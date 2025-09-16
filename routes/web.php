@@ -1,0 +1,16 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/login', function() {
+    return view('auth.login'); // más adelante crearás login.blade.php
+})->name('login');
+
+Route::get('/register', function () {
+    return view('auth.register'); // puedes crear más adelante esta vista
+})->name('register');
+
