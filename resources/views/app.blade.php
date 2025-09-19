@@ -118,6 +118,39 @@
 
     @livewireScripts
 </body>
-
+<script>
+    function confirmarEliminacion(id) {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success",
+                cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33'
+        });
+        swalWithBootstrapButtons.fire({
+            title: "¿Estás seguro de eliminar?",
+            text: "No podrás revertir esto.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "No, cancelar",
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById(`formEliminar_${id}`).submit();
+            } else if (
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire({
+                    title: "Cancelado",
+                    text: "No se ha eliminado los datos",
+                    icon: "error"
+                });
+            }
+        });
+    }
+</script>
 
 </html>
