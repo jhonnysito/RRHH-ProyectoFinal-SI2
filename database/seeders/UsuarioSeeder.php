@@ -6,10 +6,11 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-    /**
-     * Run the database seeds.
-     */
-    class UsuarioSeeder extends Seeder
+
+/**
+ * Run the database seeds.
+ */
+class UsuarioSeeder extends Seeder
 {
     public function run(): void
     {
@@ -20,4 +21,3 @@ use App\Models\User;
         ]);
     }
 }
-
