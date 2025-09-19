@@ -126,7 +126,7 @@
 
 
                 <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-                    <a class="w-full flex items-center py-3" href="{{ route('dashboard') }}">
+                    <a class="w-full flex items-center py-3" href="{{ route('bitacora.rinicio') }}">
                         <i class="fa-solid fa-clock-rotate-left text-center px-5"></i>
                         <span class="whitespace-nowrap pl-1">Bitacoras</span>
                     </a>

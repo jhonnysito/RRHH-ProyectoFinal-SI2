@@ -12,14 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('detalle_bitacoras', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('bitacora_id')->constrained('bitacoras')->onDelete('cascade');
-            $table->string('accion');
-            $table->string('metodo');
-            $table->time('hora');
-            $table->string('tabla');
-            $table->unsignedBigInteger('registroId');
-            $table->string('ruta');
+            $table->id('id');
+            $table->unsignedBigInteger('ID_Bitacora');
+            $table->text('accion')->nullable();
+            $table->text('metodo')->nullable();
+            $table->text('hora')->nullable();
+            $table->text('tabla')->nullable();
+            $table->text('registroId')->nullable();
+            $table->text('ruta')->nullable();
+            $table->foreign('ID_Bitacora')->references('id')->on('bitacoras')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

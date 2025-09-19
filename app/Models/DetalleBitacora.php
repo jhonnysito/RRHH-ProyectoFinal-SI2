@@ -23,7 +23,7 @@ class DetalleBitacora extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'bitacora_id',
+        'ID_Bitacora',
         'accion',
         'metodo',
         'hora',
@@ -44,6 +44,6 @@ class DetalleBitacora extends Model
      */
     public function bitacora(): BelongsTo
     {
-        return $this->belongsTo(Bitacora::class, 'bitacora_id');
+        return $this->belongsTo(Bitacora::class, 'ID_Bitacora');
     }
 }

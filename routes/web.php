@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BitacoraController;
+use App\Http\Controllers\DetalleBitacoraController;
 use App\Http\Controllers\PuestoController;
 
 Route::get('/', function () {
@@ -20,7 +21,18 @@ Route::get('/dashboard', function () {
 
 
 // Ruta para la Bitácora
-Route::get('/bitacora', [BitacoraController::class, 'index'])->name('bitacora.index');
+
+//Bitacora
+Route::get('/bitacoras/inicio/{id}', [BitacoraController::class, 'inicio'])->name('bitacora.inicio');
+Route::get('/bitacoras/rinicio', [BitacoraController::class, 'rinicio'])->name('bitacora.rinicio');
+Route::get('/bitacoras/PDF', [BitacoraController::class, 'generarBitacoraPDF'])->name('generarBitacoraPDF');
+Route::get('/bitacoras/PDF/{id}', [BitacoraController::class, 'generarBitacoraPDF_usuario'])->name('generarBitacoraPDF_usuario');
+
+//DetalleBitacora
+Route::get('/detbitacoras/inicio/{id}', [DetalleBitacoraController::class, 'inicio'])->name('detbitacoras.inicio');
+Route::get('/detbitacoras/PDF/{id}', [DetalleBitacoraController::class, 'generarDetalleBitacoraPDF'])->name('generarDetalleBitacoraPDF');
+
+
 Route::get('/puestos', [PuestoController::class, 'index'])->name('puestos');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

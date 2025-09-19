@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('bitacoras', function (Blueprint $table) {
             $table->id();
-            $table->string('bitacora');
-            $table->foreignId('id_usuario')->constrained('users')->onDelete('cascade');
-            $table->date('fecha');
-            $table->string('ip');
-            $table->string('so');
-            $table->string('navegador');
-            $table->string('usuario');
+            $table->unsignedBigInteger('ID_Usuario')->nullable();
+            $table->text('entrada')->nullable();
+            $table->text('salida')->nullable();
+            $table->text('usuario')->nullable();
+            $table->text('tipo')->nullable();
+            $table->text('direccionIp')->nullable();
+            $table->text('navegador')->nullable();
+            $table->foreign('ID_Usuario')->references('id')->on('users')->nullable();
             $table->timestamps();
         });
     }

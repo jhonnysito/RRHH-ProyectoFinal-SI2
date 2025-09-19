@@ -17,6 +17,7 @@ class Bitacora extends Model
      * @var string
      */
     protected $table = 'bitacoras';
+    protected $primaryKey = 'id';
 
     /**
      * The attributes that are mass assignable.
@@ -24,28 +25,30 @@ class Bitacora extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'bitacora',
-        'id_usuario',
-        'fecha',
-        'ip',
-        'so',
-        'navegador',
+        'ID_Usuario',
+        'entrada',
+        'salida',
         'usuario',
+        'tipo',
+        'direccionIp',
+        'navegador',
     ];
 
     /**
      * Get the user that owns the bitacora log.
      */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'id_usuario');
-    }
+
 
     /**
      * Get the details for the bitacora log.
      */
-    public function detalles(): HasMany
+    public function detallebitacoras()
     {
-        return $this->hasMany(DetalleBitacora::class, 'bitacora_id');
+        return $this->hasMany(DetalleBitacora::class, 'ID_Bitacora');
+    }
+
+    public function usuario(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'ID_Usuario');
     }
 }
