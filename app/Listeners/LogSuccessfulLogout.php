@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 
 class LogSuccessfulLogout
 {
@@ -28,28 +29,36 @@ class LogSuccessfulLogout
      */
     public function handle($event)
     {
-        $bitacora = Bitacora::where('ID_Usuario', $event->user->id)
-            ->latest()
-            ->first();
+        try {
+            $bitacora = Bitacora::where('ID_Usuario', $event->user->id)
+                ->latest()
+                ->first();
 
-        if ($bitacora) {
-            $bitacora->update([
-                'salida' => Crypt::encrypt(now()),
-            ]);
+            if ($bitacora) {
+                $bitacora->update([
+                    'salida' => Crypt::encrypt(now()),
+                ]);
+
+                $horaActual = Crypt::encrypt(Carbon::now()->format('H:i:s'));
+
+                // Detalle de la bitácora
+                $detalleBitacoraData = [
+                    'accion' => Crypt::encrypt('Cerrar Sesión'),
+                    'metodo' => Crypt::encrypt(request()->method()),
+                    'hora' => $horaActual,
+                    'tabla' => Crypt::encrypt('usuarios'),
+                    'registroId' => null,
+                    'ruta' => Crypt::encrypt(request()->fullurl()),
+                ];
+
+                $bitacora->detalleBitacoras()->create($detalleBitacoraData);
+
+                Log::info('Bitácora actualizada para logout de usuario: ' . $event->user->id);
+            } else {
+                Log::warning('No se encontró bitácora para logout de usuario: ' . $event->user->id);
+            }
+        } catch (\Exception $e) {
+            Log::error('Error en LogSuccessfulLogout: ' . $e->getMessage());
         }
-
-        $horaActual = Crypt::encrypt(Carbon::now()->format('H:i:s'));
-
-        // Detalle de la bitácora
-        $detalleBitacoraData = [
-            'accion' => Crypt::encrypt('Cerrar Sesión'),
-            'metodo' => Crypt::encrypt(request()->method()),
-            'hora' => $horaActual,
-            'tabla' => Crypt::encrypt('usuarios'),
-            'registroId' => null,
-            'ruta' => Crypt::encrypt(request()->fullurl()),
-        ];
-
-        $bitacora->detalleBitacoras()->create($detalleBitacoraData);
     }
 }

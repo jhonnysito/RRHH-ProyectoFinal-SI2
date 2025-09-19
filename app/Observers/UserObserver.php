@@ -27,7 +27,9 @@ class UserObserver
             $accion = Crypt::encrypt('Crear Empleado');
             $metodo = Crypt::encrypt('POST');
             $tabla = Crypt::encrypt('users');
-            $registroId = Crypt::encrypt($user->ID_Usuario);
+            $registroId = Crypt::encrypt($user->id);
+            // $registroId = Crypt::encrypt($user->id);
+
             $ruta = Crypt::encrypt(Request::url());
 
             $bitacora->detalleBitacoras()->create(compact('accion', 'metodo', 'horaActual', 'tabla', 'registroId', 'ruta'));
@@ -51,7 +53,7 @@ class UserObserver
             $accion = Crypt::encrypt('Actualizar Empleado');
             $metodo = Crypt::encrypt('PUT');
             $tabla = Crypt::encrypt('users');
-            $registroId = Crypt::encrypt($user->ID_Usuario);
+            $registroId = Crypt::encrypt($user->id);
             $ruta = Crypt::encrypt(Request::url());
 
             $bitacora->detalleBitacoras()->create(compact('accion', 'metodo', 'horaActual', 'tabla', 'registroId', 'ruta'));
@@ -74,8 +76,8 @@ class UserObserver
             $horaActual = Crypt::encrypt(Carbon::now()->format('H:i:s'));
             $accion = Crypt::encrypt('Eliminar Empleado');
             $metodo = Crypt::encrypt('DELETE');
-            $tabla = Crypt::encrypt('empleados');
-            $registroId = Crypt::encrypt($user->ID_Usuario);
+            $tabla = Crypt::encrypt('users');
+            $registroId = Crypt::encrypt($user->id);
             $ruta = Crypt::encrypt(Request::url());
 
             $bitacora->detalleBitacoras()->create(compact('accion', 'metodo', 'horaActual', 'tabla', 'registroId', 'ruta'));

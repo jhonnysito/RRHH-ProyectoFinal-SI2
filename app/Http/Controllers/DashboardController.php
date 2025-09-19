@@ -16,10 +16,10 @@ class DashboardController extends Controller
 
 
         // En cualquier controlador o vista, pon esto:
-        dd([
-            'bitacora_id_session' => session('bitacora_id'),
-            'usuario_logueado' => auth()->user()->name ?? 'No hay usuario'
-        ]);
+        // dd([
+        //    'bitacora_id_session' => session('bitacora_id'),
+        //    'usuario_logueado' => auth()->user()->name ?? 'No hay usuario'
+        //]);
         return view('dashboard');
     }
 }

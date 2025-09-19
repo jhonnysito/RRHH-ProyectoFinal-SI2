@@ -47,7 +47,7 @@ class Bitacora extends Model
         return $this->hasMany(DetalleBitacora::class, 'ID_Bitacora');
     }
 
-    public function usuario(): BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'ID_Usuario');
     }
