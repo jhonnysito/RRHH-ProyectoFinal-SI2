@@ -2,13 +2,13 @@
     <x-slot name="header">
         <div class = "flex flex-wrap justify-between">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Lista de Bitacoras') }}
+                {{ __('Detalle de la Bitacora ' . $bitacora->id) }}
             </h2>
             {{-- <a class = "px-3 py-2 bg-red-800 font-bold text-white rounded-lg"
-                href="{{ route('generarBitacoraPDF') }}">Generar PDF</a> --}}
+                href="{{ route('generarDetalleBitacoraPDF', $bitacora->id) }}">Generar PDF</a> --}}
         </div>
     </x-slot>
-    <title>Bitacoras</title>
+    <title>Detalles_Bitacoras</title>
 
     <table class="min-w-full border-collapse block md:table">
         <thead class="block md:table-header-group">
@@ -19,78 +19,64 @@
                     ID</th>
                 <th
                     class="bg-gray-600 p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                    ID_Usuario</th>
+                    Bitacora ID</th>
                 <th
                     class="bg-gray-600 p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                    Entrada</th>
+                    Accion</th>
                 <th
                     class="bg-gray-600 p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                    Salida</th>
+                    Metodo</th>
                 <th
                     class="bg-gray-600 p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                    Usuario</th>
+                    Hora</th>
                 <th
                     class="bg-gray-600 p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                    Tipo</th>
+                    Tabla</th>
                 <th
                     class="bg-gray-600 p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                    DireccionIp</th>
+                    RegistroId</th>
                 <th
                     class="bg-gray-600 p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                    Navegador</th>
-                <th
-                    class="bg-gray-600 p-2 text-white font-bold md:border md:border-grey-500 text-left block md:table-cell">
-                    Acciones</th>
+                    Ruta</th>
             </tr>
         </thead>
         <tbody class="block md:table-row-group">
-            @foreach ($bitacoras as $bitacora)
+            @foreach ($detbitacoras as $detbitacora)
                 <tr class="bg-white border border-grey-500 md:border-none block md:table-row">
                     <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell">
                         <span class="inline-block w-1/3 md:hidden font-bold">ID</span>
-                        {{ $bitacora->id }}
+                        {{ $detbitacora->id }}
                     </td>
                     <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                        <span class="inline-block w-1/3 md:hidden font-bold">ID_Usuario</span>
-                        {{ $bitacora->ID_Usuario }}
+                        <span class="inline-block w-1/3 md:hidden font-bold">Bitacora ID</span>
+                        {{ $detbitacora->bitacora_id }}
                     </td>
                     <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                        <span class="inline-block w-1/3 md:hidden font-bold">Entrada</span>
-                        {{ decrypt($bitacora->entrada) }}
+                        <span class="inline-block w-1/3 md:hidden font-bold">Accion</span>
+                        {{ decrypt($detbitacora->accion) }}
                     </td>
                     <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                        <span class="inline-block w-1/3 md:hidden font-bold">Salida</span>
-                        @if ($bitacora->salida !== null)
-                            {{ decrypt($bitacora->salida) }}
+                        <span class="inline-block w-1/3 md:hidden font-bold">Metodo</span>
+                        {{ decrypt($detbitacora->metodo) }}
+                    </td>
+                    <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                        <span class="inline-block w-1/3 md:hidden font-bold">Hora</span>
+                        {{ decrypt($detbitacora->hora) }}
+                    </td>
+                    <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                        <span class="inline-block w-1/3 md:hidden font-bold">Tabla</span>
+                        {{ decrypt($detbitacora->tabla) }}
+                    </td>
+                    <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+                        <span class="inline-block w-1/3 md:hidden font-bold">RegistroId</span>
+                        @if ($detbitacora->registroId !== null)
+                            {{ decrypt($detbitacora->registroId) }}
                         @endif
+
                     </td>
                     <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                        <span class="inline-block w-1/3 md:hidden font-bold">Usuario</span>
-                        {{ decrypt($bitacora->usuario) }}
-                    </td>
-                    <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                        <span class="inline-block w-1/3 md:hidden font-bold">Tipo</span>
-                        {{ decrypt($bitacora->tipo) }}
-                    </td>
-                    <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                        <span class="inline-block w-1/3 md:hidden font-bold">DireccionIp</span>
-                        {{ decrypt($bitacora->direccionIp) }}
-                    </td>
-                    <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                        <span class="inline-block w-1/3 md:hidden font-bold">Navegador</span>
-                        {{ decrypt($bitacora->navegador) }}
-                    </td>
-                    <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell">
-                        <div class="flex flex-wrap">
-                            <span class="inline-block w-1/3 md:hidden font-bold">Acciones</span>
-                            <a href="{{ route('detbitacoras.inicio', $bitacora->id) }}"
-                                class = "bg-gray-400 px-2 py-2 rounded-lg" title="Detalles">
-                                <i class="fas fa-plus"></i>
-                            </a>
-                            {{-- <a href="{{ route('generarDetalleBitacoraPDF', $bitacora->id) }}"class = "bg-white px-2 py-2 rounded-lg" title="PDF">
-                                <i class="fas fa-file-pdf"></i>
-                            </a> --}}
-                        </div>
+                        <span class="inline-block w-1/3 md:hidden font-bold">Ruta</span>
+                        {{ decrypt($detbitacora->ruta) }}
                     </td>
                 </tr>
             @endforeach
