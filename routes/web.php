@@ -8,9 +8,10 @@ use App\Http\Controllers\DetalleBitacoraController;
 use App\Http\Controllers\PuestoController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\CargoController;
+use App\Http\Controllers\Puesto_DisponibleController;
 use App\Http\Controllers\RoleController;
 
-
+use App\Models\Puesto_Disponible;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -71,6 +72,18 @@ Route::get('/register', function () {
 // CRUD de departamentos (sin auth)
 Route::resource('departamentos', DepartamentoController::class);
 Route::resource('cargos', CargoController::class);
+
+//puesto_disponibles
+    Route::get('puesto_disponibles/inicio', [Puesto_DisponibleController::class, 'inicio'])->name('puesto_disponibles.inicio');
+    Route::get('puesto_disponibles/crear', [Puesto_DisponibleController::class, 'crear'])->name('puesto_disponibles.crear');
+    Route::post('puesto_disponibles/guardar', [Puesto_DisponibleController::class, 'guardar'])->name('puesto_disponibles.guardar');
+    Route::get('puesto_disponibles/editar/{id}', [Puesto_DisponibleController::class, 'editar'])->name('puesto_disponibles.editar');
+    Route::post('puesto_disponibles/actualizar/{id}', [Puesto_DisponibleController::class, 'actualizar'])->name('puesto_disponibles.actualizar');
+    Route::post('puesto_disponibles/eliminar/{id}', [Puesto_DisponibleController::class, 'eliminar'])->name('puesto_disponibles.eliminar');
+    Route::get('puesto_disponibles/disponibles', [Puesto_DisponibleController::class, 'disponibles'])
+    ->name('puesto_disponibles.disponibles');
+
+    Route::get('puesto_disponibles/postularse/{idpuesto}', [Puesto_DisponibleController::class, 'postularse'])->name('puesto_disponibles.postularse');
 
 // CRUD protegido por auth
 /*

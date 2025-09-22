@@ -9,7 +9,7 @@
 </head>
 
 <body class="h-full overflow-hidden items-center justify-center" style="background: #edf2f7;">
-    <div class="bg-purple-800 p-8 h-screen">
+    <div class="bg-blue-800 p-8 h-screen">
         <div class="bg-white flex flex-col font-sans h-full">
             <div class="container mx-auto px-8 h-full">
                 <header class="flex flex-col sm:flex-row items-center justify-between py-6 relative">
@@ -31,7 +31,7 @@
                                 {{-- <a href="#" class="text-sm md:text-base text-gray-800 hover:text-purple-300 py-2 px-2 sm:py-3 sm:px-3 md:px-4 lg:px-6">Contact</a>
                                 <a href="#" class="text-sm md:text-base text-gray-800 hover:text-purple-300 py-2 px-2 sm:py-3 sm:px-3 md:px-4 lg:px-6">FAQ</a> --}}
                                 <a href="{{ route('login') }}"
-                                    class="bg-purple-200 hover:bg-purple-300 rounded-full uppercase text-sm md:text-base text-purple-700 py-2 px-3 sm:py-3 sm:px-4 md:px-6 lg:px-8">Iniciar
+                                    class="bg-blue-200 hover:bg-blue-300 rounded-full uppercase text-sm md:text-base text-purple-700 py-2 px-3 sm:py-3 sm:px-4 md:px-6 lg:px-8">Iniciar
                                     Sesión</a>
                             </div>
                         @endauth
@@ -42,17 +42,17 @@
                     <div class="sm:w-2/5 flex flex-col items-center sm:items-start text-center sm:text-left">
                         <h1
                             class="uppercase text-4xl sm:text-6xl text-blue-900 font-bold leading-none tracking-wide mb-2">
-                            ADMINISTRACIÓN</h1>
-                        <h2 class="uppercase text-2xl sm:text-4xl text-orange-500 text-secondary tracking-widest mb-6">
-                            RECURSOS
-                            HUMANOS</h2>
+                            ADMINISTRACION</h1>
+                        <h2 class="text-blue-500 uppercase text-2xl sm:text-4xl tracking-widest mb-6">
+                            HUMAN
+                            RESOURCES</h2>
                         <p class="text-gray-600 text-sm sm:text-lg leading-relaxed mb-12">Bienvenido a nuestra empresa
                             de administración de recursos humanos. Aumenta la productividad en los procesos de
                             remuneraciones,
                             asistencia, documentación, desempeño y mucho más.</p>
 
                         <a href="{{ url('/dashboard') }}"
-                            class="bg-purple-300 hover:bg-purple-400 py-3 px-6 uppercase text-sm sm:text-lg font-bold text-white rounded-full">Inicio</a>
+                            class="bg-blue-300 hover:bg-blue-400 py-3 px-6 uppercase text-sm sm:text-lg font-bold text-white rounded-full">Inicio</a>
                     </div>
                     <div class="mb-6 sm:mb-0 mt-6 sm:mt-0 sm:w-3/5 sm:pl-12">
                         <svg class="w-full h-64 sm:h-auto" xmlns="http://www.w3.org/2000/svg"
