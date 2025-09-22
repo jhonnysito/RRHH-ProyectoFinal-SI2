@@ -12,7 +12,7 @@
                         @if (Auth::user()->empleado)
                             {{ Auth::user()->empleado->cargo->nombre }}
                         @else
-                            Postulante
+                            <>
                         @endif
                     </p>
                 </div>
@@ -92,53 +92,55 @@
                     </a>
                 </li>
 
-
-                <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-                    <a class="w-full flex items-center py-3" href="{{ route('puesto_disponibles.inicio') }}">
-                        <i class="fa-solid fa-briefcase text-center px-5"></i>
-                        <span class="whitespace-nowrap pl-1">Puestos Disponibles</span>
-                    </a>
-                </li>
-
-
-
+                @can('Inicio Puestos Disponibles')
+                    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+                        <a class="w-full flex items-center py-3" href="{{ route('puesto_disponibles.inicio') }}">
+                            <i class="fa-solid fa-briefcase text-center px-5"></i>
+                            <span class="whitespace-nowrap pl-1">Puestos Disponibles</span>
+                        </a>
+                    </li>
+                @endcan
 
 
 
 
 
-                <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-                    <a class="w-full flex items-center py-3" href="{{ route('departamentos.index') }}">
-                        <i class="fa-solid fa-building text-center px-5"></i>
-                        <span class="whitespace-nowrap pl-1">Departamentos</span>
-                    </a>
-                </li>
 
-                <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-                    <a class="w-full flex items-center py-3" href="{{ route('cargos.index') }}">
-                        <i class="fa-solid fa-briefcase text-center px-5"></i>
-                        <span class="whitespace-nowrap pl-1">Cargos</span>
-                    </a>
-                </li>
+                @can('Inicio Departamentos')
+                    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+                        <a class="w-full flex items-center py-3" href="{{ route('departamentos.index') }}">
+                            <i class="fa-solid fa-building text-center px-5"></i>
+                            <span class="whitespace-nowrap pl-1">Departamentos</span>
+                        </a>
+                    </li>
+                @endcan
+                @can('Inicio Cargos')
+                    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+                        <a class="w-full flex items-center py-3" href="{{ route('cargos.index') }}">
+                            <i class="fa-solid fa-briefcase text-center px-5"></i>
+                            <span class="whitespace-nowrap pl-1">Cargos</span>
+                        </a>
+                    </li>
+                @endcan
 
+                @can('Inicio Roles')
+                    --}}
+                    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+                        <a class="w-full flex items-center py-3" href="{{ route('roles.inicio') }}">
+                            <i class="fa-solid fa-user-shield text-center px-5"></i>
+                            <span class="whitespace-nowrap pl-1">Roles</span>
+                        </a>
+                    </li>
+                @endcan
 
-                {{--  @can('Inicio Roles')  --}}
-                <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-                    <a class="w-full flex items-center py-3" href="{{ route('roles.inicio') }}">
-                        <i class="fa-solid fa-user-shield text-center px-5"></i>
-                        <span class="whitespace-nowrap pl-1">Roles</span>
-                    </a>
-                </li>
-                {{-- @endcan --}}
-
-
-                <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-                    <a class="w-full flex items-center py-3" href="{{ route('bitacora.rinicio') }}">
-                        <i class="fa-solid fa-clock-rotate-left text-center px-5"></i>
-                        <span class="whitespace-nowrap pl-1">Bitacoras</span>
-                    </a>
-                </li>
-
+                @can('Inicio Bitacoras')
+                    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+                        <a class="w-full flex items-center py-3" href="{{ route('bitacora.rinicio') }}">
+                            <i class="fa-solid fa-clock-rotate-left text-center px-5"></i>
+                            <span class="whitespace-nowrap pl-1">Bitacoras</span>
+                        </a>
+                    </li>
+                @endcan
 
 
 
