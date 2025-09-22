@@ -4,7 +4,7 @@
         <div class="flex justify-between items-center pr-10 pl-3 h-14">
             <div class="flex items-center">
                 <a href="{{ route('dashboard') }}">
-                    <img src="{{ asset('archivos/logo.jpg') }}" alt="Logo" class="block h-9 w-auto" />
+                    <img src="{{ asset('archivos/logo2.jpg') }}" alt="Logo" class="block h-9 w-auto" />
                 </a>
                 <div class="ml-4">
                     <h2 class="text-md font-bold">{{ Auth::user()->name }}</h2>
@@ -93,12 +93,12 @@
                 </li>
 
 
-                    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-                        <a class="w-full flex items-center py-3" href="{{ route('puesto_disponibles.inicio') }}">
-                            <i class="fa-solid fa-briefcase text-center px-5"></i>
-                            <span class="whitespace-nowrap pl-1">Puestos Disponibles</span>
-                        </a>
-                    </li>
+                <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+                    <a class="w-full flex items-center py-3" href="{{ route('puesto_disponibles.inicio') }}">
+                        <i class="fa-solid fa-briefcase text-center px-5"></i>
+                        <span class="whitespace-nowrap pl-1">Puestos Disponibles</span>
+                    </a>
+                </li>
 
 
 
