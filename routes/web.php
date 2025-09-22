@@ -6,17 +6,31 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BitacoraController;
 use App\Http\Controllers\DetalleBitacoraController;
 use App\Http\Controllers\PuestoController;
+use App\Http\Controllers\DepartamentoController;
+use App\Http\Controllers\CargoController;
 
+/*
+'name' => 'Admin',
+'email' => 'admin@admin.com',
+'password' => bcrypt('12345678'),
+*/
+
+// Al entrar a "/" redirige directo al index del CRUD
 Route::get('/', function () {
-    return view('welcome');
+    //return redirect()->route('departamentos.index');
+    return redirect()->route('welcome');
 });
+
+
 
 Route::get('/login', function () {
     return view('auth.login'); // más adelante crearás login.blade.php
+
 })->name('login');
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
 
 
 
@@ -41,3 +55,18 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
+Route::get('/register', function () {
+    return view('auth.register'); // puedes crear más adelante esta vista
+})->name('register');
+// -----------------------------------------------------------------
+
+
+// CRUD de departamentos (sin auth)
+Route::resource('departamentos', DepartamentoController::class);
+Route::resource('cargos', CargoController::class);
+
+// CRUD protegido por auth
+/*
+Route::middleware(['auth'])->group(function () {
+    Route::resource('departamentos', DepartamentoController::class);
+});*/
