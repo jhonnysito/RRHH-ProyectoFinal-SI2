@@ -8,6 +8,7 @@ use App\Http\Controllers\DetalleBitacoraController;
 use App\Http\Controllers\PuestoController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\CargoController;
+use App\Http\Controllers\RoleController;
 
 
 Route::get('/', function () {
@@ -34,6 +35,19 @@ Route::get('/bitacoras/inicio/{id}', [BitacoraController::class, 'inicio'])->nam
 Route::get('/bitacoras/rinicio', [BitacoraController::class, 'rinicio'])->name('bitacora.rinicio');
 Route::get('/bitacoras/PDF', [BitacoraController::class, 'generarBitacoraPDF'])->name('generarBitacoraPDF');
 Route::get('/bitacoras/PDF/{id}', [BitacoraController::class, 'generarBitacoraPDF_usuario'])->name('generarBitacoraPDF_usuario');
+
+
+    //Ruta para los roles
+ 
+     //ROLES
+
+    Route::get('/roles/inicio', [RoleController::class, 'inicio'])->name('roles.inicio');
+    Route::get('/roles/crear', [RoleController::class, 'crear'])->name('roles.crear');
+    Route::post('/roles/guardar', [RoleController::class, 'guardar'])->name('roles.guardar');
+    Route::get('/roles/editar/{id}', [RoleController::class, 'editar'])->name('roles.editar');
+    Route::post('/roles/actualizar/{id}', [RoleController::class, 'actualizar'])->name('roles.actualizar');
+    Route::post('/roles/eliminar/{id}', [RoleController::class, 'eliminar'])->name('roles.eliminar');
+
 
 //DetalleBitacora
 Route::get('/detbitacoras/inicio/{id}', [DetalleBitacoraController::class, 'inicio'])->name('detbitacoras.inicio');

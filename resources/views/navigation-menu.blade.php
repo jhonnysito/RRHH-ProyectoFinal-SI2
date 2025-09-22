@@ -117,7 +117,7 @@
 
                 {{--  @can('Inicio Roles')  --}}
                 <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-                    <a class="w-full flex items-center py-3" href="{{ route('dashboard') }}">
+                    <a class="w-full flex items-center py-3" href="{{ route('roles.inicio') }}">
                         <i class="fa-solid fa-user-shield text-center px-5"></i>
                         <span class="whitespace-nowrap pl-1">Roles</span>
                     </a>
