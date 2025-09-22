@@ -9,16 +9,9 @@ use App\Http\Controllers\PuestoController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\CargoController;
 
-/*
-'name' => 'Admin',
-'email' => 'admin@admin.com',
-'password' => bcrypt('12345678'),
-*/
 
-// Al entrar a "/" redirige directo al index del CRUD
 Route::get('/', function () {
-    //return redirect()->route('departamentos.index');
-    return redirect()->route('welcome');
+    return view('welcome');
 });
 
 

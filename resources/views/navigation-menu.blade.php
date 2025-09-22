@@ -101,14 +101,14 @@
 
 
                 <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-                    <a class="w-full flex items-center py-3" href="{{ route('dashboard') }}">
+                    <a class="w-full flex items-center py-3" href="{{ route('departamentos.index') }}">
                         <i class="fa-solid fa-building text-center px-5"></i>
                         <span class="whitespace-nowrap pl-1">Departamentos</span>
                     </a>
                 </li>
 
                 <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-                    <a class="w-full flex items-center py-3" href="{{ route('dashboard') }}">
+                    <a class="w-full flex items-center py-3" href="{{ route('cargos.index') }}">
                         <i class="fa-solid fa-briefcase text-center px-5"></i>
                         <span class="whitespace-nowrap pl-1">Cargos</span>
                     </a>
