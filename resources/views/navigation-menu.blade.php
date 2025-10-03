@@ -5,6 +5,7 @@
             <div class="flex items-center">
                 <a href="{{ route('dashboard') }}">
                     <img src="{{ asset('archivos/logo2.jpg') }}" alt="Logo" class="block h-9 w-auto" />
+
                 </a>
                 <div class="ml-4">
                     <h2 class="text-md font-bold">{{ Auth::user()->name }}</h2>

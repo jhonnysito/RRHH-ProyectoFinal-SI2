@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
+use Stancl\Tenancy\Database\Concerns\HasDomains;
 
 class Tenant extends BaseTenant
 {
+    use HasDomains;
+
     // Aquí puedes agregar tus campos personalizados si quieres
     protected $fillable = [
         'id',
