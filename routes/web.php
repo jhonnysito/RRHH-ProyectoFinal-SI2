@@ -18,9 +18,20 @@ Route::get('/', function () {
     return view('welcome'); // Página de bienvenida o landing page principal
 });
 */
-
+/*
 Route::get('/', function () {
     return  'VISTA PRINCIPAL DEL SISTEMA SAAS'; // Página de bienvenida o landing page principal
+});
+*/
+
+Route::get('/', function () {
+    return view('saas.welcome');
+});
+Route::get('/registro-empresa', function () {
+    return view('saas.registro-empresa');
+});
+Route::get('/precios', function () {
+    return view('saas.precios');
 });
 
 Route::get('/debug', function () {
