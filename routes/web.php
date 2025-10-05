@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\OnboardingController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes (Central Domain)
@@ -27,6 +27,11 @@ Route::get('/', function () {
 Route::get('/', function () {
     return view('saas.welcome');
 });
+// routes/web.php (DOMINIO CENTRAL)
+Route::get('/register', [OnboardingController::class, 'showForm'])->name('onboarding.form');
+Route::post('/register', [OnboardingController::class, 'register'])->name('onboarding.register');
+Route::get('/register/success', [OnboardingController::class, 'success'])->name('onboarding.success');
+
 Route::get('/registro-empresa', function () {
     return view('saas.registro-empresa');
 });
