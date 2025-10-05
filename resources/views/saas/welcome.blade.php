@@ -177,8 +177,9 @@
                 </div>
 
                 <div class="relative">
-                    <img src="https://placeholder-image-service.onrender.com/image/600x400?prompt=Modern%20HR%20dashboard%20interface%20with%20employee%20analytics%20and%20clean%20design&id=erp-hero-1"
-                        alt="Dashboard moderno de gestión de recursos humanos mostrando análisis de empleados y métricas clave"
+                    {{-- Asumiendo que guardaste tu imagen en public/images/saas/dashboard-hero.png --}}
+                    <img src="{{ asset('archivos/rrhh.png') }}"
+                        alt="Dashboard de HRSuite mostrando análisis de empleados"
                         class="rounded-lg shadow-2xl w-full" />
                 </div>
             </div>
