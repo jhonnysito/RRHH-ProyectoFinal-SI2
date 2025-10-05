@@ -30,7 +30,6 @@
              transition: all 0.3s ease;
              border-radius: 20px;
              position: relative;
-             overflow: hidden;
          }
 
          .plan-card:hover {
@@ -174,16 +173,16 @@
          </div>
 
          <!-- Plans Grid -->
-         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
              <!-- Free Plan -->
              <div class="plan-card bg-white p-8 text-center fade-in" data-aos="fade-up">
                  <div class="mb-6">
-                     <h3 class="text-2xl font-bold text-gray-800 mb-2">Free</h3>
+                     <h3 class="text-2xl font-bold text-gray-800 mb-2">BASICO</h3>
                      <p class="text-gray-600">Para startups pequeñas</p>
                  </div>
 
                  <div class="mb-8">
-                     <div class="text-4xl font-bold text-gray-800 mb-2">$0</div>
+                     <div class="text-4xl font-bold text-gray-800 mb-2">$15</div>
                      <div class="text-gray-500 text-sm" id="free-period">por mes</div>
                  </div>
 
@@ -196,21 +195,20 @@
                      <li class="disabled"><i class="fas fa-times"></i> Integraciones avanzadas</li>
                  </ul>
 
-                 <a href="/registro-empresa"
-                     class="btn-subscribe block w-full bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200">
-                     Empezar Gratis
+                 <a href="/register?plan=basico" class="btn-subscribe block w-full bg-primary text-white hover:bg-blue-700">
+                     Suscribirse
                  </a>
              </div>
 
              <!-- Basic Plan (Popular) -->
              <div class="plan-card bg-white p-8 text-center popular fade-in" data-aos="fade-up" data-aos-delay="100">
                  <div class="mb-6">
-                     <h3 class="text-2xl font-bold text-gray-800 mb-2">Basic</h3>
+                     <h3 class="text-2xl font-bold text-gray-800 mb-2">PROFESIONAL</h3>
                      <p class="text-gray-600">Para equipos en crecimiento</p>
                  </div>
 
                  <div class="mb-8">
-                     <div class="text-4xl font-bold text-primary mb-2" id="basic-price">$29</div>
+                     <div class="text-4xl font-bold text-primary mb-2" id="basic-price">$25</div>
                      <div class="text-gray-500 text-sm" id="basic-period">por mes</div>
                      <div class="text-xs text-green-600 mt-1" id="basic-savings" style="display: none;">Ahorra $70 al año
                      </div>
@@ -226,7 +224,7 @@
                      <li class="disabled"><i class="fas fa-times"></i> API personalizada</li>
                  </ul>
 
-                 <a href="/registro-empresa?plan=basic"
+                 <a href="/register?plan=profesional"
                      class="btn-subscribe block w-full bg-primary text-white hover:bg-blue-700">
                      Suscribirse
                  </a>
@@ -235,12 +233,12 @@
              <!-- Pro Plan -->
              <div class="plan-card bg-white p-8 text-center fade-in" data-aos="fade-up" data-aos-delay="200">
                  <div class="mb-6">
-                     <h3 class="text-2xl font-bold text-gray-800 mb-2">Pro</h3>
+                     <h3 class="text-2xl font-bold text-gray-800 mb-2">PREMIUM</h3>
                      <p class="text-gray-600">Para empresas medianas</p>
                  </div>
 
                  <div class="mb-8">
-                     <div class="text-4xl font-bold text-primary mb-2" id="pro-price">$99</div>
+                     <div class="text-4xl font-bold text-primary mb-2" id="pro-price">$40</div>
                      <div class="text-gray-500 text-sm" id="pro-period">por mes</div>
                      <div class="text-xs text-green-600 mt-1" id="pro-savings" style="display: none;">Ahorra $238 al año
                      </div>
@@ -262,33 +260,7 @@
                  </a>
              </div>
 
-             <!-- Enterprise Plan -->
-             <div class="plan-card bg-white p-8 text-center fade-in" data-aos="fade-up" data-aos-delay="300">
-                 <div class="mb-6">
-                     <h3 class="text-2xl font-bold text-gray-800 mb-2">Enterprise</h3>
-                     <p class="text-gray-600">Para grandes organizaciones</p>
-                 </div>
 
-                 <div class="mb-8">
-                     <div class="text-4xl font-bold text-gray-800 mb-2">Personalizado</div>
-                     <div class="text-gray-500 text-sm">Contactar ventas</div>
-                 </div>
-
-                 <ul class="feature-list mb-8 space-y-3">
-                     <li><i class="fas fa-check"></i> Empleados ilimitados</li>
-                     <li><i class="fas fa-check"></i> Todas las funciones Pro</li>
-                     <li><i class="fas fa-check"></i> API personalizada</li>
-                     <li><i class="fas fa-check"></i> Soporte dedicado 24/7</li>
-                     <li><i class="fas fa-check"></i> Implementación personalizada</li>
-                     <li><i class="fas fa-check"></i> Cumplimiento normativo</li>
-                     <li><i class="fas fa-check"></i> Seguridad enterprise</li>
-                 </ul>
-
-                 <a href="{{ route('contact') }}"
-                     class="btn-subscribe block w-full bg-gray-800 text-white hover:bg-gray-900">
-                     Contactar Ventas
-                 </a>
-             </div>
          </div>
 
          <!-- Features Comparison Table -->
@@ -299,10 +271,9 @@
                      <thead>
                          <tr class="border-b-2 border-gray-200">
                              <th class="text-left py-4 font-semibold text-gray-700">Característica</th>
-                             <th class="text-center py-4 font-semibold text-gray-700">Free</th>
-                             <th class="text-center py-4 font-semibold text-gray-700">Basic</th>
-                             <th class="text-center py-4 font-semibold text-gray-700">Pro</th>
-                             <th class="text-center py-4 font-semibold text-gray-700">Enterprise</th>
+                             <th class="text-center py-4 font-semibold text-gray-700">BASICO</th>
+                             <th class="text-center py-4 font-semibold text-gray-700">PROFESIONAL</th>
+                             <th class="text-center py-4 font-semibold text-gray-700">PREMIUM</th>
                          </tr>
                      </thead>
                      <tbody class="divide-y divide-gray-200">
@@ -311,18 +282,15 @@
                              <td class="text-center">10</td>
                              <td class="text-center">50</td>
                              <td class="text-center">200</td>
-                             <td class="text-center">Ilimitado</td>
                          </tr>
                          <tr>
                              <td class="py-4 font-medium text-gray-700">Gestión de Nóminas</td>
                              <td class="text-center"><i class="fas fa-times text-red-500"></i></td>
                              <td class="text-center"><i class="fas fa-check text-green-500"></i></td>
                              <td class="text-center"><i class="fas fa-check text-green-500"></i></td>
-                             <td class="text-center"><i class="fas fa-check text-green-500"></i></td>
                          </tr>
                          <tr>
                              <td class="py-4 font-medium text-gray-700">Reportes Avanzados</td>
-                             <td class="text-center"><i class="fas fa-check text-green-500"></i></td>
                              <td class="text-center"><i class="fas fa-check text-green-500"></i></td>
                              <td class="text-center"><i class="fas fa-check text-green-500"></i></td>
                              <td class="text-center"><i class="fas fa-check text-green-500"></i></td>
@@ -332,21 +300,18 @@
                              <td class="text-center"><i class="fas fa-times text-red-500"></i></td>
                              <td class="text-center"><i class="fas fa-times text-red-500"></i></td>
                              <td class="text-center"><i class="fas fa-check text-green-500"></i></td>
-                             <td class="text-center"><i class="fas fa-check text-green-500"></i></td>
                          </tr>
                          <tr>
                              <td class="py-4 font-medium text-gray-700">Integraciones</td>
                              <td class="text-center">Básicas</td>
                              <td class="text-center">10+</td>
                              <td class="text-center">20+</td>
-                             <td class="text-center">Personalizadas</td>
                          </tr>
                          <tr>
                              <td class="py-4 font-medium text-gray-700">Soporte</td>
                              <td class="text-center">Email</td>
                              <td class="text-center">Prioritario</td>
                              <td class="text-center">24/7</td>
-                             <td class="text-center">Dedicado</td>
                          </tr>
                      </tbody>
                  </table>

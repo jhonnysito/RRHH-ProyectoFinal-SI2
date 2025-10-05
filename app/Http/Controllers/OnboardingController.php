@@ -13,9 +13,12 @@ use Illuminate\Support\Facades\Log;
 
 class OnboardingController extends Controller
 {
-    public function showForm()
+    public function showForm(Request $request)
     {
-        return view('saas.form-registro');
+        $plan = $request->query('plan'); // "basic"
+
+        return view('saas.form-registro', compact('plan'));
+        // return view('saas.form-registro');
     }
 
     public function register(Request $request)
@@ -36,6 +39,15 @@ class OnboardingController extends Controller
         ]);
 
         try {
+
+            $plan = $request->input('plan'); // "profesional"
+            $priceMap = [
+                'basic'        => env('STRIPE_PRICE_BASICO'),
+                'profesional'  => env('STRIPE_PRICE_PROFESIONAL'),
+                'premium'      => env('STRIPE_PRICE_PREMIUM'),
+            ];
+            $stripePriceId = $priceMap[$plan] ?? env('STRIPE_PRICE_BASICO');
+
             // 1. Crear tenant
             $tenantId = Str::slug($request->company_name);
             Log::info("Creando tenant con ID: {$tenantId}");
@@ -76,7 +88,7 @@ class OnboardingController extends Controller
             Log::info("Customer de Stripe creado para tenant {$tenant->id}, stripe_id={$tenant->stripe_id}");
 
             // 5. Redirigir a CHECKOUT de Stripe (aquí pedirá la tarjeta)
-            return $tenant->newSubscription('default', env('STRIPE_PRICE_BASICO'))
+            return $tenant->newSubscription('default', $stripePriceId)
                 ->checkout([
                     'success_url' => $tenant->url('/dashboard') . '?session_id={CHECKOUT_SESSION_ID}',
                     'cancel_url' => route('onboarding.form') . '?canceled=true',

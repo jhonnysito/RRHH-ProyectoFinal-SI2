@@ -21,6 +21,9 @@
             <form method="POST" action="{{ route('onboarding.register') }}">
                 @csrf
 
+                <input type="hidden" name="plan" value="{{ $plan }}">
+
+
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2">Nombre de la Empresa</label>
                     <input type="text" name="company_name" required
@@ -52,7 +55,8 @@
                 </div>
 
                 <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
-                    Registrarse y Suscribirse ($29/mes)
+                    Registrarse y Suscribirse al plan {{ ucfirst($plan) }}
+
                 </button>
 
                 <p class="text-sm text-gray-600 mt-4 text-center">
