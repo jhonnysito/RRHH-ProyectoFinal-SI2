@@ -1,5 +1,5 @@
  {{-- resources/views/subscription/pricing.blade.php --}}
- @extends('layouts.guest') {{-- Usamos el layout para invitados para que sea accesible públicamente --}}
+ @extends('layouts.central.guest') {{-- Usamos el layout para invitados para que sea accesible públicamente --}}
 
  @section('title', 'Planes de Suscripción - HR Pro SaaS')
 

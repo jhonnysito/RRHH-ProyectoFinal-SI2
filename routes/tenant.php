@@ -49,7 +49,7 @@ Route::middleware([
         return view('auth.login'); // más adelante crearás login.blade.php
 
     })->name('login');
-    */
+*/
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->middleware(['auth', 'verified'])->name('dashboard');
