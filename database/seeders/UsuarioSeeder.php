@@ -17,6 +17,7 @@ class UsuarioSeeder extends Seeder
     public function run(): void
     {
         $user =  User::create([
+            'tenant_id' => 'empresa1',
             'name' => 'admin',        // Nombre del usuario
             'email' => 'admin@gmail.com',     // Email
             'password' => Hash::make('12345678'), // Contraseña (encriptada)
@@ -24,6 +25,7 @@ class UsuarioSeeder extends Seeder
 
 
         $user =  User::create([
+            'tenant_id' => 'empresa1',
             'name' => 'empleado',        // Nombre del usuario
             'email' => 'empleado@gmail.com',     // Email
             'password' => Hash::make('12345678'), // Contraseña (encriptada)
@@ -31,6 +33,7 @@ class UsuarioSeeder extends Seeder
 
 
         $user =  User::create([
+            'tenant_id' => 'empresa1',
             'name' => 'encargado',        // Nombre del usuario
             'email' => 'encargado@gmail.com',     // Email
             'password' => Hash::make('12345678'), // Contraseña (encriptada)

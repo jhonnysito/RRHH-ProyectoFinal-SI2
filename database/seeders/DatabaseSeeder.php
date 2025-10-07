@@ -17,8 +17,9 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             RoleSeeder::class,     // 1. Crear roles y permisos
-            UsuarioSeeder::class,  // 2. Crear usuario y asignarle rol
             TenantSeeder::class,   // 3. Crear tenant y dominio
+            UsuarioSeeder::class,  // 2. Crear usuario y asignarle rol
+
             // User::factory()->create([
             //     'name' => 'Test User',
             //     'email' => 'test@example.com',

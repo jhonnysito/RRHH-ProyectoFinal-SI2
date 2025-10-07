@@ -12,10 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('departamentos', function (Blueprint $table) {
-        $table->id();
-        $table->string('nombre')->unique();
-        $table->string('descripcion')->nullable();
-        $table->timestamps();
+            $table->id();
+            $table->string('nombre')->unique();
+            $table->string('descripcion')->nullable();
+            $table->string('tenant_id');
+
+            $table->timestamps();
+            $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

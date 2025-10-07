@@ -13,7 +13,9 @@ class DepartamentoController extends Controller
     public function index()
     {
         //
-        $departamentos = Departamento::all();
+        //$departamentos = Departamento::all();
+        $departamentos = Departamento::where('tenant_id', tenant('id'))->get();
+
         return view('departamentos.index', compact('departamentos'));
     }
 
@@ -37,10 +39,15 @@ class DepartamentoController extends Controller
             'descripcion' => 'nullable|string',
         ]);
 
-        Departamento::create($request->all());
+        //Departamento::create($request->all());
+        Departamento::create([
+            'tenant_id'   => tenant('id'), // 👈 asignación obligatoria
+            'nombre'      => $request->nombre,
+            'descripcion' => $request->descripcion,
+        ]);
 
         return redirect()->route('departamentos.index')
-                         ->with('success', 'Departamento creado correctamente.');
+            ->with('success', 'Departamento creado correctamente.');
     }
 
     /**
@@ -62,18 +69,23 @@ class DepartamentoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-public function update(Request $request, Departamento $departamento)
-{
-    $request->validate([
-        'nombre' => 'required|max:255|unique:departamentos,nombre,' . $departamento->id,
-        'descripcion' => 'nullable|string',
-    ]);
+    public function update(Request $request, Departamento $departamento)
+    {
+        $request->validate([
+            'nombre' => 'required|max:255|unique:departamentos,nombre,' . $departamento->id,
+            'descripcion' => 'nullable|string',
+        ]);
 
-    $departamento->update($request->only(['nombre', 'descripcion']));
+        // Verificar que el departamento pertenece al tenant actual
+        if ($departamento->tenant_id !== tenant('id')) {
+            abort(403, 'Acceso denegado');
+        }
 
-    return redirect()->route('departamentos.index')
-                     ->with('success', '✏️ Departamento actualizado correctamente.');
-}
+        $departamento->update($request->only(['nombre', 'descripcion']));
+
+        return redirect()->route('departamentos.index')
+            ->with('success', '✏️ Departamento actualizado correctamente.');
+    }
 
 
     /**
@@ -81,9 +93,13 @@ public function update(Request $request, Departamento $departamento)
      */
     public function destroy(Departamento $departamento)
     {
+        if ($departamento->tenant_id !== tenant('id')) {
+            abort(403, 'Acceso denegado');
+        }
+
         $departamento->delete();
 
         return redirect()->route('departamentos.index')
-                         ->with('success', '🗑️ Departamento eliminado correctamente.');
+            ->with('success', '🗑️ Departamento eliminado correctamente.');
     }
 }

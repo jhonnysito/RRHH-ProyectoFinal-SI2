@@ -24,9 +24,28 @@ class Tenant extends BaseTenant
 
         return "http://{$this->domains()->first()->domain}{$path}";
     }
+    //relaciones parav- Si quieres navegar desde el tenant hacia sus departamentos con sintaxis elegante ($tenant->departamentos).
 
     public function domains()
     {
         return $this->hasMany(Domain::class);
+    }
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
+    public function cargos()
+    {
+        return $this->hasMany(Cargo::class);
+    }
+
+    public function departamentos()
+    {
+        return $this->hasMany(Departamento::class);
+    }
+
+    public function puestos_disponibles()
+    {
+        return $this->hasMany(Puesto_Disponible::class);
     }
 }
