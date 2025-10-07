@@ -1,5 +1,5 @@
  {{-- resources/views/auth/register-company.blade.php --}}
- @extends('layouts.guest') {{-- Usamos el layout para invitados --}}
+ @extends('layouts.central.guest') {{-- Usamos el layout para invitados --}}
 
  @section('title', 'Registrar Empresa - HR Pro SaaS')
 
