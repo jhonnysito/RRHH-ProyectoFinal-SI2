@@ -3,9 +3,13 @@
     <div class="h-14 bg-gray-100 top-0 w-full fixed shadow" style="z-index: 99999;">
         <div class="flex justify-between items-center pr-10 pl-3 h-14">
             <div class="flex items-center">
-                <a href="{{ route('dashboard') }}">
-                    <img src="{{ asset('archivos/logo2.jpg') }}" alt="Logo" class="block h-9 w-auto" />
-
+                <a href="{{ route('dashboard') }}" class="flex items-center">
+                    @if (isset($tenantLogoPath) && $tenantLogoPath)
+                        <img src="{{ tenant_asset($tenantLogoPath) }}" alt="Logo" class="block h-9 w-auto" />
+                    @else
+                        {{-- Logo por defecto si el tenant no ha subido uno --}}
+                        <img src="{{ asset('archivos/logo2.jpg') }}" alt="Logo" class="block h-9 w-auto" />
+                    @endif
                 </a>
                 <div class="ml-4">
                     <h2 class="text-md font-bold">{{ Auth::user()->name }}</h2>
@@ -142,23 +146,25 @@
                     </li>
                 @endcan
 
+                {{-- ====================================================== --}}
+                {{-- NUEVO ENLACE A PERSONALIZACIÓN --}}
+                <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+                    <a class="w-full flex items-center py-3" href="{{ route('personalizacion.edit') }}">
+                        <i class="fa-solid fa-palette text-center px-5"></i>
+                        <span class="whitespace-nowrap pl-1">Personalización</span>
+                    </a>
+                </li>
+                {{-- ====================================================== --}}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                {{-- ====================================================== --}}
+                {{-- ENLACE PARA REGISTROS DE ASISTENCIA --}}
+                <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+                    <a class="w-full flex items-center py-3" href="{{ route('location-records.index') }}">
+                        <i class="fa-solid fa-map-location-dot text-center px-5"></i>
+                        <span class="whitespace-nowrap pl-1">Asistencias</span>
+                    </a>
+                </li>
+                {{-- ====================================================== --}}
             </ul>
             <ul class="flex flex-col gap-1 mt-2">
                 <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">

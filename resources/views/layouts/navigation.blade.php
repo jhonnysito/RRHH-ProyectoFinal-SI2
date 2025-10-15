@@ -15,6 +15,13 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    {{-- ... otros enlaces como Bitácora, etc. ... --}}
+
+                    {{-- NUEVO ENLACE AÑADIDO AQUÍ --}}
+                    <x-nav-link :href="route('location-records.index')" :active="request()->routeIs('location-records.index')">
+                        {{ __('Asistencias') }}
+                    </x-nav-link>
                 </div>
             </div>
 

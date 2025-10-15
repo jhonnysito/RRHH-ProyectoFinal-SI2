@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BitacoraController;
 use App\Http\Controllers\DetalleBitacoraController;
 use App\Http\Controllers\PuestoController;
@@ -14,6 +13,9 @@ use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\CargoController;
 use App\Http\Controllers\Puesto_DisponibleController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PersonalizacionController;
+use App\Http\Controllers\Api\LocationRecordController;
+use App\Http\Controllers\LocationRecordController as WebLocationRecordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,11 +41,12 @@ Route::middleware([
     'web', //middleware web normal de laravel
     InitializeTenancyByDomain::class, // detecta y activa el tenant segun el dominio
     PreventAccessFromCentralDomains::class, // bloquea accesos desde dominios centrales
+
+
 ])->group(function () {
     Route::get('/', function () {
         return view('welcome');
     });
-
     /*
     Route::get('/login', function () {
         return view('auth.login'); // más adelante crearás login.blade.php
@@ -88,6 +91,14 @@ Route::middleware([
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+        // Rutas para Personalización
+        Route::get('/personalizacion', [PersonalizacionController::class, 'edit'])->name('personalizacion.edit');
+        Route::post('/personalizacion', [PersonalizacionController::class, 'update'])->name('personalizacion.update');
+
+        // Ruta para ver los registros de ubicación en el dashboard
+        Route::get('/location-records', [WebLocationRecordController::class, 'index'])
+            ->name('location-records.index');
     });
 
     require __DIR__ . '/auth.php';
@@ -111,5 +122,10 @@ Route::middleware([
     Route::get('puesto_disponibles/disponibles', [Puesto_DisponibleController::class, 'disponibles'])
         ->name('puesto_disponibles.disponibles');
 
-    Route::get('puesto_disponibles/postularse/{idpuesto}', [Puesto_DisponibleController::class, 'postularse'])->name('puesto_disponibles.postularse');
+    Route::get('puesto_disponibles/postularse/{idpuesto}', [Puesto_DisponibleController::class, 'postularse'])->name('puesto_disponibles.postularse')->middleware('auth');
 });
+
+// Ruta de API para que la app Flutter envíe los datos de ubicación
+Route::post('/api/location-records', [Api\LocationRecordController::class, 'store'])
+    ->middleware([InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])
+    ->name('api.location-records.store');

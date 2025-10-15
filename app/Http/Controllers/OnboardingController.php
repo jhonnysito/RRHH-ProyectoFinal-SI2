@@ -55,10 +55,14 @@ class OnboardingController extends Controller
             $tenant = Tenant::create([
                 'id'   => $tenantId,
                 'data' => [
-                    'nombre'     => $request->company_name,
-                    'email'      => $request->email,
-                    'admin_name' => $request->name,
-                    'plan'       => 'trial',
+                    'nombre'          => $request->company_name,
+                    'email'           => $request->email,
+                    'admin_name'      => $request->name,
+                    'plan'            => 'trial',
+                    // --- DATOS DE BRANDING POR DEFECTO ---
+                    'logo_path'       => null, // No hay logo al inicio
+                    'primary_color'   => '#2563eb', // Azul por defecto (Tailwind blue-600)
+                    'secondary_color' => '#64748b', // Gris por defecto (Tailwind slate-500)
                 ],
             ]);
             Log::info("Tenant creado: {$tenant->id}");

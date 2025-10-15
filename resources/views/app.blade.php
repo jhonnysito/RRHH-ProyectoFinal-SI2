@@ -39,6 +39,17 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
+    {{-- ====================================================== --}}
+    {{-- INYECTAR VARIABLES CSS DEL TENANT --}}
+    <style>
+        :root {
+            --color-primario: {{ $tenantPrimaryColor ?? '#2563eb' }};
+            --color-secundario: {{ $tenantSecondaryColor ?? '#64748b' }};
+        }
+    </style>
+    {{-- ====================================================== --}}
+
+
     <script>
         function collapseSidebar() {
             let sidebar = document.getElementById('sidebar');
