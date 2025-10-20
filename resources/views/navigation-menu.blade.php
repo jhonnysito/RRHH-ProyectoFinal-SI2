@@ -10,10 +10,10 @@
                 <div class="ml-4">
                     <h2 class="text-md font-bold">{{ Auth::user()->name }}</h2>
                     <p class="text-gray-400 text-[12px]">
-                        @if (Auth::user()->empleado)
+                        @if (Auth::user()->empleado && Auth::user()->empleado->cargo)
                             {{ Auth::user()->empleado->cargo->nombre }}
                         @else
-                            <>
+                           <span>Sin cargo asignado</span>
                         @endif
                     </p>
                 </div>
@@ -142,7 +142,14 @@
                     </li>
                 @endcan
 
-
+                @can('Inicio Empleados')
+                    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+                        <a class="w-full flex items-center py-3" href="{{ route('empleados.index') }}">
+                            <i class="fa-solid fa-user-check text-center px-5"></i>
+                            <span class="whitespace-nowrap pl-1">Empleados</span>
+                        </a>
+                    </li>
+                @endcan
 
 
 

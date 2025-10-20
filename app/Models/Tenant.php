@@ -48,4 +48,8 @@ class Tenant extends BaseTenant
     {
         return $this->hasMany(Puesto_Disponible::class);
     }
+     public function empleados()
+    {
+        return $this->hasMany(Empleado::class);
+    }
 }
