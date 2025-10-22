@@ -63,7 +63,7 @@ class OnboardingController extends Controller
             ]);
             Log::info("Tenant creado: {$tenant->id}");
 
-
+            //dd($tenant->all());
 
             // 2. Crear dominio
             $domain = Domain::create([
