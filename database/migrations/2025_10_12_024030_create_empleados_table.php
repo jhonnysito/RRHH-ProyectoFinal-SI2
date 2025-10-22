@@ -18,7 +18,10 @@ return new class extends Migration
             $table->foreignId('departamento_id')->constrained()->onDelete('cascade');
             $table->foreignId('cargo_id')->constrained()->onDelete('cascade');
             $table->enum('estado', ['Activo', 'Inactivo'])->default('Activo');
+            $table->string('tenant_id');
+
             $table->timestamps();
+            $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
