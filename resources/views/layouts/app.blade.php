@@ -110,7 +110,7 @@
 
         <!-- Page Content -->
         <main class = "ml-[55px] lg:w-[100wh-100px] mt-[55px]">
-            {{ $slot }}
+           @yield('content')
         </main>
     </div>
 
