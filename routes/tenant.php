@@ -15,6 +15,8 @@ use App\Http\Controllers\CargoController;
 use App\Http\Controllers\Puesto_DisponibleController;
 use App\Http\Controllers\RoleController;
 
+use App\Http\Controllers\PostulanteController;
+use App\Http\Controllers\SolicitudEmpleoController;
 /*
 |--------------------------------------------------------------------------
 | Tenant Routes
@@ -100,6 +102,11 @@ Route::middleware([
     // CRUD de departamentos (sin auth)
     Route::resource('departamentos', DepartamentoController::class);
     Route::resource('cargos', CargoController::class);
+
+    //crud de postulantes
+
+    Route::resource('postulantes', PostulanteController::class);
+    Route::resource('solicitudes', SolicitudEmpleoController::class);
 
     //puesto_disponibles
     Route::get('puesto_disponibles/inicio', [Puesto_DisponibleController::class, 'inicio'])->name('puesto_disponibles.inicio');
