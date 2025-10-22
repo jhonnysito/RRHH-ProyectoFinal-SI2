@@ -11,7 +11,8 @@ class SolicitudEmpleoController extends Controller
     // Mostrar todas las solicitudes de empleo
     public function index()
     {
-        $solicitudes = SolicitudEmpleo::all();
+        //$solicitudes = SolicitudEmpleo::all();
+        $solicitudes = SolicitudEmpleo::where('tenant_id', tenant('id'))->get();
         return view('solicitudes.index', compact('solicitudes'));
     }
 
@@ -33,6 +34,7 @@ class SolicitudEmpleoController extends Controller
         ]);
 
         SolicitudEmpleo::create([
+            'tenant_id'   => tenant('id'),
             'postulante_id' => $request->postulante_id,
             'puesto' => $request->puesto,
             'mensaje' => $request->mensaje,
