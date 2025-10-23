@@ -11,6 +11,7 @@ class SolicitudEmpleo extends Model
 
     // Definir los campos que se pueden asignar masivamente
     protected $fillable = [
+        'tenant_id',
         'postulante_id', // Relación con el postulante
         'puesto',        // Puesto solicitado
         'mensaje',       // Mensaje de la solicitud
