@@ -11,6 +11,7 @@ class Postulante extends Model
 
     // Los campos que pueden ser asignados masivamente
     protected $fillable = [
+        'tenant_id',
         'nombres',
         'apellidos',
         'email',
