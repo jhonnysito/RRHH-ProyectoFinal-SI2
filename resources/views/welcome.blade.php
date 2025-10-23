@@ -16,25 +16,33 @@
                     <h3 class="text-2xl font-bold uppercase text-blue-900">RRHH</h3>
                     <nav class="text-lg">
                         @auth
-                            <div class="md:flex">
-                                <a href="{{ url('/dashboard') }}"
-                                    class="text-gray-800 hover:text-purple-300 py-3 px-6">Dashboard</a>
-                            </div>
+                        <div class="md:flex">
+                            <a href="{{ url('/dashboard') }}"
+                                class="text-gray-800 hover:text-purple-300 py-3 px-6">Dashboard</a>
+                        </div>
                         @else
-                            <div class="flex justify-center md:justify-start">
-                                <a href="{{ route('puestos') }}"
-                                    class="text-sm md:text-base text-gray-800 hover:text-purple-300 py-2 px-2 sm:py-3 sm:px-3 md:px-4 lg:px-6">
-                                    <>
-                                </a>
-                                <a href="#"
-                                    class="text-sm md:text-base text-gray-800 hover:text-purple-300 py-2 px-2 sm:py-3 sm:px-3 md:px-4 lg:px-6">Información
-                                    de la empresa</a>
-                                {{-- <a href="#" class="text-sm md:text-base text-gray-800 hover:text-purple-300 py-2 px-2 sm:py-3 sm:px-3 md:px-4 lg:px-6">Contact</a>
-                                <a href="#" class="text-sm md:text-base text-gray-800 hover:text-purple-300 py-2 px-2 sm:py-3 sm:px-3 md:px-4 lg:px-6">FAQ</a> --}}
-                                <a href="{{ route('login') }}"
-                                    class="bg-blue-200 hover:bg-blue-300 rounded-full uppercase text-sm md:text-base text-purple-700 py-2 px-3 sm:py-3 sm:px-4 md:px-6 lg:px-8">Iniciar
-                                    Sesión</a>
-                            </div>
+                        <div class="flex justify-center md:justify-start gap-2">
+                            <a href="{{ route('puestos') }}"
+                                class="text-sm md:text-base text-gray-800 hover:text-purple-300 py-2 px-2 sm:py-3 sm:px-3 md:px-4 lg:px-6">
+                                Inicio
+                            </a>
+
+                            <a href="#"
+                                class="text-sm md:text-base text-gray-800 hover:text-purple-300 py-2 px-2 sm:py-3 sm:px-3 md:px-4 lg:px-6">
+                                Información de la empresa
+                            </a>
+
+                            <!-- Nuevo botón: Ver puestos disponibles -->
+                            <a href="{{ route('puesto_disponibles.ver_empresa') }}"
+                                class="bg-green-200 hover:bg-green-300 rounded-full uppercase text-sm md:text-base text-green-700 py-2 px-3 sm:py-3 sm:px-4 md:px-6 lg:px-8">
+                                Ver Puestos Disponibles
+                            </a>
+
+                            <a href="{{ route('login') }}"
+                                class="bg-blue-200 hover:bg-blue-300 rounded-full uppercase text-sm md:text-base text-purple-700 py-2 px-3 sm:py-3 sm:px-4 md:px-6 lg:px-8">
+                                Iniciar Sesión
+                            </a>
+                        </div>
                         @endauth
                     </nav>
 

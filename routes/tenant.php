@@ -117,7 +117,12 @@ Route::middleware([
     Route::get('puesto_disponibles/crear', [Puesto_DisponibleController::class, 'crear'])->name('puesto_disponibles.crear');
     Route::post('puesto_disponibles/guardar', [Puesto_DisponibleController::class, 'guardar'])->name('puesto_disponibles.guardar');
     Route::get('puesto_disponibles/editar/{id}', [Puesto_DisponibleController::class, 'editar'])->name('puesto_disponibles.editar');
-    Route::post('puesto_disponibles/actualizar/{id}', [Puesto_DisponibleController::class, 'actualizar'])->name('puesto_disponibles.actualizar');
+    Route::put('puesto_disponibles/actualizar/{id}', [Puesto_DisponibleController::class, 'actualizar'])
+    ->name('puesto_disponibles.actualizar');
+    // Ver todos los puestos disponibles de la empresa
+Route::get('puesto_disponibles/empresa', [Puesto_DisponibleController::class, 'verDisponiblesEmpresa'])
+    ->name('puesto_disponibles.ver_empresa');
+
     Route::post('puesto_disponibles/eliminar/{id}', [Puesto_DisponibleController::class, 'eliminar'])->name('puesto_disponibles.eliminar');
     Route::get('puesto_disponibles/disponibles', [Puesto_DisponibleController::class, 'disponibles'])
         ->name('puesto_disponibles.disponibles');
