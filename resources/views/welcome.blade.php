@@ -20,6 +20,10 @@
                             <a href="{{ url('/dashboard') }}"
                                 class="text-gray-800 hover:text-purple-300 py-3 px-6">Dashboard</a>
                         </div>
+                        <div class="md:flex">
+                            <a href="{{ url('/dashboard') }}"
+                                class="text-gray-800 hover:text-purple-300 py-3 px-6">Dashboard</a>
+                        </div>
                         @else
                         <div class="flex justify-center md:justify-start gap-2">
                             <a href="{{ route('puestos') }}"
