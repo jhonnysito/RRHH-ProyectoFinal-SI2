@@ -9,6 +9,7 @@ use App\Models\SolicitudEmpleo;
 use App\Services\CVTextExtractor; // Incluir el servicio
 use Illuminate\Support\Facades\Http; // Usado para ambas APIs (OpenAI y Gemini)
 use Illuminate\Support\Facades\Log; // Importar Log para el manejo de errores
+use App\Models\Puesto_Disponible;
 
 class PostulanteController extends Controller
 {
@@ -23,10 +24,11 @@ class PostulanteController extends Controller
     // Mostrar todos los postulantes
     public function index()
     {
-        // $postulantes = Postulante::all(); // Obtener todos los postulantes
-        $postulantes = Postulante::where('tenant_id', tenant('id'))->get();
+        $postulantes = Postulante::where('tenant_id', tenant('id'))
+            ->orderByDesc('puntuacion') // 🔹 Ordenar de mayor a menor
+            ->get();
 
-        return view('postulantes.index', compact('postulantes')); // Pasar los postulantes a la vista
+        return view('postulantes.index', compact('postulantes'));
     }
 
 
@@ -38,13 +40,13 @@ class PostulanteController extends Controller
 
     // Crear un nuevo postulante con archivo CV
     public function store(Request $request)
-    {
+    {   //dd($request);
         $request->validate([
             'nombres' => 'required|string',
             'apellidos' => 'required|string',
             'email' => 'required|email|unique:postulantes',
             'telefono' => 'required|string',
-            'cv' => 'nullable|file|mimes:pdf,doc,docx|max:10240', // Validación del archivo
+            // 'cv' => 'nullable|file|mimes:pdf,doc,docx|max:10240', // Validación del archivo
             'skills' => 'nullable|string', // Validación del campo skills (ahora es solo texto)
             'experiencia_anios' => 'nullable|integer'
         ]);
@@ -74,8 +76,8 @@ class PostulanteController extends Controller
         // ************************
 
         // Crear el postulante en la base de datos
-        $postulante = Postulante::create([
-            'tenant_id'   => tenant('id'),
+        Postulante::create([
+            'tenant_id'   => $tenant_id,
             'nombres' => $request->nombres,
             'apellidos' => $request->apellidos,
             'email' => $request->email,
@@ -88,7 +90,8 @@ class PostulanteController extends Controller
             'ai_suggested_job' => $puestoSugerido
         ]);
 
-        return redirect()->route('postulantes.index')->with('success', 'Postulante creado exitosamente.');
+        return redirect()->route('puesto_disponible.ver', $puesto->id)
+            ->with('success', 'Tu postulación fue enviada correctamente.');
     }
 
     /**
@@ -328,5 +331,107 @@ class PostulanteController extends Controller
 
         $postulante->delete(); // Eliminar el postulante
         return redirect()->route('postulantes.index')->with('success', 'Postulante eliminado exitosamente.');
+    }
+
+
+    public function guardar(Request $request, $id)
+    {
+        $request->validate([
+            'nombres' => 'required|string',
+            'apellidos' => 'required|string',
+            'email' => 'required|email|unique:postulantes',
+            'telefono' => 'required|string',
+            'cv' => 'nullable|file|mimes:pdf,doc,docx|max:10240', // Validación del archivo
+            'skills' => 'nullable|string', // Validación del campo skills (ahora es solo texto)
+            'experiencia_anios' => 'nullable|integer'
+        ]);
+
+        $puesto = Puesto_Disponible::findOrFail($id);
+        // Convertir el campo 'skills' en un array JSON
+        $skills = $request->skills ? explode(',', $request->skills) : [];
+
+        // Inicializar variables para la ruta y URL
+        $cvPath = null; // Ruta relativa en el disco (ej: 'cv/nombre.pdf')
+        $cvUrl = null;  // URL pública (ej: 'http://localhost/storage/cv/nombre.pdf')
+
+        if ($request->hasFile('cv')) {
+            $cvPath = $request->file('cv')->store('cv', 'public'); // Subir a storage/app/public/cv
+            $cvFileName = basename($cvPath); // Solo el nombre del archivo, ej: 2OdDbPEazyqNqNmFAi9BrrQsnp751bnPK4avQHoo.pdf
+        }
+
+        // Extraer texto del CV (CORRECCIÓN: Se pasa $cvPath - la ruta relativa)
+        $cvText = '';
+        if ($cvPath) { // Verificar si el archivo fue subido
+            $cvText = $this->extraerTextoDeCV($cvPath);
+        }
+        // 🧠 Obtener puntuación desde Gemini
+        $puntuacion = $this->calcularPuntuacionConGemini($cvText);
+        // *** LLAMADAS A GEMINI ***
+        //$habilidades = $this->analizarHabilidadesConGemini($cvText); // <-- Método con Gemini
+        //$puestoSugerido = $this->recomendarPuestoConGemini($cvText); // <-- Método con Gemini
+        // ************************
+        //dd($puntuacion);
+        // Crear el postulante en la base de datos
+        Postulante::create([
+            'tenant_id'   => $puesto->tenant_id,
+            'puesto_disponible_id' => $puesto->id,
+            'nombres' => $request->nombres,
+            'apellidos' => $request->apellidos,
+            'email' => $request->email,
+            'telefono' => $request->telefono,
+            'cv' => $cvFileName, // Guardar la URL del archivo
+            'skills' => json_encode($skills), // Guardar como JSON válido
+            'experiencia_anios' => $request->experiencia_anios,
+            'puntuacion'       => round(floatval($puntuacion), 2), // ✅ casteo a float y redondeo a 2 decimales
+            // NUEVO: Guardar los resultados de la IA
+            //'ai_skills' => $habilidades,
+        ]);
+        $puesto->postulado = $puesto->postulantes()->count() > 0 ? true : false;
+        $puesto->save();
+        return redirect()->route('puesto_disponibles')
+            ->with('success', 'Tu postulación fue enviada correctamente.');
+    }
+    public function calcularPuntuacionConGemini($cvText)
+    {
+        $apiKey = env('GEMINI_API_KEY');
+        $apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={$apiKey}";
+
+        // 🔹 Prompt modificado para pedir puntuación del 1 al 10 (con decimales permitidos)
+        $prompt = "Eres un reclutador experto. Evalúa el siguiente texto de un currículum (CV) y otorga una puntuación de **1 a 10**, donde 1 es muy débil y 10 es excelente. 
+    Considera factores como experiencia, claridad, redacción y habilidades profesionales. 
+    Responde únicamente con el número (por ejemplo: 8.5 o 9.0).
+    Texto del CV:
+    {$cvText}";
+
+        $payload = [
+            'contents' => [
+                [
+                    'role' => 'user',
+                    'parts' => [['text' => $prompt]]
+                ]
+            ],
+        ];
+
+        $response = Http::post($apiUrl, $payload);
+        $data = $response->json();
+
+        if ($response->successful() && isset($data['candidates'][0]['content']['parts'][0]['text'])) {
+            $puntuacionTexto = trim($data['candidates'][0]['content']['parts'][0]['text']);
+
+            // 🔹 Extraer solo el número (con posible decimal)
+            $puntuacion = floatval(preg_replace('/[^0-9.]/', '', $puntuacionTexto));
+
+            // 🔹 Validar que esté dentro del rango 1-10
+            //dd($puntuacion);
+            if ($puntuacion >= 1 && $puntuacion <= 10) {
+                return $puntuacion;
+            } else {
+                Log::warning('Gemini devolvió una puntuación fuera de rango', ['puntuacion' => $puntuacion]);
+                return null;
+            }
+        } else {
+            Log::error('Gemini Error al calcular puntuación', ['status' => $response->status(), 'response' => $data]);
+            return null;
+        }
     }
 }
