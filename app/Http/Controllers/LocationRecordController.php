@@ -15,6 +15,6 @@ class LocationRecordController extends Controller
         // Ordenamos por el más reciente primero
         $records = LocationRecord::orderBy('recorded_at', 'desc')->paginate(15);
 
-        return view('location_records.index', compact('records'));
+        return view('asistencia.index', compact('records'));
     }
 }

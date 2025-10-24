@@ -101,7 +101,7 @@ Route::middleware([
 
         // Ruta para ver los registros de ubicación en el dashboard
         Route::get('/location-records', [WebLocationRecordController::class, 'index'])
-            ->name('location-records.index');
+            ->name('asistencia.index');
     });
 
     require __DIR__ . '/auth.php';

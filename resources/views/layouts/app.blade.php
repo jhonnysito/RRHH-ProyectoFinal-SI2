@@ -96,8 +96,7 @@
 <body class="font-sans antialiased">
     <x-banner />
 
-    <div class="min-h-screen bg-gradient-to-r from-indigo-700 to-indigo-950">
-        @include('navigation-menu')
+    <div class="bg-gradient-to-r from-brand-light to-brand-dark"> @include('navigation-menu')
 
         <!-- Page Heading -->
         @if (isset($header))
