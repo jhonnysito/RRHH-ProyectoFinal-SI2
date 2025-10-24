@@ -139,15 +139,69 @@
                                 <td class="px-6 py-4">Recursos Humanos</td>
                                 <td class="px-6 py-4">Analista</td>
                                 <td class="px-6 py-4">Activo</td>
-                                <td class="px-6 py-4 space-x-2">
-                                    <button class="text-blue-600 hover:underline">Editar</button>
-                                    <button class="text-red-600 hover:underline">Eliminar</button>
-                                    <button class="text-green-600 hover:underline">Crear contrato</button>
-                                    <button class="text-gray-600 hover:underline">Ver contrato</button>
-                                    <button class="text-yellow-600 hover:underline">Ver información</button>
-                                    <button class="text-purple-600 hover:underline">Asignar horario</button>
-                                    <button class="text-indigo-600 hover:underline">Bitácora</button>
-                                </td>
+                                 @foreach ($empleados as $empleado)
+                               <td class="p-2 md:border md:border-grey-500 text-left block md:table-cell">
+    <div class="relative inline-block text-left">
+        <button type="button"
+            class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-3 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+            id="menu-button" aria-expanded="true" aria-haspopup="true">
+            Acciones
+            <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                aria-hidden="true">
+                <path fill-rule="evenodd"
+                    d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 011.08 1.04l-4.25 4.25a.75.75 0 01-1.08 0L5.25 8.27a.75.75 0 01-.02-1.06z"
+                    clip-rule="evenodd" />
+            </svg>
+        </button>
+
+        <!-- Menú desplegable -->
+        <div class="hidden absolute right-0 mt-2 w-48 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg z-50"
+            id="dropdownMenu">
+            <div class="py-1">
+                @can('Editar Empleados')
+                    <a href="{{ route('empleados.editar', $empleado->usuario->id) }}"
+                        class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        ✏️ Editar
+                    </a>
+                @endcan
+
+                @can('Eliminar Empleados')
+                    <form id="formEliminar_{{ $empleado->usuario->id }}"
+                        action="{{ route('empleados.eliminar', $empleado->usuario->id) }}" method="POST">
+                        @csrf
+                        <button type="button"
+                            onclick="confirmarEliminacion('{{ $empleado->usuario->id }}')"
+                            class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            🗑️ Eliminar
+                        </button>
+                    </form>
+                @endcan
+
+                @can('Inicio Informacion Personal')
+                    <a href="{{ route('informacionpersonal.inicio', $empleado->usuario->id) }}"
+                        class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        📄 Información
+                    </a>
+                @endcan
+
+                @can('Inicio Bitacoras')
+                    <a href="{{ route('bitacoras.inicio', $empleado->usuario->id) }}"
+                        class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        📘 Bitácora
+                    </a>
+                @endcan
+
+                @can('Asignar Horarios')
+                    <a href="{{ route('empleados.inicioH', $empleado->usuario->id) }}"
+                        class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        ⏰ Horario
+                    </a>
+                @endcan
+            </div>
+        </div>
+    </div>
+</td>
+@endforeach
                             </tr>
                         </tbody>
                     </table>

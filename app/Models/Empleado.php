@@ -28,7 +28,7 @@ class Empleado extends Model
         'departamento_id',
         'direccion',
         'telefono',
-        'email',
+        'correo',
         'estado',
     ];
 
@@ -75,7 +75,7 @@ class Empleado extends Model
      */
     public function scopeActivos($query)
     {
-        return $query->where('estado', 'activo');
+        return $query->where('estado', 'Activo');
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Models\Empleado;
 use App\Models\Departamento; 
 use Spatie\Permission\Models\Role;
 use App\Models\Cargo; 
+
 class EmpleadoController extends Controller
 
 {
@@ -16,6 +17,7 @@ class EmpleadoController extends Controller
     public function index(Request $request)
     {
         // Obtenemos los parámetros enviados por el formulario de filtros
+        $empleados = Empleado::with('usuario')->get();
         $buscar = $request->input('buscar');
         $departamento = $request->input('departamento');
         $estado = $request->input('estado');
@@ -69,27 +71,28 @@ class EmpleadoController extends Controller
     /**
      * Guarda un nuevo empleado en la base de datos.
      */
-    public function store(Request $request)
+        public function store(Request $request)
     {
         // Validamos los campos del formulario
         $validated = $request->validate([
-            'nombre' => 'required|string|max:100',
-            'apellido' => 'required|string|max:100',
-            'ci' => 'required|string|max:20|unique:empleado,ci',
-            'cargo' => 'required|string|max:100',
-            'departamento' => 'nullable|string|max:100',
+            'nombre_completo' => 'required|string|max:100',
+            'ci' => 'required|string|max:20|unique:empleados,ci',
+            //'ci' => 'required|string|max:20',
+            'cargo_id' => 'required|exists:cargos,id', 
+            'departamento_id' => 'required|exists:departamentos,id', 
             'direccion' => 'nullable|string|max:200',
             'telefono' => 'nullable|string|max:20',
-            'email' => 'nullable|email|max:100',
+            'correo' => 'nullable|email|max:100|unique:empleados,correo', 
             'estado' => 'required|in:activo,inactivo',
         ]);
 
+
+        $validated['tenant_id'] = tenant('id');
         // Creamos el empleado
         Empleado::create($validated);
 
         return redirect()->route('empleados.index')->with('success', 'Empleado registrado correctamente.');
     }
-
     /**
      * Muestra el formulario de edición de un empleado.
      */

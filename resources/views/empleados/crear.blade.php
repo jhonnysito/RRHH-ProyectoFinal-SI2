@@ -18,6 +18,8 @@
     </head>
     <form action="{{ route('empleados.guardar') }}" method="POST" enctype="multipart/form-data">
         @csrf
+         <input type="hidden" name="estado" value="Activo">
+          
         <div class="bg-gradient-to-r from-indigo-700 to-indigo-950 p-8">
             <!-- Cuadro exterior con fondo azul marino y relleno de 8 unidades -->
             <div class="bg-gray-100 p-4 overflow-hidden shadow-xl sm:rounded-lg m-5 ">
@@ -33,10 +35,10 @@
                                     class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
                                     <i class="fa-solid fa-user text-gray-400 text-lg"></i>
                                 </div>
-                                <input id= "name" type="text" name="name"
+                                <input id= "nombre_completo" type="text" name="nombre_completo"
                                     class="w-full -ml-10 pl-10 pr-3 py-2 rounded-2xl border-2 border-gray-200 outline-none focus:border-indigo-500"
-                                    placeholder="Ingresar nombre" value="{{ old('name') }}">
-                                @error('name')
+                                    placeholder="Ingresar nombre completo" value="{{ old('nombre_completo') }}">
+                                @error('nambre_completo')
                                     <strong class = "text-red-500">{{ $message }}</strong>
                                 @enderror
                             </div>
@@ -64,10 +66,10 @@
                                     class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
                                     <i class="fa-solid fa-house text-gray-400 text-lg"></i>
                                 </div>
-                                <input id= "email" type="email" name="email"
+                                <input id= "correo" type="email" name="correo"
                                     class="w-full -ml-10 pl-10 pr-3 py-2 rounded-2xl border-2 border-gray-200 outline-none focus:border-indigo-500"
-                                    placeholder="Ingresar Correo Electrónico" value="{{ old('email') }}">
-                                @error('email')
+                                    placeholder="Ingresar Correo Electrónico" value="{{ old('correo') }}">
+                                @error('correo')
                                     <strong class = "text-red-500">{{ $message }}</strong>
                                 @enderror
                             </div>
@@ -134,7 +136,7 @@
                                             class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
                                             <i class="fa-regular fa-registered"></i>
                                         </div>
-                                        <select name="ID_Departamento" id="ID_Departamento"
+                                        <select name="departamento_id" id="departamento_id"
                                             class="w-full -ml-10 pl-10 pr-3 py-2 rounded-2xl border-2 border-gray-200 outline-none focus:border-indigo-500">
                                             <option value="">Selecciona el Departamento</option>
                                             @foreach ($departamentos as $departamento)
@@ -143,7 +145,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    @error('ID_Departamento')
+                                    @error('departamento_id')
                                         <strong class = "text-red-500">Debe seleccionar el Departamento</strong>
                                     @enderror
                                 </div>
@@ -179,7 +181,7 @@
                                             class="w-10 z-10 pl-1 text-center pointer-events-none flex items-center justify-center">
                                             <i class="fa-regular fa-registered"></i>
                                         </div>
-                                        <select name="ID_Cargo" id="ID_Cargo"
+                                        <select name="cargo_id" id="cargo_id"
                                             class="w-full -ml-10 pl-10 pr-3 py-2 rounded-2xl border-2 border-gray-200 outline-none focus:border-indigo-500">
                                             <option value="">Selecciona el Cargo</option>
                                             @foreach ($cargos as $cargo)
@@ -189,7 +191,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    @error('ID_Cargo')
+                                    @error('cargo_id')
                                         <strong class = "text-red-500">Debe seleccionar el Cargo</strong>
                                     @enderror
                                 </div>
@@ -260,9 +262,9 @@
             // Obtiene el contenedor de cargos
             const cargoContainer = document.getElementById('cargo-container');
             // Obtiene el select de departamento
-            const departamentoSelect = document.getElementById('ID_Departamento');
+            const departamentoSelect = document.getElementById('departamento_id');
             // Obtiene todos los options de cargos
-            const cargoOptions = cargoContainer.querySelectorAll('option');
+            const cargoOptions = cargoContainer.querySelectorAll('#cargo_id option');
 
             // Agrega un evento change al select de departamento
             departamentoSelect.addEventListener('change', function() {
