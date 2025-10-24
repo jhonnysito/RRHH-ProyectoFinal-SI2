@@ -18,6 +18,9 @@ use App\Http\Controllers\EmpleadoController;
 
 use App\Http\Controllers\PostulanteController;
 use App\Http\Controllers\SolicitudEmpleoController;
+
+use App\Http\Controllers\Api\LocationRecordController;
+use App\Http\Controllers\LocationRecordController as WebLocationRecordController;
 /*
 |--------------------------------------------------------------------------
 | Tenant Routes
@@ -94,6 +97,11 @@ Route::middleware([
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+        // Ruta para ver los registros de ubicación en el dashboard
+        Route::get('/location-records', [WebLocationRecordController::class, 'index'])
+            ->name('location-records.index');
     });
 
     require __DIR__ . '/auth.php';
@@ -153,3 +161,7 @@ Route::post('/entrevistas/guardar', [App\Http\Controllers\EntrevistaController::
 
 Route::post('/entrevistas', [App\Http\Controllers\EntrevistaController::class, 'store'])
     ->name('entrevistas.store');
+// Ruta de API para que la app Flutter envíe los datos de ubicación
+Route::post('/api/location-records', [LocationRecordController::class, 'store'])
+    ->middleware([InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])
+    ->name('api.location-records.store');
