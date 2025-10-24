@@ -18,6 +18,9 @@ use App\Http\Controllers\EmpleadoController;
 
 use App\Http\Controllers\PostulanteController;
 use App\Http\Controllers\SolicitudEmpleoController;
+
+use App\Http\Controllers\Api\LocationRecordController;
+use App\Http\Controllers\LocationRecordController as WebLocationRecordController;
 /*
 |--------------------------------------------------------------------------
 | Tenant Routes
@@ -59,9 +62,9 @@ Route::middleware([
 
     //Ruta para loe empleados
     // Empleados
-     Route::get('/empleados', [EmpleadoController::class, 'index'])->name('empleados.index');
-     Route::get('/empleados/crear', [EmpleadoController::class, 'create'])->name('empleados.create');
-      Route::post('/empleados/guardar', [EmpleadoController::class, 'store'])->name('empleados.guardar');
+    Route::get('/empleados', [EmpleadoController::class, 'index'])->name('empleados.index');
+    Route::get('/empleados/crear', [EmpleadoController::class, 'create'])->name('empleados.create');
+    Route::post('/empleados/guardar', [EmpleadoController::class, 'store'])->name('empleados.guardar');
 
     // Ruta para la Bitácora
 
@@ -94,6 +97,11 @@ Route::middleware([
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+        // Ruta para ver los registros de ubicación en el dashboard
+        Route::get('/location-records', [WebLocationRecordController::class, 'index'])
+            ->name('location-records.index');
     });
 
     require __DIR__ . '/auth.php';
@@ -118,10 +126,10 @@ Route::middleware([
     Route::post('puesto_disponibles/guardar', [Puesto_DisponibleController::class, 'guardar'])->name('puesto_disponibles.guardar');
     Route::get('puesto_disponibles/editar/{id}', [Puesto_DisponibleController::class, 'editar'])->name('puesto_disponibles.editar');
     Route::put('puesto_disponibles/actualizar/{id}', [Puesto_DisponibleController::class, 'actualizar'])
-    ->name('puesto_disponibles.actualizar');
+        ->name('puesto_disponibles.actualizar');
     // Ver todos los puestos disponibles de la empresa
-Route::get('puesto_disponibles/empresa', [Puesto_DisponibleController::class, 'verDisponiblesEmpresa'])
-    ->name('puesto_disponibles.ver_empresa');
+    Route::get('puesto_disponibles/empresa', [Puesto_DisponibleController::class, 'verDisponiblesEmpresa'])
+        ->name('puesto_disponibles.ver_empresa');
 
     Route::post('puesto_disponibles/eliminar/{id}', [Puesto_DisponibleController::class, 'eliminar'])->name('puesto_disponibles.eliminar');
     Route::get('puesto_disponibles/disponibles', [Puesto_DisponibleController::class, 'disponibles'])
@@ -129,3 +137,9 @@ Route::get('puesto_disponibles/empresa', [Puesto_DisponibleController::class, 'v
 
     Route::get('puesto_disponibles/postularse/{idpuesto}', [Puesto_DisponibleController::class, 'postularse'])->name('puesto_disponibles.postularse');
 });
+
+
+// Ruta de API para que la app Flutter envíe los datos de ubicación
+Route::post('/api/location-records', [LocationRecordController::class, 'store'])
+    ->middleware([InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])
+    ->name('api.location-records.store');
