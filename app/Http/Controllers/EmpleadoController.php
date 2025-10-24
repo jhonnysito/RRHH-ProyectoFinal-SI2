@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Empleado; 
-use App\Models\Departamento; 
+use App\Models\Empleado;
+use App\Models\Departamento;
 use Spatie\Permission\Models\Role;
-use App\Models\Cargo; 
+use App\Models\Cargo;
+
 class EmpleadoController extends Controller
 
 {
@@ -27,8 +28,8 @@ class EmpleadoController extends Controller
         if ($buscar) {
             $query->where(function ($q) use ($buscar) {
                 $q->where('nombre', 'LIKE', "%{$buscar}%")
-                  ->orWhere('apellido', 'LIKE', "%{$buscar}%")
-                  ->orWhere('ci', 'LIKE', "%{$buscar}%");
+                    ->orWhere('apellido', 'LIKE', "%{$buscar}%")
+                    ->orWhere('ci', 'LIKE', "%{$buscar}%");
             });
         }
 
@@ -59,11 +60,11 @@ class EmpleadoController extends Controller
      */
     public function create()
     {
-    $departamentos = Departamento::all();
-    $roles = Role::all();
-    $cargos = Cargo::all();
+        $departamentos = Departamento::all();
+        $roles = Role::all();
+        $cargos = Cargo::all();
 
-    return view('empleados.crear', compact('departamentos', 'roles', 'cargos'));
+        return view('empleados.crear', compact('departamentos', 'roles', 'cargos'));
     }
 
     /**

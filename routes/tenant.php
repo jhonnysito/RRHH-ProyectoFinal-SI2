@@ -119,6 +119,7 @@ Route::middleware([
 
     Route::resource('postulantes', PostulanteController::class);
     Route::resource('solicitudes', SolicitudEmpleoController::class);
+    Route::post('/postulantes/{id}', [PostulanteController::class, 'guardar'])->name('postulantes.guardar');
 
     //puesto_disponibles
     Route::get('puesto_disponibles/inicio', [Puesto_DisponibleController::class, 'inicio'])->name('puesto_disponibles.inicio');
@@ -129,8 +130,16 @@ Route::middleware([
         ->name('puesto_disponibles.actualizar');
     // Ver todos los puestos disponibles de la empresa
     Route::get('puesto_disponibles/empresa', [Puesto_DisponibleController::class, 'verDisponiblesEmpresa'])
-        ->name('puesto_disponibles.ver_empresa');
-
+        ->name('puesto_disponibles');
+    // Ver detalle de un puesto disponible
+    Route::get('puesto_disponible/{id}', [Puesto_DisponibleController::class, 'verDetalle'])
+        ->name('puesto_disponible.ver');
+    // web/tenant.php
+    Route::get('puesto/{id}/postular', [Puesto_DisponibleController::class, 'postular'])
+        ->name('puesto.postular');
+    // Enviar formulario de postulación
+    Route::post('puesto/{id}/postular', [Puesto_DisponibleController::class, 'enviarPostulacion'])
+        ->name('puesto.enviarPostulacion');
     Route::post('puesto_disponibles/eliminar/{id}', [Puesto_DisponibleController::class, 'eliminar'])->name('puesto_disponibles.eliminar');
     Route::get('puesto_disponibles/disponibles', [Puesto_DisponibleController::class, 'disponibles'])
         ->name('puesto_disponibles.disponibles');
@@ -139,6 +148,19 @@ Route::middleware([
 });
 
 
+
+
+
+// Mostrar el formulario para programar entrevista
+Route::get('/entrevistas/crear/{postulante}', [App\Http\Controllers\EntrevistaController::class, 'crear'])
+    ->name('entrevistas.crear');
+
+// Guardar la entrevista en la base de datos
+Route::post('/entrevistas/guardar', [App\Http\Controllers\EntrevistaController::class, 'guardar'])
+    ->name('entrevistas.guardar');
+
+Route::post('/entrevistas', [App\Http\Controllers\EntrevistaController::class, 'store'])
+    ->name('entrevistas.store');
 // Ruta de API para que la app Flutter envíe los datos de ubicación
 Route::post('/api/location-records', [LocationRecordController::class, 'store'])
     ->middleware([InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])

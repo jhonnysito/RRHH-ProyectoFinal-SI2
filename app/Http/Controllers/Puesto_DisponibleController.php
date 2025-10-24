@@ -143,10 +143,14 @@ class Puesto_DisponibleController extends Controller
     }
     public function verDisponiblesEmpresa()
     {
-        // Obtener los puestos activos de la empresa (tenant actual)
+        // Obtener los puestos activos del tenant actual
+        $tenantId = tenant() ? tenant()->id : null;
+
         $puesto_disponibles = Puesto_Disponible::where('estado', 'Activo')
-            ->where('tenant_id', auth()->check() ? auth()->user()->tenant_id : null)
+            ->where('tenant_id', $tenantId)
             ->get();
+
+        //dd($puesto_disponibles); // Para depurar
 
         return view('puesto_disponibles.verPuestosDisponibles', compact('puesto_disponibles'));
     }
@@ -164,5 +168,48 @@ class Puesto_DisponibleController extends Controller
         $postulante->estado = null;
         $postulante->save();
         return redirect(route('puesto_disponibles.disponibles'))->with('actualizado', 'Has pustulado al puesto exitosamente');
+    }
+    public function verDetalle($id)
+    {
+        $puesto = Puesto_Disponible::findOrFail($id); // Trae el puesto por ID o falla
+
+        return view('puesto_disponibles.detalle', compact('puesto'));
+    }
+    public function postular($id)
+    {
+        $puesto = Puesto_Disponible::findOrFail($id);
+        // Aquí podrías mostrar un formulario para subir CV, datos de contacto, etc.
+        return view('puesto_disponibles.postular', compact('puesto'));
+    }
+
+
+    public function enviarPostulacion(Request $request, $id)
+    {
+        dd($request);
+        $request->validate([
+            'nombres' => 'required|string|max:255',
+            'apellidos' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'telefono' => 'nullable|string|max:50',
+           // 'cv' => 'required|file|mimes:pdf,doc,docx|max:2048',
+        ]);
+        
+        $puesto = Puesto_Disponible::findOrFail($id);
+
+        // Guardar el archivo CV
+        $cvPath = $request->file('cv')->store('public/cv');
+
+        // Crear un nuevo postulante
+        Postulante::create([
+            'tenant_id' => $puesto->tenant_id,
+            'nombres' => $request->nombres,
+            'apellidos' => $request->apellidos,
+            'email' => $request->email,
+            'telefono' => $request->telefono,
+            'cv' => $cvPath,
+        ]);
+
+        return redirect()->route('puesto_disponible.ver', $puesto->id)
+            ->with('success', 'Tu postulación fue enviada correctamente.');
     }
 }
