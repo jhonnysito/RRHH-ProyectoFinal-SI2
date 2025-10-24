@@ -8,7 +8,7 @@
                href="{{ route('puesto_disponibles.crear') }}">
                <i class="fa-solid fa-plus mr-1"></i> CREAR PUESTO DISPONIBLE
             </a>
-        </div>
+        </div> 
     </x-slot>
 
     <title>Puestos Disponibles</title>

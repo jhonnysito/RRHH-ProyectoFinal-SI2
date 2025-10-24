@@ -28,9 +28,17 @@
         <div class="mb-4">
             <strong class="text-gray-700">CV:</strong>
             @if ($postulante->cv)
-                <a href="{{ asset($postulante->cv) }}" class="text-blue-500" target="_blank">Ver CV</a>
+            <a href="{{ asset('cv/' . $postulante->cv) }}" target="_blank"
+                class="inline-flex items-center bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition">
+                📄 Ver CV
+            </a>
+
+            <a href="{{ asset('cv/' . $postulante->cv) }}" download
+                class="inline-flex items-center bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition ml-2">
+                ⬇️ Descargar CV
+            </a>
             @else
-                <span class="text-gray-500">No disponible</span>
+            <p class="text-gray-500">No se subió ningún CV.</p>
             @endif
         </div>
 
@@ -43,7 +51,12 @@
         <div class="mb-4">
             <strong class="text-gray-700">Años de Experiencia:</strong> {{ $postulante->experiencia_anios }}
         </div>
-
+        <div class="mt-6">
+             <a href="{{ route('entrevistas.crear', ['postulante' => $postulante->id]) }}"
+                class="inline-flex items-center bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
+                📅 Programar Entrevista
+            </a>
+        </div>
         <a href="{{ route('postulantes.index') }}" class="text-blue-600">Volver a la lista de postulantes</a>
     </div>
 

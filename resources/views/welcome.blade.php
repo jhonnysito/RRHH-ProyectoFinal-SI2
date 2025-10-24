@@ -20,10 +20,7 @@
                             <a href="{{ url('/dashboard') }}"
                                 class="text-gray-800 hover:text-purple-300 py-3 px-6">Dashboard</a>
                         </div>
-                        <div class="md:flex">
-                            <a href="{{ url('/dashboard') }}"
-                                class="text-gray-800 hover:text-purple-300 py-3 px-6">Dashboard</a>
-                        </div>
+                       
                         @else
                         <div class="flex justify-center md:justify-start gap-2">
                             <a href="{{ route('puestos') }}"
@@ -37,7 +34,7 @@
                             </a>
 
                             <!-- Nuevo botón: Ver puestos disponibles -->
-                            <a href="{{ route('puesto_disponibles.ver_empresa') }}"
+                            <a href="{{ route('puesto_disponibles') }}"
                                 class="bg-green-200 hover:bg-green-300 rounded-full uppercase text-sm md:text-base text-green-700 py-2 px-3 sm:py-3 sm:px-4 md:px-6 lg:px-8">
                                 Ver Puestos Disponibles
                             </a>
