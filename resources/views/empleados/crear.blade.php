@@ -38,7 +38,7 @@
                                 <input id= "nombre_completo" type="text" name="nombre_completo"
                                     class="w-full -ml-10 pl-10 pr-3 py-2 rounded-2xl border-2 border-gray-200 outline-none focus:border-indigo-500"
                                     placeholder="Ingresar nombre completo" value="{{ old('nombre_completo') }}">
-                                @error('nambre_completo')
+                                @error('nombre_completo')
                                     <strong class = "text-red-500">{{ $message }}</strong>
                                 @enderror
                             </div>
