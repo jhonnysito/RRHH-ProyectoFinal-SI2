@@ -1,7 +1,5 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h1 class="text-xl font-semibold">Gestión de Empleados</h1>
-    </x-slot>
+    
 
     <div class="min-h-screen bg-gray-100">
         {{-- aquí va todo tu contenido tal cual lo tienes --}}

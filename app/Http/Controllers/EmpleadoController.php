@@ -7,7 +7,7 @@ use App\Models\Empleado;
 use App\Models\Departamento; 
 use Spatie\Permission\Models\Role;
 use App\Models\Cargo; 
-
+use Illuminate\Validation\Rules\Password;
 class EmpleadoController extends Controller
 
 {
@@ -77,15 +77,19 @@ class EmpleadoController extends Controller
         $validated = $request->validate([
             'nombre_completo' => 'required|string|max:100',
             'ci' => 'required|string|max:20|unique:empleados,ci',
-            //'ci' => 'required|string|max:20',
+           'password' => ['required', Password::min(8)],
             'cargo_id' => 'required|exists:cargos,id', 
             'departamento_id' => 'required|exists:departamentos,id', 
             'direccion' => 'nullable|string|max:200',
             'telefono' => 'nullable|string|max:20',
             'correo' => 'nullable|email|max:100|unique:empleados,correo', 
             'estado' => 'required|in:activo,inactivo',
+            'roles' => 'required|array',
+            'ruta_imagen_e' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+          
 
+        
 
         $validated['tenant_id'] = tenant('id');
         // Creamos el empleado

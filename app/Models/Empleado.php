@@ -92,4 +92,8 @@ class Empleado extends Model
         }
         return $query;
     }
+        public function contratos()
+{
+    return $this->hasMany(Contrato::class);
+}
 }
