@@ -20,14 +20,18 @@ class RoleSeeder extends Seeder
          $rol2 = Role::create(['name' => 'Encargado']);
         $rol3 = Role::create(['name' => 'Postulante']);
         $rol4 = Role::create(['name' => 'Empleado']);
-
-    //Usuarios
+     
+    //Usuarios y Contratos
         Permission::create(['name' => 'Inicio Empleados'])->syncRoles([$rol1, $rol2]);
         Permission::create(['name' => 'Crear Empleados'])->syncRoles([$rol1, $rol2]);
         Permission::create(['name' => 'Guardar Empleados'])->syncRoles([$rol1, $rol2]);
         Permission::create(['name' => 'Eliminar Empleados'])->syncRoles([$rol1, $rol2]);
         Permission::create(['name' => 'Editar Empleados'])->syncRoles([$rol1, $rol2]);
         Permission::create(['name' => 'Actualizar Empleados'])->syncRoles([$rol1, $rol2]);
+
+        Permission::create(['name' => 'Crear Contrato'])->syncRoles([$rol1]);
+        Permission::create(['name' => 'Ver Contrato'])->syncRoles([$rol1, $rol2]);
+        Permission::create(['name' => 'Ver Empleado'])->syncRoles([$rol1, $rol2]);
 
         Permission::create(['name' => 'Asignar Horarios'])->syncRoles([$rol1, $rol2]);
         Permission::create(['name' => 'Asignar Horarios a Empleado'])->syncRoles([$rol1, $rol2]);

@@ -15,6 +15,7 @@ use App\Http\Controllers\CargoController;
 use App\Http\Controllers\Puesto_DisponibleController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\EmpleadoController;
+use App\Http\Controllers\ContratoController;
 
 use App\Http\Controllers\PostulanteController;
 use App\Http\Controllers\SolicitudEmpleoController;
@@ -60,13 +61,33 @@ Route::middleware([
         return view('dashboard');
     })->middleware(['auth', 'verified'])->name('dashboard');
 
-    //Ruta para loe empleados
+   
     // Empleados
     Route::get('/empleados', [EmpleadoController::class, 'index'])->name('empleados.index');
     Route::get('/empleados/crear', [EmpleadoController::class, 'create'])->name('empleados.create');
     Route::post('/empleados/guardar', [EmpleadoController::class, 'store'])->name('empleados.guardar');
 
-    // Ruta para la Bitácora
+      Route::get('/empleados/info/{id}', [EmpleadoController::class, 'info'])
+    ->name('empleados.info');
+
+
+       // Vista para crear contrato de un empleado específico
+      Route::get('/empleados/{empleado}/contrato', [ContratoController::class, 'create'])
+    ->name('empleados.contrato.create');
+
+   //  Route::get('/contratos/crear/{empleado}', [ContratoController::class, 'crear'])
+       // ->name('contratos.crear');
+
+   // Route::get('/contratos/{empleado}', [ContratoController::class, 'ver'])
+        //->name('contratos.ver');
+
+   //  Route::post('/empleados/contrato', [ContratoController::class, 'store'])
+   // ->name('empleados.contrato.store');
+    Route::prefix('contratos')->group(function () {
+    Route::get('/crear/{empleado_id}', [ContratoController::class, 'create'])->name('contratos.crear');
+    Route::post('/store', [ContratoController::class, 'store'])->name('contratos.store');
+    Route::get('/ver/{empleado_id}', [ContratoController::class, 'ver'])->name('contratos.ver');
+});
 
     //Bitacora
     Route::get('/bitacoras/inicio/{id}', [BitacoraController::class, 'inicio'])->name('bitacora.inicio');

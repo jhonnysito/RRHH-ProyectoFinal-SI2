@@ -54,4 +54,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Bitacora::class, 'ID_Usuario');
     }
+    public function empleado()
+{
+    return $this->hasOne(Empleado::class, 'user_id');
+}
+
 }

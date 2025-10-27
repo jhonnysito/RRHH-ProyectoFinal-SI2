@@ -8,7 +8,11 @@
 
                 </a>
                 <div class="ml-4">
-                    <h2 class="text-md font-bold">{{ Auth::user()->name }}</h2>
+                    @auth
+    <h2 class="text-md font-bold">{{ Auth::user()->name }}</h2>
+@else
+    <h2 class="text-md font-bold">Invitado</h2>
+@endauth
                     <p class="text-gray-400 text-[12px]">
                         @if (Auth::user()->empleado && Auth::user()->empleado->cargo)
                             {{ Auth::user()->empleado->cargo->nombre }}
