@@ -4,11 +4,13 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+
 return new class extends Migration
 {
     public function up(): void
     {
         Schema::create('empleados', function (Blueprint $table) {
+           
             $table->id();
             $table->string('nombre_completo');
             $table->string('correo')->unique();
@@ -17,7 +19,11 @@ return new class extends Migration
             $table->string('ci')->nullable();
             $table->foreignId('departamento_id')->constrained()->onDelete('cascade');
             $table->foreignId('cargo_id')->constrained()->onDelete('cascade');
-            $table->enum('estado', ['Activo', 'Inactivo'])->default('Activo');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->string('password')->nullable();
+            $table->enum('estado', ['activo', 'Inactivo'])->default('activo');
             $table->string('tenant_id');
 
             $table->timestamps();
