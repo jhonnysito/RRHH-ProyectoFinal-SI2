@@ -1,0 +1,9 @@
+1 )para que se enlace bien la app con el backend de laravel debe usarse este comando : 
+
+php artisan serve --host=0.0.0.0 --port=8000
+
+2 ) EN LA BASE DE DATOS DEBE EJECUTARSE ESTO EN QUERY TOOL 
+para que traduzca bien el dominio la app:
+
+INSERT INTO domains (domain, tenant_id, created_at, updated_at)
+VALUES ('empresa1.192.168.0.184.nip.io', 'empresa1', now(), now());
