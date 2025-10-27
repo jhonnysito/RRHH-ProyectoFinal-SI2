@@ -13,7 +13,9 @@ class ContratoController extends Controller
 {
     public function create($empleado_id)
     {
-      $empleado = Empleado::where('tenant_id', tenant('id'))->findOrFail($empleado_id);
+        $empleado = Empleado::with(['cargo', 'departamento'])
+        ->where('tenant_id', tenant('id'))
+        ->findOrFail($empleado_id);
         return view('empleados.contrato', compact('empleado'));
     }
 
@@ -27,7 +29,7 @@ class ContratoController extends Controller
             'tipo' => 'required|in:Indefinido,Anual,Temporal',
             'observaciones' => 'nullable|string',
         ]);
-
+       
         $tenant_id = Auth::user()->tenant_id;
 
         $contrato = Contrato::create([
@@ -35,7 +37,7 @@ class ContratoController extends Controller
             'sueldo' => $request->sueldo,
             'fecha_inicio' => $request->fecha_inicio,
             'fecha_fin' => $request->fecha_fin,
-            'tipo' => $request->tipo_contrato,
+            'tipo' => $request->tipo,
             'observaciones' => $request->observaciones,
             'tenant_id' => $tenant_id,
         ]);
@@ -47,5 +49,12 @@ class ContratoController extends Controller
         }
 
         return redirect()->route('empleados.index')->with('success', 'Contrato creado y enviado al correo del empleado.');
+    }
+
+    public function ver($empleado_id)
+    {
+         $empleado = Empleado::with(['cargo', 'departamento', 'contratos'])
+        ->findOrFail($empleado_id);
+        return view('empleados.ver_contrato', compact('empleado'));
     }
 }

@@ -18,7 +18,27 @@
     </head>
     <form action="{{ route('empleados.guardar') }}" method="POST" enctype="multipart/form-data">
         @csrf
-         <input type="hidden" name="estado" value="Activo">
+ @if ($errors->any())
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative m-5" role="alert">
+                <strong class="font-bold">¡Error de validación!</strong>
+                <span class="block sm:inline">Por favor, corrige los siguientes errores:</span>
+                <ul class="list-disc list-inside mt-2">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        
+        <!-- También muestra el error general si la transacción falló (si la usas) -->
+        @if (session('error'))
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative m-5" role="alert">
+                <strong class="font-bold">¡Error!</strong>
+                <span class="block sm:inline">{{ session('error') }}</span>
+            </div>
+        @endif
+
+         <input type="hidden" name="estado" value="activo">
           
         <div class="bg-gradient-to-r from-indigo-700 to-indigo-950 p-8">
             <!-- Cuadro exterior con fondo azul marino y relleno de 8 unidades -->
@@ -243,8 +263,8 @@
                             }
                         };
                     </script>
-
-
+           
+                    <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
                     <div class="flex -mx-3 pt-9">
                         <div class="w-full px-3 mb-5">
                             <button type ="submit" id="registrar"
