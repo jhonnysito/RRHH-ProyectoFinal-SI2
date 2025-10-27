@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Facades\Hash;
 class Empleado extends Model
 {
     use HasFactory;
@@ -21,15 +21,17 @@ class Empleado extends Model
      */
     protected $fillable = [
         'tenant_id',
-        'nombre',
-        'apellido',
+        'nombre_completo',
         'ci',
+        'password',
         'cargo_id',
         'departamento_id',
         'direccion',
         'telefono',
-        'email',
+        'correo',
         'estado',
+        'user_id',
+         'ruta_imagen_e',
     ];
 
     
@@ -66,7 +68,20 @@ class Empleado extends Model
      */
     public function getNombreCompletoAttribute()
     {
-        return "{$this->nombre} {$this->apellido}";
+       if (!empty($this->attributes['nombre_completo'])) {
+        return $this->attributes['nombre_completo'];
+    }
+
+    // Si no, intentar concatenar nombre + apellido (por compatibilidad)
+    $nombre = $this->attributes['nombre'] ?? null;
+    $apellido = $this->attributes['apellido'] ?? null;
+
+    if ($nombre || $apellido) {
+        return trim("{$nombre} {$apellido}");
+    }
+
+    // Fallback
+    return null;
     }
 
     /**
@@ -75,7 +90,7 @@ class Empleado extends Model
      */
     public function scopeActivos($query)
     {
-        return $query->where('estado', 'activo');
+        return $query->where('estado', 'Activo');
     }
 
     /**
@@ -92,4 +107,15 @@ class Empleado extends Model
         }
         return $query;
     }
+        public function contratos()
+{
+    return $this->hasMany(Contrato::class);
+}
+public function usuario()
+{
+    return $this->belongsTo(User::class, 'user_id');
+}
+
+
+
 }

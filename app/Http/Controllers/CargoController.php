@@ -12,14 +12,16 @@ class CargoController extends Controller
     public function index()
     {
         //$cargos = Cargo::all();
-        $cargos = Cargo::with('departamento')->get();
+        $cargos = Cargo::with('departamento')
+        ->where('tenant_id', tenant('id'))
+        ->get();
 
         return view('cargos.index', compact('cargos'));
     }
 
     public function create()
     {
-        $departamentos = Departamento::all(); // para el select
+        $departamentos = Departamento::where('tenant_id', tenant('id'))->get();
         return view('cargos.create', compact('departamentos'));
     
 
@@ -35,7 +37,12 @@ class CargoController extends Controller
             'departamento_id' => 'required|exists:departamentos,id',
         ]);
 
-        Cargo::create($request->only(['nombre', 'descripcion', 'departamento_id']));
+       Cargo::create([
+        'tenant_id'       => tenant('id'), 
+        'nombre'          => $request->nombre,
+        'descripcion'     => $request->descripcion,
+        'departamento_id' => $request->departamento_id,
+    ]);
 
         return redirect()->route('cargos.index')
                          ->with('success', '✅ Cargo creado correctamente.');
@@ -43,22 +50,10 @@ class CargoController extends Controller
 
     public function edit(Cargo $cargo)
     {
-        $departamentos = Departamento::all();
+      $departamentos = Departamento::where('tenant_id', tenant('id'))->get();
         return view('cargos.edit', compact('cargo', 'departamentos'));
     }
-/*
-    public function update(Request $request, Cargo $cargo)
-    {
-        $request->validate([
-            'nombre' => 'required|max:255|unique:cargos,nombre,' . $cargo->id,
-            'descripcion' => 'nullable|string',
-        ]);
 
-        $cargo->update($request->only(['nombre', 'descripcion']));
-
-        return redirect()->route('cargos.index')
-                         ->with('success', '✏️ Cargo actualizado correctamente.');
-    }*/
     // Actualizar cargo existente
     public function update(Request $request, Cargo $cargo)
     {
