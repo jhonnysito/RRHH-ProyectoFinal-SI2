@@ -13,8 +13,30 @@ class Puesto_Disponible extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'nombre', 
-        'informacion', 
-        'disponible', 
+        'nombre',
+        'area',
+        'descripcion',
+        'requisitos',
+        'tipo_contrato',
+        'modalidad',
+        'nivel',
+        'salario',
+        'ubicacion',
+        'vacantes',
+        'fecha_limite',
+        'estado',
+        'beneficios',
+        'tenant_id',
+        'postulado', // <-- agregar aquí
     ];
+
+    // Relación con Tenant (si usas Tenancy)
+    public function tenant()
+    {
+        return $this->belongsTo(Tenant::class);
+    }
+    public function postulantes()
+    {
+        return $this->hasMany(Postulante::class, 'puesto_disponible_id');
+    }
 }

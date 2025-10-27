@@ -12,22 +12,32 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('postulantes', function (Blueprint $table) {
-            $table->id(); // ID del postulante
-            $table->string('nombres'); // Nombres del postulante
-            $table->string('apellidos'); // Apellidos del postulante
-            $table->string('email')->unique(); // Email único
-            $table->string('telefono'); // Teléfono
-            $table->string('cv')->nullable(); // URL del CV (puede ser nulo si no se sube un archivo)
-            $table->json('skills')->nullable(); // Habilidades en formato JSON
-            $table->integer('experiencia_anios')->default(0); // Años de experiencia
-
-            $table->text('ai_skills')->nullable();          // Habilidades extraídas por IA
-            $table->string('ai_suggested_job')->nullable(); // Puesto sugerido por IA
-
+            $table->id();
+            $table->string('nombres');
+            $table->string('apellidos');
+            $table->string('email')->unique();
+            $table->string('telefono');
+            $table->string('cv')->nullable();
+            $table->json('skills')->nullable();
+            $table->integer('experiencia_anios')->default(0);
+            $table->text('ai_skills')->nullable();
             $table->string('tenant_id');
+            $table->decimal('puntuacion', 5, 2)->nullable()->comment('Puntuación del postulante generada por IA');
+
+            // 🔹 Campo de relación con puestos
+            $table->foreignId('puesto_disponible_id')
+                ->constrained('puestos_disponibles')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
 
             $table->timestamps();
-            $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
+
+            // Relación con tenant
+            $table->foreign('tenant_id')
+                ->references('id')
+                ->on('tenants')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 

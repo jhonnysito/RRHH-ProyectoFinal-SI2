@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Puesto_Disponible;
 
 class Postulante extends Model
 {
@@ -11,6 +12,7 @@ class Postulante extends Model
 
     // Los campos que pueden ser asignados masivamente
     protected $fillable = [
+        'tenant_id',
         'nombres',
         'apellidos',
         'email',
@@ -20,7 +22,8 @@ class Postulante extends Model
         'experiencia_anios',
         // --- CAMPOS DE IA AÑADIDOS ---
         'ai_skills',
-        'ai_suggested_job',
+        'puntuacion',
+        'puesto_disponible_id'
         // -----------------------------
     ];
 
@@ -28,5 +31,9 @@ class Postulante extends Model
     public function solicitudes()
     {
         return $this->hasMany(SolicitudEmpleo::class);
+    }
+     public function puesto()
+    {
+        return $this->belongsTo(Puesto_Disponible::class, 'puesto_disponible_id');
     }
 }

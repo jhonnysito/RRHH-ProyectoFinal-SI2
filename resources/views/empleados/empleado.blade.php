@@ -1,36 +1,9 @@
 <x-app-layout>
     <div class="min-h-screen bg-gray-100">
-        {{-- Barra superior con notificaciones y perfil --}}
-        <div class="flex justify-between items-center bg-white shadow p-4">
-            <h1 class="text-xl font-semibold">Gestión de Empleados</h1>
-            <div class="flex items-center space-x-4">
-                {{-- Icono de campana --}}
-                <button class="relative focus:outline-none">
-                    <i class="fa fa-bell text-gray-600 text-xl"></i>
-                    <span
-                        class="absolute top-0 right-0 inline-flex items-center justify-center px-1 py-0.5 text-xs font-bold leading-none text-white bg-red-500 rounded-full">3</span>
-                </button>
+        {{-- aquí va todo tu contenido tal cual lo tienes --}}
+        <div class="min-h-screen bg-gray-100">
+            {{-- Barra superior con notificaciones y perfil --}}
 
-                {{-- Menú de perfil --}}
-                <div x-data="{ open: false }" class="relative">
-                    <button @click="open = !open" class="flex items-center space-x-2 focus:outline-none">
-                        <img src="{{ asset('images/user.png') }}" alt="Admin" class="w-8 h-8 rounded-full">
-                        <span class="text-gray-700 font-medium">Administrador</span>
-                    </button>
-                    <div x-show="open" @click.away="open = false"
-                        class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2">
-                        <a href="{{ route('profile.edit') }}"
-                            class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Perfil</a>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                Cerrar sesión
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         {{-- Contenido principal --}}
         <div class="max-w-7xl mx-auto py-6 px-4">
