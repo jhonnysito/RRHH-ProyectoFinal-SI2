@@ -7,6 +7,10 @@ use App\Models\Empleado;
 use App\Models\Departamento;
 use Spatie\Permission\Models\Role;
 use App\Models\Cargo;
+use App\Models\Contrato;
+use App\Models\User;
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Hash;
 
 class EmpleadoController extends Controller
 
@@ -71,54 +75,54 @@ class EmpleadoController extends Controller
     /**
      * Guarda un nuevo empleado en la base de datos.
      */
-        public function store(Request $request)
+    public function store(Request $request)
     {
-       //dd($request->all());
+        //dd($request->all());
         // Validamos los campos del formulario
         $validated = $request->validate([
             'nombre_completo' => 'required|string|max:100',
             'ci' => 'required|string|max:20|unique:empleados,ci',
-           'password' => ['required', Password::min(8)],
-            'cargo_id' => 'required|exists:cargos,id', 
-            'departamento_id' => 'required|exists:departamentos,id', 
+            'password' => ['required', Password::min(8)],
+            'cargo_id' => 'required|exists:cargos,id',
+            'departamento_id' => 'required|exists:departamentos,id',
             'direccion' => 'nullable|string|max:200',
             'telefono' => 'nullable|string|max:20',
-            'correo' => 'nullable|email|max:100|unique:empleados,correo', 
+            'correo' => 'nullable|email|max:100|unique:empleados,correo',
             'estado' => 'required|in:activo,inactivo',
             'roles' => 'required|array',
             'ruta_imagen_e' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
 
         ]);
-          
-         // 1️⃣ Crear el usuario relacionado
-        $user = User::create([
-        'name' => $request['nombre_completo'],
-        'email' => $request['correo'],
-        'password' => Hash::make($request['password']),
-        'tenant_id' => tenant('id'),
-    ]);
 
-          $imagePath = null;
+        // 1️⃣ Crear el usuario relacionado
+        $user = User::create([
+            'name' => $request['nombre_completo'],
+            'email' => $request['correo'],
+            'password' => Hash::make($request['password']),
+            'tenant_id' => tenant('id'),
+        ]);
+
+        $imagePath = null;
         if ($request->hasFile('ruta_imagen_e')) {
             // Guarda la imagen en 'storage/app/public/fotos_empleados'
             $imagePath = $request->file('ruta_imagen_e')->store('fotos_empleados', 'public');
         }
-        
-       // $data['tenant_id'] = auth()->User()->tenant_id;
+
+        // $data['tenant_id'] = auth()->User()->tenant_id;
         $validated['tenant_id'] = tenant('id');
         // Creamos el empleado
-       Empleado::create([
-        'nombre_completo' => $validated['nombre_completo'],
-        'ci' => $validated['ci'],
-        'cargo_id' => $validated['cargo_id'],
-        'departamento_id' => $validated['departamento_id'],
-        'direccion' => $validated['direccion'] ?? null,
-        'telefono' => $validated['telefono'] ?? null,
-        'correo' => $validated['correo'],
-        'estado' => strtolower($validated['estado']),
-        'tenant_id' => tenant('id'),
-        'user_id' => $user->id,
-    ]);
+        Empleado::create([
+            'nombre_completo' => $validated['nombre_completo'],
+            'ci' => $validated['ci'],
+            'cargo_id' => $validated['cargo_id'],
+            'departamento_id' => $validated['departamento_id'],
+            'direccion' => $validated['direccion'] ?? null,
+            'telefono' => $validated['telefono'] ?? null,
+            'correo' => $validated['correo'],
+            'estado' => strtolower($validated['estado']),
+            'tenant_id' => tenant('id'),
+            'user_id' => $user->id,
+        ]);
 
         return redirect()->route('empleados.index')->with('success', 'Empleado registrado correctamente.');
     }
@@ -127,14 +131,32 @@ class EmpleadoController extends Controller
      */
     public function edit($id)
     {
-     $empleado = Empleado::with('usuario', 'cargo', 'departamento')->findOrFail($id);
-    $roles = Role::all(); // Si usas spatie/laravel-permission
-    $departamentos = Departamento::all();
-    $cargos = Cargo::all();
+        $empleado = Empleado::with('usuario', 'cargo', 'departamento')->findOrFail($id);
+        $roles = Role::all(); // Si usas spatie/laravel-permission
+        $departamentos = Departamento::all();
+        $cargos = Cargo::all();
 
-    return view('empleados.editar', compact('empleado', 'roles', 'departamentos', 'cargos'));
+        return view('empleados.editar', compact('empleado', 'roles', 'departamentos', 'cargos'));
     }
+    public function ver($empleado_id)
+    {
+        // Buscar el empleado
+        $empleado = Empleado::find($empleado_id);
 
+        if (!$empleado) {
+            abort(404, 'Empleado no encontrado');
+        }
+
+        // Buscar el contrato asociado a ese empleado
+        $contrato = Contrato::where('empleado_id', $empleado_id)->first();
+
+        if (!$contrato) {
+            abort(404, 'Contrato no encontrado para este empleado');
+        }
+
+        // Retornar la vista con los datos
+        return view('empleados.ver_contrato', compact('empleado', 'contrato'));
+    }
     /**
      * Actualiza un empleado existente.
      */
@@ -144,13 +166,13 @@ class EmpleadoController extends Controller
 
         $validated = $request->validate([
             'nombre_completo' => 'required|string|max:100',
-             'roles' => 'required|array',
+            'roles' => 'required|array',
             'ci' => 'required|string|max:20|unique:empleado,ci,' . $empleado->id,
-           'cargo_id' => 'required|exists:cargos,id', 
-           'departamento_id' => 'required|exists:departamentos,id',
+            'cargo_id' => 'required|exists:cargos,id',
+            'departamento_id' => 'required|exists:departamentos,id',
             'direccion' => 'nullable|string|max:200',
             'telefono' => 'nullable|string|max:20',
-           'correo' => 'nullable|email|max:100|unique:empleados,correo',
+            'correo' => 'nullable|email|max:100|unique:empleados,correo',
             'estado' => 'required|in:activo,inactivo',
             'ruta_imagen_e' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'password' => ['required', Password::min(8)],
@@ -158,35 +180,35 @@ class EmpleadoController extends Controller
 
         // Actualizamos usuario vinculado
         $empleado->usuario->update([
-        'name' => $validated['name'],
-        'email' => $validated['email'],
-        'password' => $request->filled('password')
-        ? Hash::make($request->password)
-        : $empleado->usuario->password,
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => $request->filled('password')
+                ? Hash::make($request->password)
+                : $empleado->usuario->password,
 
         ]);
 
-         //Actualizar empleado
+        //Actualizar empleado
         $empleado->update([
-        'direccion' => $validated['direccion'] ?? null,
-        'telefono' => $validated['telefono'] ?? null,
-        'ci' => $validated['ci'],
-        'cargo_id' => $validated['cargo_id'],
-        'departamento_id' => $validated['departamento_id'],
-        'nombre_completo' => $validated['nombre_completo'],
-        'correo' => $validated['correo'],
-        'estado' => strtolower($validated['estado']),
+            'direccion' => $validated['direccion'] ?? null,
+            'telefono' => $validated['telefono'] ?? null,
+            'ci' => $validated['ci'],
+            'cargo_id' => $validated['cargo_id'],
+            'departamento_id' => $validated['departamento_id'],
+            'nombre_completo' => $validated['nombre_completo'],
+            'correo' => $validated['correo'],
+            'estado' => strtolower($validated['estado']),
 
         ]);
-        
+
         //  Actualizar roles
-    $empleado->usuario->syncRoles($validated['roles']);
+        $empleado->usuario->syncRoles($validated['roles']);
 
         // Imagen
-    if ($request->hasFile('ruta_imagen_e')) {
-        $imagePath = $request->file('ruta_imagen_e')->store('fotos_empleados', 'public');
-        $empleado->update(['ruta_imagen_e' => $imagePath]);
-    }
+        if ($request->hasFile('ruta_imagen_e')) {
+            $imagePath = $request->file('ruta_imagen_e')->store('fotos_empleados', 'public');
+            $empleado->update(['ruta_imagen_e' => $imagePath]);
+        }
 
         return redirect()->route('empleados.index')->with('success', 'Empleado actualizado correctamente.');
     }
@@ -197,7 +219,7 @@ class EmpleadoController extends Controller
     public function destroy($id)
     {
         $empleado = Empleado::findOrFail($id);
-          if ($empleado->usuario) {
+        if ($empleado->usuario) {
             $empleado->usuario->delete();
         }
 
@@ -206,8 +228,8 @@ class EmpleadoController extends Controller
         return redirect()->route('empleados.index')->with('success', 'Empleado eliminado correctamente.');
     }
     public function info($id)
-{
-    $empleado = Empleado::with(['departamento', 'cargo', 'usuario'])->findOrFail($id);
-    return view('empleados.info', compact('empleado'));
-}
+    {
+        $empleado = Empleado::with(['departamento', 'cargo', 'usuario'])->findOrFail($id);
+        return view('empleados.info', compact('empleado'));
+    }
 }
