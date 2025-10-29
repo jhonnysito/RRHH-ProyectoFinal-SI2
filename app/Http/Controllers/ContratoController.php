@@ -26,7 +26,7 @@ class ContratoController extends Controller
             'sueldo' => 'required|numeric|min:0',
             'fecha_inicio' => 'required|date',
             'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
-            'tipo' => 'required|in:Indefinido,Anual,Temporal',
+            'tipo' => 'required|in:Indefinido,anual,Temporal',
             'observaciones' => 'nullable|string',
         ]);
        
@@ -37,7 +37,7 @@ class ContratoController extends Controller
             'sueldo' => $request->sueldo,
             'fecha_inicio' => $request->fecha_inicio,
             'fecha_fin' => $request->fecha_fin,
-            'tipo' => $request->tipo,
+            'tipo' => 'anual',
             'observaciones' => $request->observaciones,
             'tenant_id' => $tenant_id,
         ]);
