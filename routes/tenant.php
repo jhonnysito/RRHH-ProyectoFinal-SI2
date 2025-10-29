@@ -80,10 +80,14 @@ Route::middleware([
     Route::get('/empleados/{empleado}/contrato', [ContratoController::class, 'create'])
         ->name('empleados.contrato.create');
     Route::prefix('contratos')->group(function () {
-        Route::get('/crear/{empleado_id}', [ContratoController::class, 'create'])->name('contratos.crear');
-        Route::post('/store', [ContratoController::class, 'store'])->name('contratos.store');
-        Route::get('/ver/{empleado_id}', [ContratoController::class, 'ver'])->name('contratos.ver');
-    });
+    Route::get('/crear/{empleado_id}', [ContratoController::class, 'create'])->name('contratos.crear');
+    Route::post('/store', [ContratoController::class, 'store'])->name('contratos.store');
+    Route::get('/ver/{empleado_id}', [ContratoController::class, 'ver'])->name('contratos.ver');
+    Route::get('/empleados/{id}/editar', [EmpleadoController::class, 'editar'])
+     ->name('empleados.editar');
+     Route::get('/empleados/{id}/eliminar', [EmpleadoController::class, 'eliminar'])
+     ->name('empleados.eliminar');
+});
 
     //Bitacora
     Route::get('/bitacoras/inicio/{id}', [BitacoraController::class, 'inicio'])->name('bitacora.inicio');

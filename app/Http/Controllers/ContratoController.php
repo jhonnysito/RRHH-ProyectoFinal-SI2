@@ -26,7 +26,7 @@ class ContratoController extends Controller
             'sueldo' => 'required|numeric|min:0',
             'fecha_inicio' => 'required|date',
             'fecha_fin' => 'nullable|date|after_or_equal:fecha_inicio',
-            'tipo' => 'required|in:Indefinido,Anual,Temporal',
+            'tipo' => 'required|in:Indefinido,anual,Temporal',
             'observaciones' => 'nullable|string',
         ]);
          $tipo = strtolower($validated['tipo']);
@@ -42,13 +42,13 @@ class ContratoController extends Controller
         $tenant_id = Auth::user()->tenant_id;
 
         $contrato = Contrato::create([
-           'empleado_id'  => $validated['empleado_id'],
-        'sueldo'       => $validated['sueldo'],
-        'fecha_inicio' => $validated['fecha_inicio'],
-        'fecha_fin'    => $validated['fecha_fin'] ?? null,
-        'tipo'         => $tipo, // usamos la versión normalizada
-        'observaciones'=> $validated['observaciones'] ?? null,
-        'tenant_id'    => $tenant_id,
+            'empleado_id' => $request->empleado_id,
+            'sueldo' => $request->sueldo,
+            'fecha_inicio' => $request->fecha_inicio,
+            'fecha_fin' => $request->fecha_fin,
+            'tipo' => 'anual',
+            'observaciones' => $request->observaciones,
+            'tenant_id' => $tenant_id,
         ]);
 
         // Enviar correo al empleado

@@ -7,6 +7,10 @@ use App\Models\Empleado;
 use App\Models\Departamento;
 use Spatie\Permission\Models\Role;
 use App\Models\Cargo;
+use App\Models\Contrato;
+use App\Models\User;
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Hash;
@@ -138,7 +142,25 @@ class EmpleadoController extends Controller
 
         return view('empleados.editar', compact('empleado', 'roles', 'departamentos', 'cargos'));
     }
+    public function ver($empleado_id)
+    {
+        // Buscar el empleado
+        $empleado = Empleado::find($empleado_id);
 
+        if (!$empleado) {
+            abort(404, 'Empleado no encontrado');
+        }
+
+        // Buscar el contrato asociado a ese empleado
+        $contrato = Contrato::where('empleado_id', $empleado_id)->first();
+
+        if (!$contrato) {
+            abort(404, 'Contrato no encontrado para este empleado');
+        }
+
+        // Retornar la vista con los datos
+        return view('empleados.ver_contrato', compact('empleado', 'contrato'));
+    }
     /**
      * Actualiza un empleado existente.
      */
