@@ -40,6 +40,23 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     <script>
+        // Script para aplicar el tema oscuro si está guardado en localStorage
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia(
+                '(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+
+    {{-- Estilos dinámicos del Tenant --}}
+    @isset($dynamicCss)
+        <style>
+            {!! $dynamicCss !!}
+        </style>
+    @endisset
+
+    <script>
         function collapseSidebar() {
             let sidebar = document.getElementById('sidebar');
             let mainContent = document.querySelector('main');
@@ -109,7 +126,11 @@
 
         <!-- Page Content -->
         <main class = "ml-[55px] lg:w-[100wh-100px] mt-[55px]">
-            {{ $slot }}
+            @if (isset($slot))
+                {{ $slot }}
+            @else
+                @yield('content')
+            @endif
         </main>
     </div>
 
