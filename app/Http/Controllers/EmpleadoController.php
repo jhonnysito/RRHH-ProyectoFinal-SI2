@@ -12,6 +12,10 @@ use App\Models\User;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Hash;
 
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+
 class EmpleadoController extends Controller
 
 {

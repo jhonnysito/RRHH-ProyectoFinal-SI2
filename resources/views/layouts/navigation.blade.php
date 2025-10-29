@@ -18,8 +18,17 @@
                 </div>
             </div>
 
-            <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
+                {{-- Icono de Personalización (Engranaje) --}}
+                <a href="{{ route('tenant.customization.edit') }}"
+                    class="p-2 text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 transition ease-in-out duration-150"
+                    title="Personalización">
+                    <i class="fa-solid fa-cog text-lg"></i>
+                </a>
+
+                {{-- Aquí iría tu icono de notificaciones si lo tuvieras --}}
+
+                <!-- Settings Dropdown -->
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button

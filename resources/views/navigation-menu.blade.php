@@ -9,10 +9,10 @@
                 </a>
                 <div class="ml-4">
                     @auth
-    <h2 class="text-md font-bold">{{ Auth::user()->name }}</h2>
-@else
-    <h2 class="text-md font-bold">Invitado</h2>
-@endauth
+                        <h2 class="text-md font-bold">{{ Auth::user()->name }}</h2>
+                    @else
+                        <h2 class="text-md font-bold">Invitado</h2>
+                    @endauth
                     <p class="text-gray-400 text-[12px]">
                         @if (Auth::user()->empleado && Auth::user()->empleado->cargo)
                             {{ Auth::user()->empleado->cargo->nombre }}
@@ -28,6 +28,14 @@
 
 
             <ul class="flex items-center gap-5">
+                {{-- Icono de Personalización (Engranaje) --}}
+                <li>
+                    <a href="{{ route('tenant.customization.edit') }}"
+                        class="p-2 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700"
+                        title="Personalización">
+                        <i class="fa-solid fa-cog text-lg"></i>
+                    </a>
+                </li>
                 <li class="">
                     <div class="ml-3 relative" x-data="{ open: false }">
                         <button @click="open = !open"
@@ -173,17 +181,6 @@
                         </a>
                     </li>
                 @endcan
-
-
-
-
-
-
-
-
-
-
-
 
 
 

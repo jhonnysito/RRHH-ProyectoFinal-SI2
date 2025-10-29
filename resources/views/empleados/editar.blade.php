@@ -15,7 +15,7 @@
         </style>
         <title>Editar_Empleado</title>
     </head>
-    <form method="POST" action="{{ route('empleados.actualizar', $usuario->id) }}" enctype="multipart/form-data"
+    <form method="POST" action="{{ route('empleados.actualizar', $empleado->id) }}" enctype="multipart/form-data"
         autocomplete="off">
         @csrf
         @method('PUT')
