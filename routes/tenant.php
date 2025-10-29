@@ -22,6 +22,9 @@ use App\Http\Controllers\SolicitudEmpleoController;
 
 use App\Http\Controllers\Api\LocationRecordController;
 use App\Http\Controllers\LocationRecordController as WebLocationRecordController;
+
+use App\Http\Controllers\TenantCustomizationController;
+
 /*
 |--------------------------------------------------------------------------
 | Tenant Routes
@@ -61,28 +64,21 @@ Route::middleware([
         return view('dashboard');
     })->middleware(['auth', 'verified'])->name('dashboard');
 
-   
+
     // Empleados
     Route::get('/empleados', [EmpleadoController::class, 'index'])->name('empleados.index');
+    //Route::get('/empleados/editar/{id}', [EmpleadoController::class, 'edit'])->name('empleados.editar');
+    //Route::get('/empleados/eliminar/{id}', [EmpleadoController::class, 'edit'])->name('empleados.eliminar');
+
     Route::get('/empleados/crear', [EmpleadoController::class, 'create'])->name('empleados.create');
     Route::post('/empleados/guardar', [EmpleadoController::class, 'store'])->name('empleados.guardar');
 
-      Route::get('/empleados/info/{id}', [EmpleadoController::class, 'info'])
-    ->name('empleados.info');
+    Route::get('/empleados/info/{id}', [EmpleadoController::class, 'info'])
+        ->name('empleados.info');
 
-
-       // Vista para crear contrato de un empleado específico
-      Route::get('/empleados/{empleado}/contrato', [ContratoController::class, 'create'])
-    ->name('empleados.contrato.create');
-
-   //  Route::get('/contratos/crear/{empleado}', [ContratoController::class, 'crear'])
-       // ->name('contratos.crear');
-
-   // Route::get('/contratos/{empleado}', [ContratoController::class, 'ver'])
-        //->name('contratos.ver');
-
-   //  Route::post('/empleados/contrato', [ContratoController::class, 'store'])
-   // ->name('empleados.contrato.store');
+    // Vista para crear contrato de un empleado específico
+    Route::get('/empleados/{empleado}/contrato', [ContratoController::class, 'create'])
+        ->name('empleados.contrato.create');
     Route::prefix('contratos')->group(function () {
     Route::get('/crear/{empleado_id}', [ContratoController::class, 'create'])->name('contratos.crear');
     Route::post('/store', [ContratoController::class, 'store'])->name('contratos.store');
@@ -170,6 +166,11 @@ Route::middleware([
         ->name('puesto_disponibles.disponibles');
 
     Route::get('puesto_disponibles/postularse/{idpuesto}', [Puesto_DisponibleController::class, 'postularse'])->name('puesto_disponibles.postularse');
+
+    // Personalisacion
+    Route::get('/customization', [TenantCustomizationController::class, 'edit'])->name('tenant.customization.edit');
+    Route::put('/customization', [TenantCustomizationController::class, 'update'])->name('tenant.customization.update');
+    
 });
 
 

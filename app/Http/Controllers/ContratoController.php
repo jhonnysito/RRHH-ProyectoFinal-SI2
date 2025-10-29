@@ -21,7 +21,7 @@ class ContratoController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated =$request->validate([
             'empleado_id' => 'required|exists:empleados,id',
             'sueldo' => 'required|numeric|min:0',
             'fecha_inicio' => 'required|date',
@@ -29,7 +29,16 @@ class ContratoController extends Controller
             'tipo' => 'required|in:Indefinido,anual,Temporal',
             'observaciones' => 'nullable|string',
         ]);
-       
+         $tipo = strtolower($validated['tipo']);
+        $allowed = ['indefinido', 'anual']; // ajustar si agregas más en la migración
+        if (! in_array($tipo, $allowed)) {
+        return back()
+            ->withInput()
+            ->withErrors(['tipo' => 'Tipo de contrato inválido. Seleccione: ' . implode(', ', $allowed)]);
+    }
+        if ($tipo === 'indefinido') {
+        $validated['fecha_fin'] = null;
+    }
         $tenant_id = Auth::user()->tenant_id;
 
         $contrato = Contrato::create([
@@ -43,7 +52,7 @@ class ContratoController extends Controller
         ]);
 
         // Enviar correo al empleado
-        $empleado = Empleado::find($request->empleado_id);
+         $empleado = Empleado::find($validated['empleado_id']);
         if ($empleado && $empleado->correo) {
             Mail::to($empleado->correo)->send(new ContratoCreadoMail($empleado, $contrato));
         }

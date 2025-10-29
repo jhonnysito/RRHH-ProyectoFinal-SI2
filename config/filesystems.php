@@ -64,6 +64,15 @@ return [
             'token' => env('DROPBOX_TOKEN'),
         ],
 
+        'tenant' => [
+            'driver' => 'local',
+            // Usa el ID del tenant para crear una carpeta única.
+            'root' => storage_path('app/public/tenants/' . tenant('id')),
+            // La URL base para acceder a los archivos.
+            'url' => env('APP_URL') . '/storage/tenants/' . tenant('id'),
+            'visibility' => 'public',
+        ],
+
     ],
 
     /*

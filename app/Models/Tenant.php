@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Laravel\Cashier\Billable;
+use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Models\Domain;
@@ -48,8 +49,13 @@ class Tenant extends BaseTenant
     {
         return $this->hasMany(Puesto_Disponible::class);
     }
-     public function empleados()
+    public function empleados()
     {
         return $this->hasMany(Empleado::class);
+    }
+
+    public function customization()
+    {
+        return $this->hasOne(TenantCustomization::class);
     }
 }
