@@ -22,6 +22,9 @@ use App\Http\Controllers\SolicitudEmpleoController;
 
 use App\Http\Controllers\Api\LocationRecordController;
 use App\Http\Controllers\LocationRecordController as WebLocationRecordController;
+
+use App\Http\Controllers\TenantCustomizationController;
+
 /*
 |--------------------------------------------------------------------------
 | Tenant Routes
@@ -159,6 +162,11 @@ Route::middleware([
         ->name('puesto_disponibles.disponibles');
 
     Route::get('puesto_disponibles/postularse/{idpuesto}', [Puesto_DisponibleController::class, 'postularse'])->name('puesto_disponibles.postularse');
+
+    // Personalisacion
+    Route::get('/customization', [TenantCustomizationController::class, 'edit'])->name('tenant.customization.edit');
+    Route::put('/customization', [TenantCustomizationController::class, 'update'])->name('tenant.customization.update');
+    
 });
 
 
