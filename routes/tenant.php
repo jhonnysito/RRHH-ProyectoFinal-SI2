@@ -16,7 +16,7 @@ use App\Http\Controllers\Puesto_DisponibleController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\ContratoController;
-
+use App\Http\Controllers\PermisoController;
 use App\Http\Controllers\PostulanteController;
 use App\Http\Controllers\SolicitudEmpleoController;
 
@@ -101,10 +101,11 @@ Route::middleware([
     //ROLES
 
     Route::get('/roles/inicio', [RoleController::class, 'inicio'])->name('roles.inicio');
+     Route::post('/roles/actualizar', [RoleController::class, 'actualizar'])->name('roles.actualizar');
     Route::get('/roles/crear', [RoleController::class, 'crear'])->name('roles.crear');
     Route::post('/roles/guardar', [RoleController::class, 'guardar'])->name('roles.guardar');
-    Route::get('/roles/editar/{id}', [RoleController::class, 'editar'])->name('roles.editar');
-    Route::post('/roles/actualizar/{id}', [RoleController::class, 'actualizar'])->name('roles.actualizar');
+    Route::get('/roles/editar', [RoleController::class, 'editar'])->name('roles.editar');
+   
     Route::post('/roles/eliminar/{id}', [RoleController::class, 'eliminar'])->name('roles.eliminar');
 
 
@@ -191,3 +192,15 @@ Route::post('/entrevistas', [App\Http\Controllers\EntrevistaController::class, '
 Route::post('/api/location-records', [LocationRecordController::class, 'store'])
     ->middleware([InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])
     ->name('api.location-records.store');
+
+
+
+        // Para actualizar el permiso
+//Route::put('/actualizar/{id}', [PermisoController::class, 'actualizar'])->name('permisos.actualizar');
+Route::delete('/eliminar/{id}', [PermisoController::class, 'destroy'])->name('permisos.eliminar');
+    Route::get('/editar/{id}', [PermisoController::class, 'edit'])->name('permisos.editar');
+
+
+Route::middleware(['auth'])->group(function() {
+    Route::resource('permisos', PermisoController::class);
+});

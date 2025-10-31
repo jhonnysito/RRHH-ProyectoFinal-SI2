@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
+
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -25,10 +26,14 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // Obtener todos los permisos del usuario
+        $user = auth()->user();
+        $permisos = $user->getAllPermissions()->pluck('name'); // colección de nombres
+        $request->session()->put('permisos', $permisos);
+
+        return redirect()->intended(route('dashboard', false));
     }
 
     /**
