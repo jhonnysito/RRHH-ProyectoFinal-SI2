@@ -1,42 +1,50 @@
 <x-app-layout>
-    <form action="{{ route('roles.actualizar', $rol->id) }}" method="POST">
-        @csrf
-        <div class="w-full">
-            <div class="bg-gradient-to-b from-blue-800 to-blue-600 h-96"></div>
-            <div class="max-w-5xl mx-auto px-6 sm:px-6 lg:px-8 mb-12">
-                <div class="bg-white w-full shadow rounded p-8 sm:p-12 -mt-72">
-                    <p class="text-3xl font-bold leading-7 text-center">Crear Rol</p>
-                    <form action="" method="post">
-                        <div class="md:flex items-center mt-8">
-                            <div class="w-full flex flex-col">
-                                <label for="name" class="font-semibold leading-none">Nombre</label>
-                                <input type="text" name="name" id="name" value="{{ $rol->name }}"
-                                    class="leading-none text-gray-900 p-3 focus:outline-none focus:border-blue-700 mt-4 bg-gray-100 border rounded border-gray-200" />
-                            </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h1 class="text-3xl font-bold mb-8 text-center">Roles y Permisos</h1>
 
-                        </div>
-                        <div class="md:flex items-center mt-8">
-                            <div class="w-full flex flex-col">
-                                <label for="permissions[]" class="font-semibold leading-none">Permisos</label>
-                                @foreach ($permissions as $permission)
-                                    <div class="inline-flex items-center">
-                                        <input type="checkbox" name="permissions[]" id="permissions[]"
-                                            class="form-checkbox" value="{{ $permission->id }}" 
-                                            {{ $rol->hasPermissionTo($permission->name) ? 'checked' : '' }} />
-                                        <label for="permissions[]" class="ml-2">{{ $permission->name }}</label>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-center w-full">
-                            <button
-                                class="mt-9 font-semibold leading-none text-white py-4 px-10 bg-blue-700 rounded hover:bg-blue-600 focus:ring-2 focus:ring-offset-2 focus:ring-blue-700 focus:outline-none">
-                                Guardar
-                            </button>
-                        </div>
-                    </form>
+        <div class="overflow-x-auto">
+            <form action="{{ route('roles.actualizar') }}" method="POST">
+                @csrf
+
+                <table class="min-w-full bg-white shadow rounded-lg overflow-hidden">
+                    <thead class="bg-blue-600 text-white">
+                        <tr>
+                            <th class="py-3 px-6 text-left w-1/3">Rol</th>
+                            <th class="py-3 px-6 text-left w-2/3">Permisos</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        @foreach($roles as $rol)
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-3 px-6">
+                                <input type="text" name="roles[{{ $rol->id }}][name]" value="{{ $rol->name }}"
+                                    class="w-full min-w-0 p-2 border rounded border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                            </td>
+                            <td class="py-3 px-6">
+                                <div class="flex flex-wrap gap-2">
+                                    @foreach($permissions as $permission)
+                                    <label class="flex items-center space-x-2">
+                                        <input type="checkbox" name="roles[{{ $rol->id }}][permissions][]" value="{{ $permission->id }}"
+                                            class="form-checkbox h-4 w-4"
+                                            {{ $rol->hasPermissionTo($permission->name) ? 'checked' : '' }}>
+                                        <span class="text-gray-700 text-sm">{{ $permission->name }}</span>
+                                    </label>
+                                    @endforeach
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+
+                <!-- Botón centrado -->
+                <div class="flex justify-center mt-6">
+                    <button type="submit"
+                        class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                        Guardar Cambios
+                    </button>
                 </div>
-            </div>
+            </form>
         </div>
-    </form>
+    </div>
 </x-app-layout>
