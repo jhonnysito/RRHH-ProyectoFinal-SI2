@@ -107,14 +107,17 @@ class Empleado extends Model
         }
         return $query;
     }
-    public function contratos()
-    {
-        return $this->hasMany(Contrato::class);
-    }
-    public function usuario()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
+
+     public function contratos()
+{
+    return $this->hasMany(Contrato::class, 'empleado_id');
+}
+
+public function usuario()
+{
+    return $this->belongsTo(User::class, 'user_id');
+}
+
 
     //caso de uso 26elias
     // Relación: un empleado puede tener varios horarios asignados

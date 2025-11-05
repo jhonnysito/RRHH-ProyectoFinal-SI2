@@ -309,9 +309,60 @@
                 @endcanany
 
 
-                {{-- Salarios --}}
-                @canany(['Agregar Salarios',' Ver Salarios'])
-                <x-sidebar-dropdown texto="Salarios">
+
+                <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+                    <a class="w-full flex items-center py-3" href="{{ route('solicitudes.index') }}">
+                        <i class="fa-solid fa-building text-center px-5"></i>
+                        <span class="whitespace-nowrap pl-1">Solicitudes de Empleo</span>
+                    </a>
+                </li>
+
+                @can('Inicio Cargos')
+                    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+                        <a class="w-full flex items-center py-3" href="{{ route('cargos.index') }}">
+                            <i class="fa-solid fa-briefcase text-center px-5"></i>
+                            <span class="whitespace-nowrap pl-1">Cargos</span>
+                        </a>
+                    </li>
+                @endcan 
+
+                @can('Inicio Reportes')
+                    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+                        <a class="w-full flex items-center py-3" href="{{ route('reportes.inicio') }}">
+                            <i class="fa-solid fa-chart-line text-center px-5"></i>
+                            <span class="whitespace-nowrap pl-1">Reportes</span>
+                        </a>
+                    </li>
+                @endcan
+
+
+                @can('Inicio Roles')
+                    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+                        <a class="w-full flex items-center py-3" href="{{ route('roles.inicio') }}">
+                            <i class="fa-solid fa-user-shield text-center px-5"></i>
+                            <span class="whitespace-nowrap pl-1">Roles</span>
+                        </a>
+                    </li>
+                @endcan
+
+                @can('Inicio Bitacoras')
+                    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+                        <a class="w-full flex items-center py-3" href="{{ route('bitacora.rinicio') }}">
+                            <i class="fa-solid fa-clock-rotate-left text-center px-5"></i>
+                            <span class="whitespace-nowrap pl-1">Bitacoras</span>
+                        </a>
+                    </li>
+                @endcan
+
+                @can('Inicio Empleados')
+                    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+                        <a class="w-full flex items-center py-3" href="{{ route('empleados.index') }}">
+                            <i class="fa-solid fa-user-check text-center px-5"></i>
+                            <span class="whitespace-nowrap pl-1">Empleados</span>
+                        </a>
+                    </li>
+                @endcan
+
 
                     @can('Agregar Salarios')
                     <a href="{{ route('salarios.create') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Agregar</a>

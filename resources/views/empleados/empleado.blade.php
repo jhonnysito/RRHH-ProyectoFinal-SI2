@@ -1,4 +1,5 @@
 <x-app-layout>
+   
     <div class="min-h-screen bg-gray-100">
         <div class="max-w-7xl mx-auto py-6 px-4">
 
@@ -140,20 +141,33 @@
                                                 📘 Información
                                             </a>
 
-                                            @can('Eliminar Empleados')
-                                            <form id="formEliminar_{{ $empleado->usuario->id }}"
-                                                action="{{ route('empleados.eliminar', $empleado->usuario->id) }}"
-                                                method="POST">
-                                                @csrf
-                                                <button type="button"
-                                                    onclick="confirmarEliminacion('{{ $empleado->usuario->id }}')"
-                                                    class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-700 hover:bg-red-100">
-                                                    🗑️ Eliminar
-                                                </button>
-                                            </form>
-                                            @endcan
-                                        </div>
-                                    </div>
+
+        {{-- 📘 Información --}}
+        {{--@can('Ver Empleado')--}}
+        <a href="{{ route('empleados.info', $empleado->id) }}"
+            class="flex items-center gap-2 px-4 py-2 text-sm text-purple-700 hover:bg-purple-100">
+            📘 Información
+        </a>
+        {{--@endcan--}}
+
+        {{-- 🗑️ Eliminar --}}
+        @can('Eliminar Empleados')
+        <form id="formEliminar_{{ $empleado->id }}"
+            action="{{ route('empleados.destroy', $empleado->id) }}"
+            method="POST">
+            @csrf
+             @method('DELETE')
+            <button type="button"
+                onclick="confirmarEliminacion('{{ $empleado->id }}')"
+                class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-700 hover:bg-red-100">
+                🗑️ Eliminar
+            </button>
+        </form>
+        @endcan
+
+    </div>
+</div>
+
 
                                 </div>
                             </td>
@@ -199,4 +213,17 @@
             }
         }
     </script>
+     @if (session('success'))
+    <div class="bg-green-100 text-green-800 px-4 py-2 rounded mb-4">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if (session('error'))
+    <div class="bg-red-100 text-red-800 px-4 py-2 rounded mb-4">
+        {{ session('error') }}
+    </div>
+@endif
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  
 </x-app-layout>
