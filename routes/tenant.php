@@ -171,6 +171,32 @@ Route::middleware([
     // Personalisacion
     Route::get('/customization', [TenantCustomizationController::class, 'edit'])->name('tenant.customization.edit');
     Route::put('/customization', [TenantCustomizationController::class, 'update'])->name('tenant.customization.update');
+
+
+    // 1. (GET) Muestra la vista para crear un nuevo permiso
+    // Ruta: /permisos/solicitar
+    // Nombre: permisos.solicitud
+    Route::get('/permisos/solicitar', [PermisoController::class, 'solicitud'])->name('permisos.solicitud');
+
+    // 2. (POST) Guarda la nueva solicitud de permiso en la BD
+    // Ruta: /permisos/enviar
+    // Nombre: permisos.enviar-solicitud
+    Route::post('/permisos/enviar', [PermisoController::class, 'enviarSolicitud'])->name('permisos.enviar-solicitud');
+
+    // 3. (GET) Muestra el historial de permisos (para empleados y admins)
+    // Ruta: /permisos/historial
+    // Nombre: permisos.historial
+    Route::get('/permisos/historial', [PermisoController::class, 'historial'])->name('permisos.historial');
+
+    // 4. (POST) Aprueba un permiso (solo para Admins/Encargados)
+    // Ruta: /permisos/aprobar/{id}
+    // Nombre: permisos.approve
+    Route::post('/permisos/aprobar/{id}', [PermisoController::class, 'approve'])->name('permisos.approve');
+
+    // 5. (POST) Deniega un permiso (solo para Admins/Encargados)
+    // Ruta: /permisos/denegar/{id}
+    // Nombre: permisos.deny
+    Route::post('/permisos/denegar/{id}', [PermisoController::class, 'deny'])->name('permisos.deny');
     
 });
 
