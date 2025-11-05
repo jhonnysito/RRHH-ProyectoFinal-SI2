@@ -64,4 +64,8 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Tenant::class);
     }
+    public function evaluacionesRealizadas()
+    {
+        return $this->hasMany(Evaluacion::class, 'evaluador_id');
+    }
 }

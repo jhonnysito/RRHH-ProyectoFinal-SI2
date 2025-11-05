@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Postulante;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use App\Models\SolicitudEmpleo;
 use App\Services\CVTextExtractor; // Incluir el servicio
 use Illuminate\Support\Facades\Http; // Usado para ambas APIs (OpenAI y Gemini)
@@ -40,7 +41,7 @@ class PostulanteController extends Controller
 
     // Crear un nuevo postulante con archivo CV
     public function store(Request $request)
-    {   //dd($request);
+    {   dd($request->all());
         $request->validate([
             'nombres' => 'required|string',
             'apellidos' => 'required|string',
@@ -74,7 +75,7 @@ class PostulanteController extends Controller
         $habilidades = $this->analizarHabilidadesConGemini($cvText); // <-- Método con Gemini
         $puestoSugerido = $this->recomendarPuestoConGemini($cvText); // <-- Método con Gemini
         // ************************
-
+         $tenant_id = Auth::user()->tenant_id;
         // Crear el postulante en la base de datos
         Postulante::create([
             'tenant_id'   => $tenant_id,
@@ -89,7 +90,6 @@ class PostulanteController extends Controller
             'ai_skills' => $habilidades,
             'ai_suggested_job' => $puestoSugerido
         ]);
-
         return redirect()->route('puesto_disponible.ver', $puesto->id)
             ->with('success', 'Tu postulación fue enviada correctamente.');
     }
