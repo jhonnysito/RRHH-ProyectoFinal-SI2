@@ -107,10 +107,11 @@ class Empleado extends Model
         }
         return $query;
     }
-        public function contratos()
+     public function contratos()
 {
-    return $this->hasMany(Contrato::class);
+    return $this->hasMany(Contrato::class, 'empleado_id');
 }
+
 public function usuario()
 {
     return $this->belongsTo(User::class, 'user_id');

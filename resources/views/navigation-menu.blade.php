@@ -145,7 +145,17 @@
                             <span class="whitespace-nowrap pl-1">Cargos</span>
                         </a>
                     </li>
+                @endcan 
+
+                @can('Inicio Reportes')
+                    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+                        <a class="w-full flex items-center py-3" href="{{ route('reportes.inicio') }}">
+                            <i class="fa-solid fa-chart-line text-center px-5"></i>
+                            <span class="whitespace-nowrap pl-1">Reportes</span>
+                        </a>
+                    </li>
                 @endcan
+
 
                 @can('Inicio Roles')
                     <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
