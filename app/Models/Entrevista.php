@@ -16,4 +16,9 @@ class Entrevista extends Model
     {
         return $this->belongsTo(Postulante::class);
     }
+    public function evaluaciones()
+    {
+        return $this->hasMany(Evaluacion::class);
+    }
+    
 }

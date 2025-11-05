@@ -150,6 +150,7 @@ Route::middleware([
     Route::get('puesto_disponibles/editar/{id}', [Puesto_DisponibleController::class, 'editar'])->name('puesto_disponibles.editar');
     Route::put('puesto_disponibles/actualizar/{id}', [Puesto_DisponibleController::class, 'actualizar'])
         ->name('puesto_disponibles.actualizar');
+    Route::post('puesto_disponibles/eliminar/{id}', [Puesto_DisponibleController::class, 'eliminar'])->name('puesto_disponibles.eliminar');
     // Ver todos los puestos disponibles de la empresa
     Route::get('puesto_disponibles/empresa', [Puesto_DisponibleController::class, 'verDisponiblesEmpresa'])
         ->name('puesto_disponibles');
@@ -162,7 +163,7 @@ Route::middleware([
     // Enviar formulario de postulación
     Route::post('puesto/{id}/postular', [Puesto_DisponibleController::class, 'enviarPostulacion'])
         ->name('puesto.enviarPostulacion');
-    Route::post('puesto_disponibles/eliminar/{id}', [Puesto_DisponibleController::class, 'eliminar'])->name('puesto_disponibles.eliminar');
+    
     Route::get('puesto_disponibles/disponibles', [Puesto_DisponibleController::class, 'disponibles'])
         ->name('puesto_disponibles.disponibles');
 
@@ -181,13 +182,27 @@ Route::middleware([
 // Mostrar el formulario para programar entrevista
 Route::get('/entrevistas/crear/{postulante}', [App\Http\Controllers\EntrevistaController::class, 'crear'])
     ->name('entrevistas.crear');
-
+Route::get('entrevistas', [App\Http\Controllers\EntrevistaController::class, 'index'])->name('entrevistas.index');
 // Guardar la entrevista en la base de datos
 Route::post('/entrevistas/guardar', [App\Http\Controllers\EntrevistaController::class, 'guardar'])
     ->name('entrevistas.guardar');
-
+// Mostrar el formulario para editar una entrevista
+Route::get('/entrevistas/editar/{entrevista}', [App\Http\Controllers\EntrevistaController::class, 'editar'])
+    ->name('entrevistas.edit');
+    // Mostrar la evaluación de una entrevista
+Route::get('/entrevistas/{entrevista}/evaluacion', [App\Http\Controllers\EntrevistaController::class, 'verEvaluacion'])
+    ->name('evaluaciones.show');
+    // Eliminar una entrevista
+Route::delete('/entrevistas/eliminar/{entrevista}', [App\Http\Controllers\EntrevistaController::class, 'destroy'])
+    ->name('entrevistas.destroy');
 Route::post('/entrevistas', [App\Http\Controllers\EntrevistaController::class, 'store'])
     ->name('entrevistas.store');
+    // Mostrar formulario para evaluar una entrevista
+Route::get('/entrevistas/{entrevista}/evaluar', [App\Http\Controllers\EntrevistaController::class, 'evaluar'])
+    ->name('entrevistas.evaluar');
+    // Guardar la evaluación de la entrevista
+Route::post('/entrevistas/{entrevista}/evaluar', [App\Http\Controllers\EntrevistaController::class, 'guardarEvaluacion'])
+    ->name('entrevistas.guardarEvaluacion');
 // Ruta de API para que la app Flutter envíe los datos de ubicación
 Route::post('/api/location-records', [LocationRecordController::class, 'store'])
     ->middleware([InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])
