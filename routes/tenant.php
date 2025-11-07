@@ -131,9 +131,6 @@ Route::middleware([
         Route::post('/chat', [ConversacionController::class, 'store'])->name('chat.store');
         Route::get('/chat/{conversacion}', [ConversacionController::class, 'show'])->name('chat.show');
         Route::post('/chat/{conversacion}/mensajes', [MensajeController::class, 'store'])->name('mensajes.store');
-
-        // Rutas para Administradores de RRHH
-        Route::get('/admin/chat', [ConversacionController::class, 'adminIndex'])->name('chat.admin.index')->middleware('role:Recursos Humanos');
     });
 
     require __DIR__ . '/auth.php';

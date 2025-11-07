@@ -4,82 +4,90 @@
 namespace App\Http\Controllers;
 
 use App\Models\Conversacion;
-use App\Models\Empleado;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ConversacionController extends Controller
 {
-    // Muestra la lista de conversaciones para el empleado autenticado
+    /**
+     * Muestra la lista unificada de conversaciones del usuario.
+     * (¡Esta función ya la tenías perfecta!)
+     */
     public function index()
     {
         $user = Auth::user();
-        $empleado = Empleado::where('user_id', $user->id)->firstOrFail();
 
-        $conversaciones = Conversacion::where('empleado_id', $empleado->id)
-            ->orderBy('updated_at', 'desc')
+        $conversaciones = $user->conversaciones()
+            ->withCount('mensajes') // Es buena idea contar los mensajes
+            ->latest('updated_at') // 'latest' es un atajo para orderBy('updated_at', 'desc')
             ->get();
 
-        return view('chat.index', compact('conversaciones'));
+        return view('chat.index', compact('conversaciones')); // Asegúrate de tener esta vista
     }
 
-    // Muestra el formulario para crear una nueva conversación
+    /**
+     * Muestra el formulario para crear una nueva conversación.
+     * (¡Esta función ya la tenías perfecta!)
+     */
     public function create()
     {
-        return view('chat.create');
+        $funcionarios_rrhh = User::role('Recursos Humanos')
+                                ->where('id', '!=', Auth::id()) // No mostrarte a ti mismo en la lista
+                                ->get();
+
+        return view('chat.create', compact('funcionarios_rrhh'));
     }
 
-    // Guarda una nueva conversación y el primer mensaje
+    /**
+     * ¡CORREGIDO!
+     * Guarda la nueva conversación, adjunta participantes y guarda el primer mensaje.
+     */
     public function store(Request $request)
     {
         $request->validate([
             'asunto' => 'required|string|max:255',
             'mensaje' => 'required|string',
+            'destinatario_id' => 'required|exists:users,id', // El ID del funcionario de RRHH
         ]);
 
-        $user = Auth::user();
-        $empleado = Empleado::where('user_id', $user->id)->firstOrFail();
+        $iniciador = Auth::user();
 
-        // Crear la conversación
+        // 1. Crear la conversación
         $conversacion = Conversacion::create([
             'tenant_id' => tenant('id'),
-            'empleado_id' => $empleado->id,
             'asunto' => $request->asunto,
         ]);
 
-        // Crear el primer mensaje
+        // 2. Adjuntar los participantes a la tabla pivote
+        $conversacion->participantes()->attach($iniciador->id);
+        $conversacion->participantes()->attach($request->destinatario_id);
+
+        // 3. Crear el primer mensaje
         $conversacion->mensajes()->create([
-            'user_id' => $user->id,
+            'user_id' => $iniciador->id,
             'contenido' => $request->mensaje,
         ]);
 
+        // 4. Redirigir al chat
         return redirect()->route('chat.show', $conversacion);
     }
 
-    // Muestra una conversación específica
+    /**
+     * ¡CORREGIDO!
+     * Muestra una conversación específica SÓLO a los participantes.
+     */
     public function show(Conversacion $conversacion)
     {
-        // Política de seguridad: Asegurarse de que el empleado solo vea sus chats
-        $empleado = Auth::user()->empleado;
-        if ($conversacion->empleado_id !== $empleado->id && !Auth::user()->hasRole('Recursos Humanos')) {
-            abort(403);
+        // Política de seguridad simplificada:
+        // Si el usuario autenticado no está en la lista de participantes, no puede ver el chat.
+        if (!$conversacion->participantes->contains(Auth::user())) {
+            abort(403, 'No tienes permiso para ver esta conversación.');
         }
 
-        return view('chat.show', compact('conversacion'));
-    }
-    
-    // --- Métodos para RRHH ---
+        // Cargar los mensajes y el autor de cada mensaje
+        $conversacion->load('mensajes.user');
 
-    // Muestra todas las conversaciones a RRHH
-    public function adminIndex()
-    {
-        // Aquí asumimos que tienes un rol "Recursos Humanos"
-        $this->authorize('viewAny', Conversacion::class); // O usa un Gate/Middleware
-
-        $conversaciones = Conversacion::where('tenant_id', tenant('id'))
-            ->orderBy('updated_at', 'desc')
-            ->get();
-            
-        return view('chat.admin-index', compact('conversaciones'));
+        return view('chat.show', compact('conversacion')); // Asegúrate de tener esta vista
     }
 }

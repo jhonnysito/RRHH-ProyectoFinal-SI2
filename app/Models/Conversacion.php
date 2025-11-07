@@ -9,28 +9,27 @@ class Conversacion extends Model
 {
     use HasFactory;
 
+    /**
+     * ¡Correcto!
+     */
     protected $table = 'conversaciones';
 
+    /**
+     * ¡Correcto! (empleado_id ya no está)
+     */
     protected $fillable = [
         'tenant_id',
-        'empleado_id',
         'asunto',
         'estado',
     ];
 
-    public function empleado()
+    public function participantes()
     {
-        return $this->belongsTo(Empleado::class);
+        return $this->belongsToMany(User::class, 'conversacion_participantes');
     }
 
     public function mensajes()
     {
         return $this->hasMany(Mensaje::class)->orderBy('created_at');
-    }
-
-    public function user()
-    {
-        // Accede al usuario a través del empleado
-        return $this->empleado->user();
     }
 }
