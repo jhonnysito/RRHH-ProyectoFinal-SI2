@@ -6,6 +6,11 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+// --- ¡AJUSTE! Importaciones necesarias ---
+use App\Models\Empleado;
+use App\Models\Departamento;
+use App\Models\Cargo;
+// --- FIN AJUSTE ---
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -16,27 +21,86 @@ class UsuarioSeeder extends Seeder
 {
     public function run(): void
     {
-        $user =  User::create([
-            'tenant_id' => 'empresa1',
-            'name' => 'admin',        // Nombre del usuario
-            'email' => 'admin@gmail.com',     // Email
-            'password' => Hash::make('12345678'), // Contraseña (encriptada)
-        ])->assignRole('Administrador');
+        // --- ¡AJUSTE! Crear dependencias (Departamento y Cargo)
+        // Esto es OBLIGATORIO o la creación de Empleado fallará
+        $depto = Departamento::firstOrCreate(
+            ['nombre' => 'Departamento General'],
+            ['descripcion' => 'Departamento de la empresa', 'tenant_id' => 'empresa1']
+        );
+        $cargo = Cargo::firstOrCreate(
+            ['nombre' => 'Cargo General', 'departamento_id' => $depto->id],
+            ['descripcion' => 'Cargo de la empresa', 'tenant_id' => 'empresa1']
+        );
+        // --- FIN AJUSTE ---
+
+        $userAdmin =  User::firstOrCreate(
+            ['email' => 'admin@gmail.com'], // Evitar error de duplicado
+            [
+                'tenant_id' => 'empresa1',
+                'name' => 'admin',
+                'password' => Hash::make('12345678'),
+            ]
+        );
+        $userAdmin->assignRole('Administrador');
+        $userAdmin->assignRole('Recursos Humanos'); // <-- ¡AJUSTE PARA EL CHAT!
+
+        // --- ¡AJUSTE OBLIGATORIO! Crear perfil de Empleado ---
+        Empleado::firstOrCreate( // Evitar error de duplicado
+            ['user_id' => $userAdmin->id],
+            [
+                'nombre_completo' => $userAdmin->name,
+                'correo' => $userAdmin->email,
+                'departamento_id' => $depto->id,
+                'cargo_id' => $cargo->id,
+                'tenant_id' => 'empresa1'
+            ]
+        );
 
 
-        $user =  User::create([
-            'tenant_id' => 'empresa1',
-            'name' => 'empleado',        // Nombre del usuario
-            'email' => 'empleado@gmail.com',     // Email
-            'password' => Hash::make('12345678'), // Contraseña (encriptada)
-        ])->assignRole('Empleado');
+        $userEmpleado =  User::firstOrCreate(
+            ['email' => 'empleado@gmail.com'], // Evitar error de duplicado
+            [
+                'tenant_id' => 'empresa1',
+                'name' => 'empleado',
+                'password' => Hash::make('12345678'),
+            ]
+        );
+        $userEmpleado->assignRole('Empleado');
+
+        // --- ¡AJUSTE OBLIGATORIO! Crear perfil de Empleado ---
+        Empleado::firstOrCreate( // Evitar error de duplicado
+            ['user_id' => $userEmpleado->id],
+            [
+                'nombre_completo' => $userEmpleado->name,
+                'correo' => $userEmpleado->email,
+                'departamento_id' => $depto->id,
+                'cargo_id' => $cargo->id,
+                'tenant_id' => 'empresa1'
+            ]
+        );
 
 
-        $user =  User::create([
-            'tenant_id' => 'empresa1',
-            'name' => 'encargado',        // Nombre del usuario
-            'email' => 'encargado@gmail.com',     // Email
-            'password' => Hash::make('12345678'), // Contraseña (encriptada)
-        ])->assignRole('Encargado');
+        $userEncargado =  User::firstOrCreate(
+            ['email' => 'encargado@gmail.com'], // Evitar error de duplicado
+            [
+                'tenant_id' => 'empresa1',
+                'name' => 'encargado',
+                'password' => Hash::make('12345678'),
+            ]
+        );
+        $userEncargado->assignRole('Encargado');
+        $userEncargado->assignRole('Recursos Humanos'); // <-- ¡AJUSTE PARA EL CHAT!
+        
+        // --- ¡AJUSTE OBLIGATORIO! Crear perfil de Empleado ---
+        Empleado::firstOrCreate( // Evitar error de duplicado
+            ['user_id' => $userEncargado->id],
+            [
+                'nombre_completo' => $userEncargado->name,
+                'correo' => $userEncargado->email,
+                'departamento_id' => $depto->id,
+                'cargo_id' => $cargo->id,
+                'tenant_id' => 'empresa1'
+            ]
+        );
     }
 }
