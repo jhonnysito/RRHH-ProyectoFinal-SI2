@@ -8,13 +8,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
     use Notifiable;
-    use HasRoles;
+    use HasRoles, BelongsToTenant;
     use HasApiTokens;
     /**
      * The attributes that are mass assignable.
@@ -67,5 +68,11 @@ class User extends Authenticatable
     public function evaluacionesRealizadas()
     {
         return $this->hasMany(Evaluacion::class, 'evaluador_id');
+    }
+
+    
+    public function conversaciones()
+    {
+        return $this->belongsToMany(Conversacion::class, 'conversacion_participantes');
     }
 }
