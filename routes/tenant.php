@@ -16,7 +16,13 @@ use App\Http\Controllers\Puesto_DisponibleController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\ContratoController;
+<<<<<<< HEAD
 use App\Http\Controllers\PermisoController;
+=======
+
+use App\Http\Controllers\ConversacionController;
+use App\Http\Controllers\MensajeController;
+>>>>>>> origin/chatrrhhcorrejido2
 use App\Http\Controllers\PostulanteController;
 use App\Http\Controllers\SolicitudEmpleoController;
 
@@ -138,6 +144,16 @@ Route::middleware([
             ->name('asistencia.index');
     });
 
+    // Rutas para el Chat con RRHH
+    Route::middleware('auth')->group(function () {
+        // Rutas para Empleados
+        Route::get('/chat', [ConversacionController::class, 'index'])->name('chat.index');
+        Route::get('/chat/crear', [ConversacionController::class, 'create'])->name('chat.create');
+        Route::post('/chat', [ConversacionController::class, 'store'])->name('chat.store');
+        Route::get('/chat/{conversacion}', [ConversacionController::class, 'show'])->name('chat.show');
+        Route::post('/chat/{conversacion}/mensajes', [MensajeController::class, 'store'])->name('mensajes.store');
+    });
+
     require __DIR__ . '/auth.php';
     Route::get('/register', function () {
         return view('auth.register'); // puedes crear más adelante esta vista
@@ -184,7 +200,6 @@ Route::middleware([
     // Personalisacion
     Route::get('/customization', [TenantCustomizationController::class, 'edit'])->name('tenant.customization.edit');
     Route::put('/customization', [TenantCustomizationController::class, 'update'])->name('tenant.customization.update');
-    
 });
 
 

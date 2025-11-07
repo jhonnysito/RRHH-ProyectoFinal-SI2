@@ -173,6 +173,7 @@
                 </x-sidebar-dropdown>
                 @endcanany
 
+<<<<<<< HEAD
 
 
                 {{-- Puestos Disponibles --}}
@@ -181,6 +182,15 @@
                     @can('Ver Puestos Disponibles')
                     <a href="{{ route('puesto_disponibles.inicio') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Ver</a>
                     @endcan
+=======
+                {{-- Enlace único para el Chat --}}
+                <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+                    <a class="w-full flex items-center py-3" href="{{ route('chat.index') }}">
+                        <i class="fa-solid fa-comments text-center px-5"></i>
+                        <span class="whitespace-nowrap pl-1">Mis Chats</span>
+                    </a>
+                </li>
+>>>>>>> origin/chatrrhhcorrejido2
 
                     @can('Agregar Puestos Disponibles')
                     <a href="{{ route('puesto_disponibles.crear') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Agregar</a>
