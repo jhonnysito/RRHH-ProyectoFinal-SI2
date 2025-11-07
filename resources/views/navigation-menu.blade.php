@@ -114,25 +114,13 @@
                     </li>
                 @endcan
 
-                {{-- Enlace al Chat para Empleados --}}
-                @if (Auth::user()->empleado)
-                    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-                        <a class="w-full flex items-center py-3" href="{{ route('chat.index') }}">
-                            <i class="fa-solid fa-comments text-center px-5"></i>
-                            <span class="whitespace-nowrap pl-1">Mi Chat con RRHH</span>
-                        </a>
-                    </li>
-                @endif
-
-                {{-- Enlace al Panel de Chat para RRHH --}}
-                @role('Recursos Humanos')
-                    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-                        <a class="w-full flex items-center py-3" href="{{ route('chat.admin.index') }}">
-                            <i class="fa-solid fa-headset text-center px-5"></i>
-                            <span class="whitespace-nowrap pl-1">Panel de Chat</span>
-                        </a>
-                    </li>
-                @endrole
+                {{-- Enlace único para el Chat --}}
+                <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+                    <a class="w-full flex items-center py-3" href="{{ route('chat.index') }}">
+                        <i class="fa-solid fa-comments text-center px-5"></i>
+                        <span class="whitespace-nowrap pl-1">Mis Chats</span>
+                    </a>
+                </li>
 
 
                 <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">

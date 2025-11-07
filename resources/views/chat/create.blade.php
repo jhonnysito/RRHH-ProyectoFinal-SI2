@@ -12,21 +12,32 @@
                     <form method="POST" action="{{ route('chat.store') }}">
                         @csrf
 
+                        <!-- Campo Asunto (igual) -->
                         <div>
-                            <label for="asunto" class="block font-medium text-sm text-gray-700">Asunto</label>
-                            <input id="asunto" class="block mt-1 w-full rounded-md shadow-sm border-gray-300" type="text" name="asunto" :value="old('asunto')" required autofocus />
+                            <label for="asunto">Asunto</label>
+                            <input id="asunto" type="text" name="asunto" required />
                         </div>
 
+                        <!-- ¡NUEVO! Campo Destinatario -->
                         <div class="mt-4">
-                            <label for="mensaje" class="block font-medium text-sm text-gray-700">Tu primer mensaje</label>
-                            <textarea id="mensaje" name="mensaje" rows="5" class="block mt-1 w-full rounded-md shadow-sm border-gray-300" required>{{ old('mensaje') }}</textarea>
+                            <label for="destinatario_id">Chatear con (RRHH)</label>
+                            <select name="destinatario_id" id="destinatario_id" required>
+                                <option value="">-- Selecciona un funcionario --</option>
+                                @foreach ($funcionarios_rrhh as $funcionario)
+                                    <option value="{{ $funcionario->id }}">
+                                        {{ $funcionario->name }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
 
-                        <div class="flex items-center justify-end mt-4">
-                            <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500">
-                                Enviar
-                            </button>
+                        <!-- Campo Mensaje (igual) -->
+                        <div class="mt-4">
+                            <label for="mensaje">Mensaje</label>
+                            <textarea id="mensaje" name="mensaje" required></textarea>
                         </div>
+
+                        <button type="submit">Iniciar Chat</button>
                     </form>
                 </div>
             </div>

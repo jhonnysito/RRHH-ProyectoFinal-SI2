@@ -13,7 +13,6 @@ return new class extends Migration
             $table->string('tenant_id'); // Para multi-tenant
             $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
 
-            $table->foreignId('empleado_id')->constrained('empleados')->onDelete('cascade');
             $table->string('asunto');
             $table->enum('estado', ['abierta', 'cerrada'])->default('abierta');
             $table->timestamps();
