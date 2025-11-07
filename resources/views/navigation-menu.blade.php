@@ -273,6 +273,45 @@
                 </x-sidebar-dropdown>
                 @endcanany
 
+                
+                {{-- Asistencias --}}
+                @canany(['Agregar Asistencias del Empleado','Editar Asistencias del Empleado','Eliminar Asistencias del Empleado','Ver Asistencias del Empleado'])
+                <x-sidebar-dropdown texto="Asistencias">
+                    @can('Agregar Asistencias del Empleado')
+                    <a href="{{ route('asistencias.create') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Agregar</a>
+                    @endcan
+                    @can('Editar Asistencias del Empleado')
+                    <a href="{{ route('asistencias.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Editar</a>
+                    @endcan
+                    @can('Eliminar Asistencias del Empleado')
+                    <a href="{{ route('asistencias.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Eliminar</a>
+                    @endcan
+                    @can('Ver Asistencias del Empleado')
+                    <a href="{{ route('asistencias.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Ver</a>
+                    @endcan
+                </x-sidebar-dropdown>
+                @endcanany
+
+                {{-- Horarios --}}
+                @canany(['Agregar Horarios','Editar Horarios','Eliminar Horarios','Ver Horarios'])
+                <x-sidebar-dropdown texto="Horarios">
+                    @can('Agregar Horarios')
+                    <a href="{{ route('horarios.create') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Agregar</a>
+                    @endcan
+                    @can('Editar Horarios')
+                    <a href="{{ route('horarios.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Editar</a>
+                    @endcan
+                    @can('Eliminar Horarios')
+                    <a href="{{ route('horarios.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Eliminar</a>
+                    @endcan
+                    @can('Ver Horarios')
+                    <a href="{{ route('horarios.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Ver</a>
+                    @endcan
+                </x-sidebar-dropdown>
+                @endcanany 
+
+                
+
 
             </ul>
 

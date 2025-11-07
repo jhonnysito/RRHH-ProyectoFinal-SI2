@@ -116,6 +116,18 @@ public function usuario()
     return $this->belongsTo(User::class, 'user_id');
 }
 
+    //caso de uso 26elias
+    // Relación: un empleado puede tener varios horarios asignados
+    public function horarios()
+    {
+        return $this->hasMany(Horario::class, 'empleado_id');
+    }
 
+    // Relación: un empleado puede tener varios registros de asistencia
+    public function asistencias()
+    {
+        return $this->hasMany(Asistencia::class, 'empleado_id');
+    }
 
 }
+

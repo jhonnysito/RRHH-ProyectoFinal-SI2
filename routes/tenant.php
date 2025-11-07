@@ -25,6 +25,14 @@ use App\Http\Controllers\LocationRecordController as WebLocationRecordController
 
 use App\Http\Controllers\TenantCustomizationController;
 
+use App\Http\Controllers\HorarioController;
+use App\Http\Controllers\AsistenciaController;
+
+
+
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Tenant Routes
@@ -88,6 +96,10 @@ Route::middleware([
      Route::get('/empleados/{id}/eliminar', [EmpleadoController::class, 'eliminar'])
      ->name('empleados.eliminar');
 });
+    // Rutas para Horarios de Empleados
+    Route::resource('horarios', HorarioController::class)->middleware('auth');
+    // Rutas para Asistencias de Empleados
+    Route::resource('asistencias', AsistenciaController::class)->middleware('auth');
 
     //Bitacora
     Route::get('/bitacoras/inicio/{id}', [BitacoraController::class, 'inicio'])->name('bitacora.inicio');
