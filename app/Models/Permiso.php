@@ -21,6 +21,7 @@ class Permiso extends Model
         'fecha_fin',
         'aprobado',
         'denegado',
+        'incidencia_id',
     ];
 
     /**
@@ -30,4 +31,7 @@ class Permiso extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    
 }
+ 

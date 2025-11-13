@@ -36,7 +36,7 @@ class PermisoController extends Controller
 
         $permiso = Permiso::create([
             'user_id' => Auth::id(),
-            'incidencia_id' => 1,
+            'incidencia_id' => $request->incidencia_id,
             'fecha_inicio' => $request->fecha_inicio,
             'fecha_fin' => $request->fecha_fin,
             'motivo' => $request->motivo,
