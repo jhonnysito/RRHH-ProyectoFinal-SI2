@@ -13,13 +13,12 @@ use App\Models\User; // Para buscar al administrador
 class PermisoEmpleadoController extends Controller
 {
 
-    public function solicitud()
-    {
-        
-        $incidencias = Incidencia::all();
-        dd($incidencias->all());
-        return view('permisos.solicitud', compact('incidencias'));
-    }
+   public function solicitud()
+{
+    $incidencias = Incidencia::all();
+
+    return view('permisos.solicitud', compact('incidencias'));
+}
 
     /**
      * Procesa y guarda la solicitud de permiso.
@@ -34,13 +33,13 @@ class PermisoEmpleadoController extends Controller
         ]);
 
         $permiso = PermisoEmpleado::create([
-            'user_id' => Auth::id(),
-            'incidencia_id' => 1,
-            'fecha_inicio' => $request->fecha_inicio,
-            'fecha_fin' => $request->fecha_fin,
-            'motivo' => $request->motivo,
-            'estado' => 'solicitado',
-        ]);
+        'user_id' => Auth::id(),
+        'incidencia_id' => $request->incidencia_id,
+        'fecha_inicio' => $request->fecha_inicio,
+        'fecha_fin' => $request->fecha_fin,
+        'motivo' => $request->motivo,
+        'estado' => 'solicitado',
+    ]);
 
         // 1. Notificar al empleado (Línea corregida con chequeo)
         $user = Auth::user();
@@ -80,40 +79,38 @@ class PermisoEmpleadoController extends Controller
     /**
      * Aprueba un permiso. Solo accesible por administradores.
      */
-    public function aprobar(PermisoEmpleado $permiso)
-    {
-        Gate::authorize('manage-permisos');
+   public function approve(PermisoEmpleado $permiso)
+{
+    Gate::authorize('manage-permisos');
 
-        if ($permiso->estado === 'solicitado') {
-            $permiso->update(['estado' => 'aprobado']);
+    if ($permiso->estado === 'solicitado') {
+        $permiso->update(['estado' => 'aprobado']);
 
-            // Notificar al empleado
-            $permiso->user->notify(new PermisosNotification($permiso, 'aprobado'));
-
-            return redirect()->route('permisos.historial')->with('actualizado', 'Permiso aprobado y empleado notificado.');
-        }
-
-        return redirect()->route('permisos.historial')->with('error', 'El permiso ya fue procesado o no está en estado "solicitado".');
+        return redirect()
+            ->route('permisos.historial')
+            ->with('actualizado', 'Permiso aprobado exitosamente.');
     }
+
+    return back()->with('error', 'Este permiso ya fue procesado.');
+}
 
     /**
      * Deniega un permiso. Solo accesible por administradores.
      */
-    public function denegar(PermisoEmpleado $permiso)
-    {
-        Gate::authorize('manage-permisos');
+    public function deny(PermisoEmpleado $permiso)
+{
+    Gate::authorize('manage-permisos');
 
-        if ($permiso->estado === 'solicitado') {
-            $permiso->update(['estado' => 'rechazado']);
+    if ($permiso->estado === 'solicitado') {
+        $permiso->update(['estado' => 'rechazado']);
 
-            // Notificar al empleado
-            $permiso->user->notify(new PermisosNotification($permiso, 'rechazado'));
-
-            return redirect()->route('permisos.historial')->with('actualizado', 'Permiso denegado y empleado notificado.');
-        }
-
-        return redirect()->route('permisos.historial')->with('error', 'El permiso ya fue procesado o no está en estado "solicitado".');
+        return redirect()
+            ->route('permisos.historial')
+            ->with('actualizado', 'Permiso denegado correctamente.');
     }
+
+    return back()->with('error', 'Este permiso ya fue procesado.');
+}
     /**
      * Display a listing of the resource.
      */

@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
             TenantSeeder::class,
             RoleSeeder::class,
             UsuarioSeeder::class,
+            IncidenciasSeeder::class,
         ]);
     }
 }

@@ -85,29 +85,24 @@
                                     <td class="px-8 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">{{ $permiso->fecha_fin }}</div>
                                     </td>
-                                    <td class="px-8 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                        @if($permiso->aprobado)
-                                            bg-green-100 text-green-800
-                                        @elseif($permiso->denegado)
-                                            bg-red-100 text-red-800
-                                        @else
-                                            bg-yellow-100 text-yellow-800
-                                        @endif
-                                        ">
-                                            @if($permiso->aprobado)
-                                                Aprobado
-                                            @elseif($permiso->denegado)
-                                                Denegado
-                                            @else
-                                                Pendiente
-                                            @endif
-                                        </span>
-                                    </td>
+                                            <td class="px-8 py-4 whitespace-nowrap">
+                             <span class="px-2 inline-flex text-xs leading-5 font-semibold     rounded-full 
+                                        @if($permiso->estado === 'aprobado')
+                                           bg-green-100 text-green-800
+                                           @elseif($permiso->estado === 'rechazado')
+                                              bg-red-100 text-red-800
+                                         @else
+                                              bg-yellow-100 text-yellow-800
+                                        @endif">
+                                     {{ ucfirst($permiso->estado) }}
+                                      </span>
+                                      </td>
+  
+
                                     <!-- Acciones -->
                                     @if (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Encargado'))
                                     <td class="px-8 py-4 whitespace-nowrap text-center text-sm font-medium">
-                                        @if (!$permiso->aprobado && !$permiso->denegado)
+                                        @if ($permiso->estado === 'solicitado')
                                             <form action="{{ route('permisos.approve', $permiso->id) }}" method="POST" class="inline">
                                                 @csrf
                                                 <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">

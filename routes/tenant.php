@@ -24,6 +24,7 @@ use App\Http\Controllers\SolicitudEmpleoController;
 use App\Http\Controllers\PermisoController;
 use App\Http\Controllers\Api\LocationRecordController;
 use App\Http\Controllers\LocationRecordController as WebLocationRecordController;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\TenantCustomizationController;
 
@@ -231,64 +232,55 @@ Route::post('/api/location-records', [LocationRecordController::class, 'store'])
     ->middleware([InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])
     ->name('api.location-records.store');
 
+    Route::prefix('admin/permisos')->middleware(['auth'])->group(function () {
 
+   Route::get('/', [PermisoController::class, 'index'])->name('admin.permisos.index');
+    Route::get('/crear', [PermisoController::class, 'create'])->name('admin.permisos.create');
+    Route::post('/guardar', [PermisoController::class, 'store'])->name('admin.permisos.store');
+    Route::get('/editar/{id}', [PermisoController::class, 'edit'])->name('admin.permisos.edit');
+    Route::put('/actualizar/{id}', [PermisoController::class, 'update'])->name('admin.permisos.update');
 
-        // Para actualizar el permiso
-//Route::put('/actualizar/{id}', [PermisoController::class, 'actualizar'])->name('permisos.actualizar');
-Route::delete('/eliminar/{id}', [PermisoController::class, 'destroy'])->name('permisos.eliminar');
-    Route::get('/editar/{id}', [PermisoController::class, 'edit'])->name('permisos.editar');
-
-
-Route::middleware(['auth'])->group(function() {
-    Route::resource('permisos', PermisoController::class);
-
-    // 1. (GET) Muestra la vista para crear un nuevo permiso
-    // Ruta: /permisos/solicitar
-    // Nombre: permisos.solicitud
-    Route::get('/permisos/solicitar', [PermisoEmpleadoController::class, 'solicitud'])->name('permisos.solicitud');
-
-    // 2. (POST) Guarda la nueva solicitud de permiso en la BD
-    // Ruta: /permisos/enviar
-    // Nombre: permisos.enviar-solicitud
-    Route::post('/permisos/enviar', [PermisoEmpleadoController::class, 'enviarSolicitud'])->name('permisos.enviar-solicitud');
-
-    // 3. (GET) Muestra el historial de permisos (para empleados y admins)
-    // Ruta: /permisos/historial
-    // Nombre: permisos.historial
-    Route::get('/permisos/historial', [PermisoEmpleadoController::class, 'historial'])->name('permisos.historial');
-
-    // 4. (POST) Aprueba un permiso (solo para Admins/Encargados)
-    // Ruta: /permisos/aprobar/{id}
-    // Nombre: permisos.approve
-    Route::post('/permisos/aprobar/{id}', [PermisoEmpleadoController::class, 'approve'])->name('permisos.approve');
-
-    // 5. (POST) Deniega un permiso (solo para Admins/Encargados)
-    // Ruta: /permisos/denegar/{id}
-    // Nombre: permisos.deny
-    Route::post('/permisos/denegar/{id}', [PermisoEmpleadoController::class, 'deny'])->name('permisos.deny');
+    Route::delete('/eliminar/{id}', [PermisoController::class, 'destroy'])->name('admin.permisos.destroy');
 });
 
-// 1. (GET) Muestra la vista para crear un nuevo permiso
-    // Ruta: /permisos/solicitar
-    // Nombre: permisos.solicitud
-    Route::get('/permisos/solicitar', [PermisoEmpleadoController::class, 'solicitud'])->name('permisos.solicitud');
 
-    // 2. (POST) Guarda la nueva solicitud de permiso en la BD
-    // Ruta: /permisos/enviar
-    // Nombre: permisos.enviar-solicitud
-    Route::post('/permisos/enviar', [PermisoEmpleadoController::class, 'enviarSolicitud'])->name('permisos.enviar-solicitud');
+    
 
-    // 3. (GET) Muestra el historial de permisos (para empleados y admins)
-    // Ruta: /permisos/historial
-    // Nombre: permisos.historial
-    Route::get('/permisos/historial', [PermisoEmpleadoController::class, 'historial'])->name('permisos.historial');
+  // Route::middleware(['auth'])->group(function() {
+   //Route::delete('/eliminar/{id}', [PermisoController::class, 'destroy'])->name('permisos.//eliminar');
+  // Route::get('/editar/{id}', [PermisoController::class, 'edit'])->name('permisos.editar');
+  // Route::resource('permisos', PermisoController::class);
+//});
 
-    // 4. (POST) Aprueba un permiso (solo para Admins/Encargados)
-    // Ruta: /permisos/aprobar/{id}
-    // Nombre: permisos.approve
-    Route::post('/permisos/aprobar/{id}', [PermisoEmpleadoController::class, 'approve'])->name('permisos.approve');
+   
+// PERMISOS DE EMPLEADOS
 
-    // 5. (POST) Deniega un permiso (solo para Admins/Encargados)
-    // Ruta: /permisos/denegar/{id}
-    // Nombre: permisos.deny
-    Route::post('/permisos/denegar/{id}', [PermisoEmpleadoController::class, 'deny'])->name('permisos.deny');
+Route::middleware(['auth'])->group(function () {
+
+    // Vistas de solicitud + historial (usuarios)
+    Route::get('/permisos/solicitar', [PermisoEmpleadoController::class, 'solicitud'])
+        ->name('permisos.solicitud');
+
+    Route::post('/permisos/enviar', [PermisoEmpleadoController::class, 'enviarSolicitud'])
+        ->name('permisos.enviar-solicitud');
+
+    Route::get('/permisos/historial', [PermisoEmpleadoController::class, 'historial'])
+        ->name('permisos.historial');
+
+    // Acciones para ADMIN (aprobar / denegar)
+    Route::post('/permisos/aprobar/{id}', [PermisoEmpleadoController::class, 'approve'])
+        ->name('permisos.approve');
+
+    Route::post('/permisos/denegar/{id}', [PermisoEmpleadoController::class, 'deny'])
+        ->name('permisos.deny');
+  
+  
+     });
+    Route::post('/notificaciones/leer/{id}', function ($id) {
+    $notificacion = Auth::user()->notifications()->findOrFail($id);
+    $notificacion->markAsRead();
+
+    return back();
+    })->name('notificaciones.leer')->middleware('auth');
+
+

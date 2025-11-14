@@ -6,39 +6,40 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up()
+    public function up(): void
     {
         Schema::create('permiso_empleados', function (Blueprint $table) {
             $table->id();
-            // ID del usuario que solicita el permiso
+
+            // Usuario que solicita el permiso
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
 
-            // ID del tipo de incidencia (e.g., Vacaciones, Enfermedad)
-            // Asumiendo que ya tiene una tabla 'incidencias'
+            // Tipo de incidencia (vacaciones, enfermedad, etc.)
             $table->foreignId('incidencia_id')->constrained('incidencias')->onDelete('cascade');
 
             $table->date('fecha_inicio');
             $table->date('fecha_fin');
             $table->string('motivo')->nullable();
 
-            // Estado: solicitado (default), aprobado, rechazado
+            // archivo adjunto (ruta en storage)
+            $table->string('archivo_adjunto')->nullable();
+
+            // Estado del permiso
             $table->enum('estado', ['solicitado', 'aprobado', 'rechazado'])->default('solicitado');
 
+            // Tenant (si tu proyecto usa tenant en muchas tablas)
+            $table->string('tenant_id')->nullable()->index();
+
             $table->timestamps();
+
+            // FK tenant si existe tabla tenants (siempre opcional)
+            // Descomenta si tienes tabla tenants
+            // $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('permiso_empleados');
     }
-    
 };

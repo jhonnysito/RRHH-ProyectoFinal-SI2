@@ -9,10 +9,12 @@ use Spatie\Permission\Models\Role;
 use App\Models\Cargo;
 use App\Models\Contrato;
 use Illuminate\Support\Facades\Hash;
-
+use App\Models\Incidencia;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
 use App\Models\User;
 
+use App\Models\PermisoEmpleado;
 class EmpleadoController extends Controller
 
 {
@@ -233,4 +235,5 @@ class EmpleadoController extends Controller
         $empleado = Empleado::with(['departamento', 'cargo', 'usuario'])->findOrFail($id);
         return view('empleados.info', compact('empleado'));
     }
+
 }

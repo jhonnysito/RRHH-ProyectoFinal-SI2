@@ -28,6 +28,84 @@
 
                 {{-- Aquí iría tu icono de notificaciones si lo tuvieras --}}
 
+        {{-- NOTIFICACIONES --}}
+        
+<div x-data="{ openNotif: false }" class="relative mr-4">
+    <button @click="openNotif = !openNotif"
+        class="relative p-2 text-gray-500 hover:text-gray-700 focus:outline-none">
+
+        {{-- Ícono de la campana --}}
+        <i class="fa-solid fa-bell text-xl"></i>
+
+        {{-- Burbuja roja con cantidad --}}
+        @if (Auth::user()->unreadNotifications->count() > 0)
+            <span
+                class="absolute top-0 right-0 bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-full">
+                {{ Auth::user()->unreadNotifications->count() }}
+            </span>
+        @endif
+    </button>
+
+    {{-- Dropdown --}}
+    <div x-show="openNotif" @click.outside="openNotif = false"
+        class="absolute right-0 mt-2 w-72 bg-white shadow-lg rounded-md z-50">
+
+        <div class="p-3 font-semibold border-b">
+            Notificaciones
+        </div>
+
+        {{-- Si no hay notificaciones --}}
+        @if (Auth::user()->notifications->count() == 0)
+            <p class="p-3 text-gray-500 text-sm">No tienes notificaciones</p>
+        @endif
+
+        {{-- Listado --}}
+        <ul class="max-h-60 overflow-y-auto">
+            @foreach (Auth::user()->notifications as $notification)
+                <li class="border-b px-3 py-2 text-sm
+                    {{ $notification->read_at ? 'bg-white' : 'bg-gray-100' }}">
+                    
+                    {{-- Mensaje --}}
+                    @php
+                        $status = $notification->data['status'];
+                        $motivo = $notification->data['motivo'];
+                    @endphp
+
+                    @if ($status == 'solicitado')
+                        <p><strong>Nueva solicitud:</strong> {{ $motivo }}</p>
+                    @elseif ($status == 'aprobado')
+                        <p><strong>Tu permiso fue APROBADO:</strong> {{ $motivo }}</p>
+                    @elseif ($status == 'rechazado')
+                        <p><strong>Tu permiso fue RECHAZADO:</strong> {{ $motivo }}</p>
+                    @endif
+
+                    <small class="text-gray-500">
+                        {{ $notification->created_at->diffForHumans() }}
+                    </small>
+
+                    {{-- Botón marcar como leído --}}
+                    @if (!$notification->read_at)
+                        <form method="POST"
+                            action="{{ route('notificaciones.leer', $notification->id) }}"
+                            class="mt-1">
+                            @csrf
+                            <button class="text-blue-600 text-xs hover:underline">
+                                Marcar como leída
+                            </button>
+                        </form>
+                    @endif
+                </li>
+            @endforeach
+        </ul>
+    </div>
+</div>
+
+
+
+
+
+
+
                 <!-- Settings Dropdown -->
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
