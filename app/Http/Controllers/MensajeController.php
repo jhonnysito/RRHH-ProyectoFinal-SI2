@@ -1,6 +1,5 @@
 <?php
 
-// app/Http/Controllers/MensajeController.php
 namespace App\Http\Controllers;
 
 use App\Models\Conversacion;
@@ -17,9 +16,8 @@ class MensajeController extends Controller
         ]);
 
         // Política de seguridad
-        $empleado = Auth::user()->empleado;
-        if ($conversacion->empleado_id !== $empleado->id && !Auth::user()->hasRole('Recursos Humanos')) {
-            abort(403);
+        if (!$conversacion->participantes->contains(Auth::user())) {
+            abort(403, 'No tienes permiso para enviar mensajes a esta conversación.');
         }
 
         $conversacion->mensajes()->create([
