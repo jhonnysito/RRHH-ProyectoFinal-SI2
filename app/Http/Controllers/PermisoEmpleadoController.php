@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Notifications\PermisosNotification;
+use Illuminate\Support\Facades\Storage;
 use App\Models\User; // Para buscar al administrador
 
 class PermisoEmpleadoController extends Controller
@@ -30,7 +31,15 @@ class PermisoEmpleadoController extends Controller
             'fecha_inicio' => 'required|date|after_or_equal:today',
             'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
             'motivo' => 'nullable|string|max:255',
+            'archivo_adjunto' => 'nullable|file|mimes:pdf,jpg,png,jpeg|max:2048', 
         ]);
+        
+         $pathArchivo = null;
+        if ($request->hasFile('archivo_adjunto')) {
+            // Guarda el archivo en 'storage/app/public/permisos_respaldos'
+            // La ruta guardada será 'permisos_respaldos/nombre_archivo.pdf'
+            $pathArchivo = $request->file('archivo_adjunto')->store('permisos_respaldos', 'public');
+        }
 
         $permiso = PermisoEmpleado::create([
         'user_id' => Auth::id(),
@@ -39,6 +48,8 @@ class PermisoEmpleadoController extends Controller
         'fecha_fin' => $request->fecha_fin,
         'motivo' => $request->motivo,
         'estado' => 'solicitado',
+        'archivo_adjunto' => $pathArchivo,
+        'tenant_id' => tenant('id'),
     ]);
 
         // 1. Notificar al empleado (Línea corregida con chequeo)
@@ -60,17 +71,19 @@ class PermisoEmpleadoController extends Controller
     /**
      * Muestra el historial de permisos del empleado o la lista de solicitudes para el administrador.
      */
-    public function historial()
+    public function historial(Request $request)
     {
-        if (Gate::allows('manage-permisos')) {
+        if ($request->user()->hasRole('Administrador')) {
+            // El Admin ve TODO
             $permisos = PermisoEmpleado::with('user', 'incidencia')
-                                ->orderBy('created_at', 'desc')
-                                ->get();
+                                        ->orderBy('created_at', 'desc')
+                                        ->get();
         } else {
+            // El Empleado ve SOLO LO SUYO
             $permisos = PermisoEmpleado::with('incidencia')
-                                ->where('user_id', Auth::id())
-                                ->orderBy('created_at', 'desc')
-                                ->get();
+                                        ->where('user_id', Auth::id())
+                                        ->orderBy('created_at', 'desc')
+                                        ->get();
         }
 
         return view('permisos.historial', compact('permisos'));
@@ -79,38 +92,44 @@ class PermisoEmpleadoController extends Controller
     /**
      * Aprueba un permiso. Solo accesible por administradores.
      */
-   public function approve(PermisoEmpleado $permiso)
-{
-    Gate::authorize('manage-permisos');
+ public function approve(Request $request,PermisoEmpleado $permisoEmpleado)
+    {
+        if (!$request->user()->hasRole('Administrador')) {
+             abort(403, 'Acción no autorizada.');
+        }
 
-    if ($permiso->estado === 'solicitado') {
-        $permiso->update(['estado' => 'aprobado']);
+        if ($permisoEmpleado->estado === 'solicitado') {
+            $permisoEmpleado->update(['estado' => 'aprobado']);
+            
+            // Aquí iría la integración con Asistencia (Incidencias) que hablamos
+            // ... (crear Incidencia::create(...) por cada día) ...
 
-        return redirect()
-            ->route('permisos.historial')
-            ->with('actualizado', 'Permiso aprobado exitosamente.');
+            // Aquí iría la notificación al empleado
+            // $permisoEmpleado->user->notify(...)
+
+            return redirect()->route('permisos.historial')->with('actualizado', 'Permiso APROBADO exitosamente.');
+        }
+        return redirect()->route('permisos.historial')->with('error', 'Esta solicitud ya fue procesada.');
     }
-
-    return back()->with('error', 'Este permiso ya fue procesado.');
-}
-
     /**
      * Deniega un permiso. Solo accesible por administradores.
      */
-    public function deny(PermisoEmpleado $permiso)
-{
-    Gate::authorize('manage-permisos');
+  public function deny(Request $request,PermisoEmpleado $permisoEmpleado)
+    {
+         if (!$request->user()->hasRole('Administrador')) {
+             abort(403, 'Acción no autorizada.');
+         }
 
-    if ($permiso->estado === 'solicitado') {
-        $permiso->update(['estado' => 'rechazado']);
+        if ($permisoEmpleado->estado === 'solicitado') {
+            $permisoEmpleado->update(['estado' => 'rechazado']);
 
-        return redirect()
-            ->route('permisos.historial')
-            ->with('actualizado', 'Permiso denegado correctamente.');
+            // Aquí iría la notificación al empleado
+            // $permisoEmpleado->user->notify(...)
+
+            return redirect()->route('permisos.historial')->with('actualizado', 'Permiso RECHAZADO exitosamente.');
+        }
+        return redirect()->route('permisos.historial')->with('error', 'Esta solicitud ya fue procesada.');
     }
-
-    return back()->with('error', 'Este permiso ya fue procesado.');
-}
     /**
      * Display a listing of the resource.
      */
@@ -138,9 +157,17 @@ class PermisoEmpleadoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PermisoEmpleado $permisoEmpleado)
+    public function show(Request $request,PermisoEmpleado $permisoEmpleado)
     {
-        //
+        // Solo el Admin puede ver detalles (o el propio empleado, si quisieras)
+        if (!$request->user()->hasRole('Administrador')) {
+             abort(403, 'Acción no autorizada.');
+        }
+
+        // Cargamos las relaciones para mostrar el nombre del user y la incidencia
+        $permisoEmpleado->load('user', 'incidencia');
+
+        return view('permisos.show', compact('permisoEmpleado'));
     }
 
     /**

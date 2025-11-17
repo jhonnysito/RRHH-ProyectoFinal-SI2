@@ -255,27 +255,32 @@ Route::post('/api/location-records', [LocationRecordController::class, 'store'])
    
 // PERMISOS DE EMPLEADOS
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])->prefix('permisos')->name('permisos.')->group(function () {
 
-    // Vistas de solicitud + historial (usuarios)
-    Route::get('/permisos/solicitar', [PermisoEmpleadoController::class, 'solicitud'])
-        ->name('permisos.solicitud');
+    // (Empleado) Vista para crear la solicitud
+    Route::get('/solicitar', [PermisoEmpleadoController::class, 'solicitud'])
+        ->name('solicitud');
 
-    Route::post('/permisos/enviar', [PermisoEmpleadoController::class, 'enviarSolicitud'])
-        ->name('permisos.enviar-solicitud');
+    // (Empleado) POST para guardar la solicitud (con adjunto)
+    Route::post('/enviar', [PermisoEmpleadoController::class, 'enviarSolicitud'])
+        ->name('enviar-solicitud');
 
-    Route::get('/permisos/historial', [PermisoEmpleadoController::class, 'historial'])
-        ->name('permisos.historial');
+    // (Admin y Empleado) Vista de Historial (la lista)
+    Route::get('/historial', [PermisoEmpleadoController::class, 'historial'])
+        ->name('historial');
+    
+    // (Admin) ¡NUEVA! Vista de DETALLE
+    // Usamos {permisoEmpleado} para que Laravel encuentre el permiso automáticamente
+    Route::get('/detalle/{permisoEmpleado}', [PermisoEmpleadoController::class, 'show'])
+        ->name('show');
 
-    // Acciones para ADMIN (aprobar / denegar)
-    Route::post('/permisos/aprobar/{id}', [PermisoEmpleadoController::class, 'approve'])
-        ->name('permisos.approve');
+    // (Admin) Acciones de Aprobación/Rechazo (Actualizadas)
+    Route::post('/aprobar/{permisoEmpleado}', [PermisoEmpleadoController::class, 'approve'])
+        ->name('approve');
 
-    Route::post('/permisos/denegar/{id}', [PermisoEmpleadoController::class, 'deny'])
-        ->name('permisos.deny');
-  
-  
-     });
+    Route::post('/denegar/{permisoEmpleado}', [PermisoEmpleadoController::class, 'deny'])
+        ->name('deny');
+});
     Route::post('/notificaciones/leer/{id}', function ($id) {
     $notificacion = Auth::user()->notifications()->findOrFail($id);
     $notificacion->markAsRead();
