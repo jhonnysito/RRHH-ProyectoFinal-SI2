@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\AutoAudit; // <-- asegúrate de importar tu trait
 
 class SolicitudEmpleo extends Model
 {
     use HasFactory;
-
+    use AutoAudit;
     // Definir los campos que se pueden asignar masivamente
     protected $fillable = [
         'tenant_id',

@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\AutoAudit; // <-- asegúrate de importar tu trait
 
 class Cargo extends Model
 {
     
-
+    use AutoAudit;
     protected $fillable = ['tenant_id','nombre', 'descripcion', 'departamento_id'];
 
     // Relación: un cargo pertenece a un departamento

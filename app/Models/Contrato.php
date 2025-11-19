@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\AutoAudit; // <-- asegúrate de importar tu trait
 
 class Contrato extends Model
 {
+    use AutoAudit;    
     protected $table = 'contratos';
 
     protected $fillable = [

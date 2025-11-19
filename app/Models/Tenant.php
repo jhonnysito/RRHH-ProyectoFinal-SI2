@@ -7,11 +7,13 @@ use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Models\Domain;
+use App\Traits\AutoAudit; // <-- asegúrate de importar tu trait
 
 class Tenant extends BaseTenant
 {
     use HasDomains;
     use Billable;
+    use AutoAudit;
     // Aquí puedes agregar tus campos personalizados si quieres
     protected $fillable = [
         'id',

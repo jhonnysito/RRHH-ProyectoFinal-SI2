@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Traits\AutoAudit; // <-- asegúrate de importar tu trait
 
 class Bitacora extends Model
 {
     use HasFactory;
-
+    use AutoAudit;
     /**
      * The table associated with the model.
      *

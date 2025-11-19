@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use App\Traits\AutoAudit; // <-- asegúrate de importar tu trait
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -8,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 class Empleado extends Model
 {
     use HasFactory;
-
+    use AutoAudit;
     /**
      * Nombre de la tabla asociada al modelo.
      * Si no se especifica, Laravel asume el plural del nombre del modelo ("empleados").

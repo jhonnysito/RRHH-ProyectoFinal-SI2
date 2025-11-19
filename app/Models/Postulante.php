@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Puesto_Disponible;
+use App\Traits\AutoAudit; // <-- asegúrate de importar tu trait
 
 class Postulante extends Model
 {
     use HasFactory;
-
+    use AutoAudit;
     // Los campos que pueden ser asignados masivamente
     protected $fillable = [
         'tenant_id',

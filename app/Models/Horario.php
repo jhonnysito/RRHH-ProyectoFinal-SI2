@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\AutoAudit; // <-- asegúrate de importar tu trait
 
 class Horario extends Model
 {
     use HasFactory;
-
+    use AutoAudit;
     protected $table = 'horarios';
 
     protected $fillable = [

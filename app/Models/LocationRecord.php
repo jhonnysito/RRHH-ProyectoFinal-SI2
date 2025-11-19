@@ -6,11 +6,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\AutoAudit; // <-- asegúrate de importar tu trait
 
 class LocationRecord extends Model
 {
     use HasFactory;
-
+    use AutoAudit;
     /**
      * The attributes that are mass assignable.
      *

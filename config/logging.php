@@ -5,6 +5,11 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
 use Monolog\Processor\PsrLogMessageProcessor;
 
+// Importar la clase del handler de CloudWatch (maxbanton/cwh)
+use Maxbanton\Cwh\Handler\CloudWatch as CloudWatchHandler;
+// Importar la clase del cliente de AWS SDK (aws/aws-sdk-php)
+use Aws\CloudWatchLogs\CloudWatchLogsClient;
+
 return [
 
     /*
@@ -125,6 +130,28 @@ return [
 
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
+        ],
+        // --- CANAL DE AUDITORÍA CLOUDWATCH ---
+        'cloudwatch_audit' => [
+            'driver' => 'monolog',
+            'handler' => CloudWatchHandler::class, // Clase del paquete maxbanton/cwh
+            'with' => [
+                'client' => new CloudWatchLogsClient([
+                    'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
+                    'version' => 'latest',
+                    'credentials' => [
+                        // Asegúrate de usar una clave con permisos de escritura en CloudWatch Logs
+                        'key'    => env('AWS_ACCESS_KEY_ID'),
+                        'secret' => env('AWS_SECRET_ACCESS_KEY'),
+                    ],
+                ]),
+                'group' => env('CLOUDWATCH_AUDIT_GROUP', 'RRHH-ProyectoFinal-SI2-AUDIT'),
+                'stream' => env('CLOUDWATCH_AUDIT_STREAM', 'auditoria-tenant-logs'),
+                // Opcional: Intervalo para enviar logs a AWS (en segundos)
+                'retention' => 14, // Retención de logs en días (14 días)
+            ],
+            // Nivel de log a enviar a CloudWatch (info y superior)
+            'level' => 'info',
         ],
 
     ],

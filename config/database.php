@@ -112,6 +112,19 @@ return [
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
+        'audit_pgsql' => [
+            'driver'   => 'pgsql',
+            'host'     => env('DB_AUDIT_HOST', '127.0.0.1'),
+            'port'     => env('DB_AUDIT_PORT', '5432'),
+            'database' => env('DB_AUDIT_DATABASE', 'rrhh3_audit_db'),
+            'username' => env('DB_AUDIT_USERNAME', 'postgres'),
+            'password' => env('DB_AUDIT_PASSWORD', ''),
+            'charset'  => 'utf8',
+            'prefix'   => '',
+            'schema'   => 'public',
+            'sslmode'  => 'prefer',
+        ],
+
 
     ],
 

@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\AutoAudit; // <-- asegúrate de importar tu trait
 
 class Departamento extends Model
 {
+    use AutoAudit;
     //
     protected $fillable = ['tenant_id', 'nombre', 'descripcion'];
 

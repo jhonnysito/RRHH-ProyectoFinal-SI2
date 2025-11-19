@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\AutoAudit; // <-- asegúrate de importar tu trait
 
 class Puesto_Disponible extends Model
 {
     use HasFactory;
+    use AutoAudit;
     protected $table = 'puestos_disponibles';
 
     protected $primaryKey = 'id';
