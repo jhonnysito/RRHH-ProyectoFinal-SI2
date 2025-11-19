@@ -1,4 +1,4 @@
-<nav x-data="{ open: false, sidebarVisible: false }" class="bg-white border-b border-gray-100">
+<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
 
     <!-- Primary Navigation Menu -->
     <div class="h-14 bg-gray-100 top-0 w-full fixed shadow" style="z-index: 99999;">
@@ -324,6 +324,7 @@
                 @endcan
 
 
+    @endrole
 
     {{-- =====================  EMPLEADO ===================== --}}
     @role('Empleado')
