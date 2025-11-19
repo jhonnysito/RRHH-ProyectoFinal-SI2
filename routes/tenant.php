@@ -90,14 +90,14 @@ Route::middleware([
     Route::get('/empleados/{empleado}/contrato', [ContratoController::class, 'create'])
         ->name('empleados.contrato.create');
     Route::prefix('contratos')->group(function () {
-    Route::get('/crear/{empleado_id}', [ContratoController::class, 'create'])->name('contratos.crear');
-    Route::post('/store', [ContratoController::class, 'store'])->name('contratos.store');
-    Route::get('/ver/{empleado_id}', [ContratoController::class, 'ver'])->name('contratos.ver');
-    Route::get('/empleados/{id}/editar', [EmpleadoController::class, 'editar'])
-     ->name('empleados.editar');
-     Route::get('/empleados/{id}/eliminar', [EmpleadoController::class, 'eliminar'])
-     ->name('empleados.eliminar');
-});
+        Route::get('/crear/{empleado_id}', [ContratoController::class, 'create'])->name('contratos.crear');
+        Route::post('/store', [ContratoController::class, 'store'])->name('contratos.store');
+        Route::get('/ver/{empleado_id}', [ContratoController::class, 'ver'])->name('contratos.ver');
+        Route::get('/empleados/{id}/editar', [EmpleadoController::class, 'editar'])
+            ->name('empleados.editar');
+        Route::get('/empleados/{id}/eliminar', [EmpleadoController::class, 'eliminar'])
+            ->name('empleados.eliminar');
+    });
     // Rutas para Horarios de Empleados
     Route::resource('horarios', HorarioController::class)->middleware('auth');
     // Rutas para Asistencias de Empleados
@@ -115,11 +115,11 @@ Route::middleware([
     //ROLES
 
     Route::get('/roles/inicio', [RoleController::class, 'inicio'])->name('roles.inicio');
-     Route::post('/roles/actualizar', [RoleController::class, 'actualizar'])->name('roles.actualizar');
+    Route::post('/roles/actualizar', [RoleController::class, 'actualizar'])->name('roles.actualizar');
     Route::get('/roles/crear', [RoleController::class, 'crear'])->name('roles.crear');
     Route::post('/roles/guardar', [RoleController::class, 'guardar'])->name('roles.guardar');
     Route::get('/roles/editar', [RoleController::class, 'editar'])->name('roles.editar');
-   
+
     Route::post('/roles/eliminar/{id}', [RoleController::class, 'eliminar'])->name('roles.eliminar');
 
 
@@ -187,7 +187,7 @@ Route::middleware([
     // Enviar formulario de postulación
     Route::post('puesto/{id}/postular', [Puesto_DisponibleController::class, 'enviarPostulacion'])
         ->name('puesto.enviarPostulacion');
-    
+
     Route::get('puesto_disponibles/disponibles', [Puesto_DisponibleController::class, 'disponibles'])
         ->name('puesto_disponibles.disponibles');
 
@@ -212,18 +212,18 @@ Route::post('/entrevistas/guardar', [App\Http\Controllers\EntrevistaController::
 // Mostrar el formulario para editar una entrevista
 Route::get('/entrevistas/editar/{entrevista}', [App\Http\Controllers\EntrevistaController::class, 'editar'])
     ->name('entrevistas.edit');
-    // Mostrar la evaluación de una entrevista
+// Mostrar la evaluación de una entrevista
 Route::get('/entrevistas/{entrevista}/evaluacion', [App\Http\Controllers\EntrevistaController::class, 'verEvaluacion'])
     ->name('evaluaciones.show');
-    // Eliminar una entrevista
+// Eliminar una entrevista
 Route::delete('/entrevistas/eliminar/{entrevista}', [App\Http\Controllers\EntrevistaController::class, 'destroy'])
     ->name('entrevistas.destroy');
 Route::post('/entrevistas', [App\Http\Controllers\EntrevistaController::class, 'store'])
     ->name('entrevistas.store');
-    // Mostrar formulario para evaluar una entrevista
+// Mostrar formulario para evaluar una entrevista
 Route::get('/entrevistas/{entrevista}/evaluar', [App\Http\Controllers\EntrevistaController::class, 'evaluar'])
     ->name('entrevistas.evaluar');
-    // Guardar la evaluación de la entrevista
+// Guardar la evaluación de la entrevista
 Route::post('/entrevistas/{entrevista}/evaluar', [App\Http\Controllers\EntrevistaController::class, 'guardarEvaluacion'])
     ->name('entrevistas.guardarEvaluacion');
 // Ruta de API para que la app Flutter envíe los datos de ubicación
@@ -233,36 +233,36 @@ Route::post('/api/location-records', [LocationRecordController::class, 'store'])
 
 
 
-        // Para actualizar el permiso
+// Para actualizar el permiso
 //Route::put('/actualizar/{id}', [PermisoController::class, 'actualizar'])->name('permisos.actualizar');
 Route::delete('/eliminar/{id}', [PermisoController::class, 'destroy'])->name('permisos.eliminar');
-    Route::get('/editar/{id}', [PermisoController::class, 'edit'])->name('permisos.editar');
+Route::get('/editar/{id}', [PermisoController::class, 'edit'])->name('permisos.editar');
 
 
 
 
 // 1. (GET) Muestra la vista para crear un nuevo permiso
-    // Ruta: /permisos/solicitar
-    // Nombre: permisos.solicitud
-    Route::get('/permisos/solicitar', [PermisoEmpleadoController::class, 'solicitud'])->name('permisos.solicitud');
+// Ruta: /permisos/solicitar
+// Nombre: permisos.solicitud
+Route::get('/permisos/solicitar', [PermisoEmpleadoController::class, 'solicitud'])->name('permisos.solicitud');
 
-    // 2. (POST) Guarda la nueva solicitud de permiso en la BD
-    // Ruta: /permisos/enviar
-    // Nombre: permisos.enviar-solicitud
-    Route::post('/permisos/enviar', [PermisoEmpleadoController::class, 'enviarSolicitud'])->name('permisos.enviar-solicitud');
+// 2. (POST) Guarda la nueva solicitud de permiso en la BD
+// Ruta: /permisos/enviar
+// Nombre: permisos.enviar-solicitud
+Route::post('/permisos/enviar', [PermisoEmpleadoController::class, 'enviarSolicitud'])->name('permisos.enviar-solicitud');
 
-    // 3. (GET) Muestra el historial de permisos (para empleados y admins)
-    // Ruta: /permisos/historial
-    // Nombre: permisos.historial
-    Route::get('/permisos/historial', [PermisoEmpleadoController::class, 'historial'])->name('permisos.historial');
+// 3. (GET) Muestra el historial de permisos (para empleados y admins)
+// Ruta: /permisos/historial
+// Nombre: permisos.historial
+Route::get('/permisos/historial', [PermisoEmpleadoController::class, 'historial'])->name('permisos.historial');
 
-    // 4. (POST) Aprueba un permiso (solo para Admins/Encargados)
-    // Ruta: /permisos/aprobar/{id}
-    // Nombre: permisos.approve
-    Route::post('/permisos/aprobar/{id}', [PermisoEmpleadoController::class, 'approve'])->name('permisos.approve');
+// 4. (POST) Aprueba un permiso (solo para Admins/Encargados)
+// Ruta: /permisos/aprobar/{id}
+// Nombre: permisos.approve
+//Route::post('/permisos/aprobar/{id}', [PermisoEmpleadoController::class, 'approve'])->name('permisos.approve');
+Route::post('/permisos/aprobar/{id}', [PermisoEmpleadoController::class, 'aprobar'])->name('permisos.approve');
 
-    // 5. (POST) Deniega un permiso (solo para Admins/Encargados)
-    // Ruta: /permisos/denegar/{id}
-    // Nombre: permisos.deny
-    Route::post('/permisos/denegar/{id}', [PermisoEmpleadoController::class, 'deny'])->name('permisos.deny');
-
+// 5. (POST) Deniega un permiso (solo para Admins/Encargados)
+// Ruta: /permisos/denegar/{id}
+// Nombre: permisos.deny
+Route::post('/permisos/denegar/{id}', [PermisoEmpleadoController::class, 'deny'])->name('permisos.deny');

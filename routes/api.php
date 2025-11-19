@@ -13,6 +13,7 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\PermisoEmpleadoController;
 
 
 
@@ -39,8 +40,11 @@ Route::post('/login', function (Request $request) {
 });
 
 Route::middleware([
+    'auth:sanctum',
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
+    //Route::post('/permisos/enviar', [PermisoEmpleadoController::class, 'enviarSolicitud'])->name('permisos.enviar-solicitud');
+    Route::post('/permisos/solicitud', [PermisoEmpleadoController::class, 'enviarSolicitudApi']);
     Route::post('/location-records', [LocationRecordController::class, 'store']);
 });
