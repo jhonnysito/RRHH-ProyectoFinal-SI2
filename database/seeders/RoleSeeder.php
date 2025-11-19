@@ -27,7 +27,7 @@ class RoleSeeder extends Seeder
         // --- ¡AJUSTE NECESARIO PARA EL CHAT! ---
         Role::firstOrCreate(['name' => 'Recursos Humanos']);
         // --- FIN DEL AJUSTE ---
-     
+
         //Usuarios y Contratos
         // --- ¡AJUSTE MÍNIMO! ---
         // Cambiamos create() por firstOrCreate() para que no falle
@@ -54,7 +54,7 @@ class RoleSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Editar Rol'])->syncRoles([$rol1]);
         Permission::firstOrCreate(['name' => 'Actualizar Rol'])->syncRoles([$rol1]);
         Permission::firstOrCreate(['name' => 'Eliminar Rol'])->syncRoles([$rol1]);
-    
+
         //postulantes
         Permission::firstOrCreate(['name' => 'Inicio Postulantes'])->syncRoles([$rol1, $rol2]);
         Permission::firstOrCreate(['name' => 'Postularse'])->syncRoles($rol1);
@@ -121,7 +121,7 @@ class RoleSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Editar Actividades'])->syncRoles([$rol1, $rol2]);
         Permission::firstOrCreate(['name' => 'Actualizar Actividades'])->syncRoles([$rol1, $rol2]);
         Permission::firstOrCreate(['name' => 'Eliminar Actividades'])->syncRoles([$rol1, $rol2]);
-         
+
         // Depósitos
         Permission::firstOrCreate(['name' => 'Ver Todos los Depósitos'])->syncRoles([$rol1, $rol2]);
         Permission::firstOrCreate(['name' => 'Ver Mis Depósitos'])->syncRoles([$rol4]);
@@ -130,7 +130,24 @@ class RoleSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Eliminar Depósitos'])->syncRoles([$rol1, $rol2]);
         Permission::firstOrCreate(['name' => 'Depositar Dinero'])->syncRoles([$rol1, $rol2]);
 
+        // Salarios
+        Permission::firstOrCreate(['name' => 'Inicio Salarios'])
+            ->syncRoles([$rol1, $rol2, $rol4]); // Ver
 
+        Permission::firstOrCreate(['name' => 'Crear Salarios'])
+            ->syncRoles([$rol1]); // solo rol1
+
+        Permission::firstOrCreate(['name' => 'Guardar Salarios'])
+            ->syncRoles([$rol1]); // solo rol1
+
+        Permission::firstOrCreate(['name' => 'Editar Salarios'])
+            ->syncRoles([$rol1]); // solo rol1
+
+        Permission::firstOrCreate(['name' => 'Actualizar Salarios'])
+            ->syncRoles([$rol1]); // solo rol1
+
+        Permission::firstOrCreate(['name' => 'Eliminar Salarios'])
+            ->syncRoles([$rol1]); // solo rol1
         //memorandums
         Permission::firstOrCreate(['name' => 'Crear memorandum'])->syncRoles([$rol1, $rol2]);
     }

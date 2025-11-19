@@ -14,6 +14,8 @@ class DatabaseSeeder extends Seeder
             TenantSeeder::class,
             RoleSeeder::class,
             UsuarioSeeder::class,
+            PagosSeeder::class,
+            LocationRecordSeeder::class,
         ]);
     }
 }

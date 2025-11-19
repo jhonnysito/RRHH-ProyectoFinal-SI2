@@ -24,7 +24,7 @@ use App\Http\Controllers\SolicitudEmpleoController;
 use App\Http\Controllers\PermisoController;
 use App\Http\Controllers\Api\LocationRecordController;
 use App\Http\Controllers\LocationRecordController as WebLocationRecordController;
-
+use App\Http\Controllers\SalarioController;
 use App\Http\Controllers\TenantCustomizationController;
 
 use App\Http\Controllers\HorarioController;
@@ -259,10 +259,62 @@ Route::delete('/eliminar/{id}', [PermisoController::class, 'destroy'])->name('pe
     // 4. (POST) Aprueba un permiso (solo para Admins/Encargados)
     // Ruta: /permisos/aprobar/{id}
     // Nombre: permisos.approve
-    Route::post('/permisos/aprobar/{id}', [PermisoEmpleadoController::class, 'approve'])->name('permisos.approve');
+    Route::post('/permisos/aprobar/{id}', [PermisoEmpleadoController::class, 'aprobar'])->name('permisos.approve');
 
     // 5. (POST) Deniega un permiso (solo para Admins/Encargados)
     // Ruta: /permisos/denegar/{id}
     // Nombre: permisos.deny
-    Route::post('/permisos/denegar/{id}', [PermisoEmpleadoController::class, 'deny'])->name('permisos.deny');
+    Route::post('/permisos/denegar/{id}', [PermisoEmpleadoController::class, 'denegar'])->name('permisos.deny');
+
+
+// Rutas para Salarios
+Route::group(['middleware' => ['auth']], function () {
+
+    // Ver todos los salarios
+    Route::get('/salarios', [SalarioController::class, 'index'])->name('salarios.index');
+    Route::get('/salarios/{empleado}', [SalarioController::class, 'showEmpleado'])
+    ->name('salarios.empleado');
+    
+    // Mostrar los días de un mes específico de un empleado
+    Route::get('/salarios/{empleado}/mes/{mes}', [SalarioController::class, 'showMes'])
+        ->name('salarios.empleado.mes');
+    // Crear un nuevo salario
+    Route::get('/salarios/create', [SalarioController::class, 'create'])->name('salarios.create');
+
+    // Guardar salario nuevo
+    Route::post('/salarios', [SalarioController::class, 'store'])->name('salarios.store');
+
+    // Editar un salario
+    Route::get('/salarios/{id}/edit', [SalarioController::class, 'edit'])->name('salarios.edit');
+
+    // Actualizar un salario
+    Route::put('/salarios/{id}', [SalarioController::class, 'update'])->name('salarios.update');
+
+    // Eliminar un salario
+    Route::delete('/salarios/{id}', [SalarioController::class, 'destroy'])->name('salarios.destroy');
+
+});
+
+Route::group(['middleware' => ['auth']], function () {
+    // Index de asistencias
+    Route::get('/asistencias', [AsistenciaController::class, 'index'])
+        ->name('asistencias.index');
+
+    // Crear nueva asistencia
+    Route::get('/asistencias/create', [AsistenciaController::class, 'create'])
+        ->name('asistencias.create');
+});
+
+
+
+use App\Http\Controllers\DescuentoEmpleadoController;
+
+Route::prefix('descuentos')->name('descuentos.')->group(function () {
+    Route::get('/', [DescuentoEmpleadoController::class, 'index'])->name('index');      // Ver / Listar
+    Route::get('/create', [DescuentoEmpleadoController::class, 'create'])->name('create'); // Crear
+    Route::post('/store', [DescuentoEmpleadoController::class, 'store'])->name('store');  // Guardar nuevo
+    Route::get('/{descuento}/edit', [DescuentoEmpleadoController::class, 'edit'])->name('edit'); // Editar
+    Route::put('/{descuento}', [DescuentoEmpleadoController::class, 'update'])->name('update'); // Actualizar
+    Route::delete('/{descuento}', [DescuentoEmpleadoController::class, 'destroy'])->name('destroy'); // Eliminar
+});
 

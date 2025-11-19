@@ -91,39 +91,52 @@ class PermisoEmpleadoController extends Controller
     /**
      * Aprueba un permiso. Solo accesible por administradores.
      */
-    public function aprobar(PermisoEmpleado $permiso)
+    public function aprobar($id)
     {
-        Gate::authorize('manage-permisos');
+        // Buscar el permiso
+        $permiso = PermisoEmpleado::findOrFail($id);
 
+        // Verificar estado
         if ($permiso->estado === 'solicitado') {
+
             $permiso->update(['estado' => 'aprobado']);
 
             // Notificar al empleado
-            $permiso->user->notify(new PermisosNotification($permiso, 'aprobado'));
+            if ($permiso->user) {
+                $permiso->user->notify(new PermisosNotification($permiso, 'aprobado'));
+            }
 
-            return redirect()->route('permisos.historial')->with('actualizado', 'Permiso aprobado y empleado notificado.');
+            return redirect()->route('permisos.historial')
+                ->with('actualizado', 'Permiso aprobado y empleado notificado.');
         }
 
-        return redirect()->route('permisos.historial')->with('error', 'El permiso ya fue procesado o no está en estado "solicitado".');
+        return redirect()->route('permisos.historial')
+            ->with('error', 'El permiso ya fue procesado o no está en estado "solicitado".');
     }
 
     /**
      * Deniega un permiso. Solo accesible por administradores.
      */
-    public function denegar(PermisoEmpleado $permiso)
+    public function denegar($id)
     {
-        Gate::authorize('manage-permisos');
+        // Buscar el permiso
+        $permiso = PermisoEmpleado::findOrFail($id);
 
         if ($permiso->estado === 'solicitado') {
+
             $permiso->update(['estado' => 'rechazado']);
 
             // Notificar al empleado
-            $permiso->user->notify(new PermisosNotification($permiso, 'rechazado'));
+            if ($permiso->user) {
+                $permiso->user->notify(new PermisosNotification($permiso, 'rechazado'));
+            }
 
-            return redirect()->route('permisos.historial')->with('actualizado', 'Permiso denegado y empleado notificado.');
+            return redirect()->route('permisos.historial')
+                ->with('actualizado', 'Permiso denegado y empleado notificado.');
         }
 
-        return redirect()->route('permisos.historial')->with('error', 'El permiso ya fue procesado o no está en estado "solicitado".');
+        return redirect()->route('permisos.historial')
+            ->with('error', 'El permiso ya fue procesado o no está en estado "solicitado".');
     }
     /**
      * Display a listing of the resource.

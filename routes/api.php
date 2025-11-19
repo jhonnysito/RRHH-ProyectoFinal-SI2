@@ -43,4 +43,7 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
     Route::post('/location-records', [LocationRecordController::class, 'store']);
+    Route::post('/asistencias/corregir', [LocationRecordController::class, 'corregir'])
+    ->name('asistencia.correccion');
 });
+

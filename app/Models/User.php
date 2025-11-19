@@ -75,4 +75,8 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Conversacion::class, 'conversacion_participantes');
     }
+    public function pagos()
+{
+    return $this->hasMany(PagoEmpleado::class, 'empleado_id');
+}
 }

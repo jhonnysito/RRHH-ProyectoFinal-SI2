@@ -270,12 +270,26 @@
                         Ver Historial
                     </a>
                     @endcan
-
-                    
-
                 </x-sidebar-dropdown>
 
+                {{-- Salarios --}}
+                @canany(['Inicio Salarios'])
+                <x-sidebar-dropdown texto="Salarios">
 
+                    @can('Crear Salarios')
+                    <a href="{{ route('salarios.create') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Agregar</a>
+                    @endcan
+
+                    @can('Inicio Salarios')
+                    <a href="{{ route('salarios.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Ver</a>
+                    @endcan 
+                    <a href="{{ route('descuentos.create') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Agregar</a>
+                    <a href="{{ route('descuentos.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Ver</a>
+    
+
+
+                </x-sidebar-dropdown>
+                @endcanany
             </ul>
 
 
