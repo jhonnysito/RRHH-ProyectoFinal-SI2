@@ -187,6 +187,9 @@
                 {{-- Empleados --}}
                 @canany(['Inicio Empleados'])
                 <x-sidebar-dropdown texto="Empleados">
+                    @can('Inicio Empleados')
+                    <a href="{{ route('empleados.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Ver</a>
+                    @endcan
                     @can('Crear Empleados')
                     <a href="{{ route('empleados.create') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Agregar</a>
                     @endcan
@@ -251,31 +254,31 @@
                 </x-sidebar-dropdown>
                 @endcanany
 
+                {{-- Permisos Empleados --}}
+                <x-sidebar-dropdown texto="Permisos Empleados">
+
+                    {{-- Solicitar Permiso --}}
+                    @can('Solicitar Permiso')
+                    <a href="{{ route('permisos.solicitud') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">
+                        Solicitar Permiso
+                    </a>
+                    @endcan
+
+                    {{-- Ver Historial --}}
+                    @can('Ver Historial de Permisos')
+                    <a href="{{ route('permisos.historial') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">
+                        Ver Historial
+                    </a>
+                    @endcan
+
+                    
+
+                </x-sidebar-dropdown>
 
 
             </ul>
-            {{-- Bloque de Permisos --}}
-            {{-- Muestra la sección si es Administrador O si tiene al menos un permiso de Permisos --}}
-            @if (Auth::user()->hasRole('Administrador') || Auth::user()->canany(['Agregar Permisos','Ver Permisos', 'Editar Permisos']))
-            <x-sidebar-dropdown texto="PermisosEmpleados">
 
-                {{-- Opción 1: Solicitar Permiso (Ruta corregida: usa 'permisos.solicitud') --}}
-                @if (Auth::user()->hasRole('Administrador') || Auth::user()->can('Agregar Permisos'))
-                <a href="{{ route('permisos.solicitud') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Solicitar Permiso</a>
-                @endif
 
-                {{-- Opción 2: Ver Historial (Visible si puede "Ver") --}}
-                @if (Auth::user()->hasRole('Administrador') || Auth::user()->can('Ver Permisos'))
-                <a href="{{ route('permisos.historial') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Ver Historial</a>
-                @endif
-
-                {{-- Opción 3: Aprobar/Denegar (Visible si puede "Editar" o es Admin. También usa historial) --}}
-                @if (Auth::user()->hasRole('Administrador') || Auth::user()->can('Editar Permisos'))
-                <a href="{{ route('permisos.historial') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Aprobar/Denegar</a>
-                @endif
-
-            </x-sidebar-dropdown>
-            @endif
 
             {{-- Chat --}}
             <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">

@@ -13,20 +13,26 @@ return new class extends Migration
     {
         Schema::create('permiso_empleados', function (Blueprint $table) {
             $table->id();
+
             // ID del usuario que solicita el permiso
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
 
-            // ID del tipo de incidencia (e.g., Vacaciones, Enfermedad)
-            // Asumiendo que ya tiene una tabla 'incidencias'
-            $table->foreignId('incidencia_id')->constrained('incidencias')->onDelete('cascade');
+            // Tipo de incidencia convertida a atributo
+            $table->enum('incidencia', ['vacaciones', 'enfermedad', 'otros']);
 
             $table->date('fecha_inicio');
             $table->date('fecha_fin');
+
             $table->string('motivo')->nullable();
 
-            // Estado: solicitado (default), aprobado, rechazado
-            $table->enum('estado', ['solicitado', 'aprobado', 'rechazado'])->default('solicitado');
+            // Imagen adjunta del permiso (certificado médico, carta, etc.)
+            $table->string('imagen')->nullable(); // Guardarás el path de la imagen aquí
 
+            // Estado del permiso
+            $table->enum('estado', ['solicitado', 'aprobado', 'rechazado'])->default('solicitado');
+             // Relación con el tenant (empresa) - string
+            $table->string('tenant_id');
+            $table->foreign('tenant_id')->references('id')->on('tenants')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -40,5 +46,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('permiso_empleados');
     }
-    
 };

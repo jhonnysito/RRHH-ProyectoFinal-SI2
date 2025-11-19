@@ -15,9 +15,9 @@ class PermisoEmpleadoController extends Controller
 
     public function solicitud()
     {
-        
-        $incidencias = Incidencia::all();
-        dd($incidencias->all());
+        // Tipos de permisos disponibles
+        $incidencias = ['vacaciones', 'enfermedad', 'otros'];
+
         return view('permisos.solicitud', compact('incidencias'));
     }
 
@@ -26,36 +26,48 @@ class PermisoEmpleadoController extends Controller
      */
     public function enviarSolicitud(Request $request)
     {
+        // VALIDACIÓN
         $request->validate([
-            'incidencia_id' => 'required|exists:incidencias,id',
+            'incidencia' => 'required|in:enfermedad,vacaciones,otros',
             'fecha_inicio' => 'required|date|after_or_equal:today',
             'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
             'motivo' => 'nullable|string|max:255',
+            'imagen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120', // 5MB
         ]);
 
+        // SUBIR ARCHIVO SI EXISTE
+        $rutaImagen = null;
+        if ($request->hasFile('imagen')) {
+            $rutaImagen = $request->file('imagen')->store('permisos', 'public');
+        }
+
+        // CREACIÓN DEL PERMISO
         $permiso = PermisoEmpleado::create([
             'user_id' => Auth::id(),
-            'incidencia_id' => 1,
+            'incidencia' => $request->incidencia,  // <---- NUEVO CAMPO
             'fecha_inicio' => $request->fecha_inicio,
             'fecha_fin' => $request->fecha_fin,
             'motivo' => $request->motivo,
+            'imagen' => $rutaImagen, // <---- NUEVA IMAGEN
             'estado' => 'solicitado',
+            'tenant_id'       => tenant('id'),
         ]);
 
-        // 1. Notificar al empleado (Línea corregida con chequeo)
+        // NOTIFICAR EMPLEADO
         $user = Auth::user();
-        
         if ($user) {
-            //$user->notify(new PermisosNotification($permiso, 'solicitado')); // Línea 49
+            // $user->notify(new PermisosNotification($permiso, 'solicitado'));
         }
 
-        // 2. Notificar al administrador (o supervisor)
+        // NOTIFICAR ADMINISTRADORES
         $administradores = User::role('Administrador')->get();
         foreach ($administradores as $admin) {
             $admin->notify(new PermisosNotification($permiso, 'solicitado'));
         }
 
-        return redirect()->route('permisos.historial')->with('creado', 'Solicitud de permiso enviada con éxito. Pendiente de aprobación.');
+        return redirect()
+            ->route('permisos.historial')
+            ->with('creado', 'Solicitud de permiso enviada con éxito. Pendiente de aprobación.');
     }
 
     /**
@@ -63,15 +75,14 @@ class PermisoEmpleadoController extends Controller
      */
     public function historial()
     {
-        if (Gate::allows('manage-permisos')) {
-            $permisos = PermisoEmpleado::with('user', 'incidencia')
-                                ->orderBy('created_at', 'desc')
-                                ->get();
+        if (Auth::user()->hasRole('Administrador')) {
+            $permisos = PermisoEmpleado::with('user')
+                ->orderBy('created_at', 'desc')
+                ->get();
         } else {
-            $permisos = PermisoEmpleado::with('incidencia')
-                                ->where('user_id', Auth::id())
-                                ->orderBy('created_at', 'desc')
-                                ->get();
+            $permisos = PermisoEmpleado::where('user_id', Auth::id())
+                ->orderBy('created_at', 'desc')
+                ->get();
         }
 
         return view('permisos.historial', compact('permisos'));

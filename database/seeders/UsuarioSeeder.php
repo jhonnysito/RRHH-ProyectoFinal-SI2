@@ -24,12 +24,12 @@ class UsuarioSeeder extends Seeder
         // --- ¡AJUSTE! Crear dependencias (Departamento y Cargo)
         // Esto es OBLIGATORIO o la creación de Empleado fallará
         $depto = Departamento::firstOrCreate(
-            ['nombre' => 'Departamento General'],
-            ['descripcion' => 'Departamento de la empresa', 'tenant_id' => 'empresa1']
+            ['nombre' => 'Recursos Humanos'],
+            ['descripcion' => 'Departamento de RRHH', 'tenant_id' => 'empresa1']
         );
         $cargo = Cargo::firstOrCreate(
-            ['nombre' => 'Cargo General', 'departamento_id' => $depto->id],
-            ['descripcion' => 'Cargo de la empresa', 'tenant_id' => 'empresa1']
+            ['nombre' => 'Gerencia', 'departamento_id' => $depto->id],
+            ['descripcion' => 'Gerencia de RRHH', 'tenant_id' => 'empresa1']
         );
         // --- FIN AJUSTE ---
 
