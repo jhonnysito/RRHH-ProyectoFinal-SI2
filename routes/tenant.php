@@ -19,6 +19,7 @@ use App\Http\Controllers\ContratoController;
 use App\Http\Controllers\PermisoEmpleadoController;
 use App\Http\Controllers\ConversacionController;
 use App\Http\Controllers\MensajeController;
+use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\PostulanteController;
 use App\Http\Controllers\SolicitudEmpleoController;
 use App\Http\Controllers\PermisoController;
@@ -78,8 +79,9 @@ Route::middleware([
 
     // Empleados
     Route::get('/empleados', [EmpleadoController::class, 'index'])->name('empleados.index');
-    //Route::get('/empleados/editar/{id}', [EmpleadoController::class, 'edit'])->name('empleados.editar');
-    //Route::get('/empleados/eliminar/{id}', [EmpleadoController::class, 'edit'])->name('empleados.eliminar');
+    Route::get('/empleados/editar/{id}', [EmpleadoController::class, 'edit'])->name('empleados.editar');
+    Route::post('/empleados/actualizar/{id}', [EmpleadoController::class, 'update'])->name('empleados.actualizar');
+    Route::delete('/empleados/eliminar/{id}', [EmpleadoController::class, 'destroy'])->name('empleados.destroy');
 
     Route::get('/empleados/crear', [EmpleadoController::class, 'create'])->name('empleados.create');
     Route::post('/empleados/guardar', [EmpleadoController::class, 'store'])->name('empleados.guardar');
@@ -111,7 +113,14 @@ Route::middleware([
     Route::get('/bitacoras/PDF/{id}', [BitacoraController::class, 'generarBitacoraPDF_usuario'])->name('generarBitacoraPDF_usuario');
 
 
-    //Ruta para los roles
+    //REPORTES
+    
+      Route::get('/reportes', [ReporteController::class, 'inicio'])->name('reportes.inicio');
+       Route::post('/reportes/generar', [ReporteController::class, 'generar'])
+         ->name('reportes.generar');
+
+
+
 
     //ROLES
 

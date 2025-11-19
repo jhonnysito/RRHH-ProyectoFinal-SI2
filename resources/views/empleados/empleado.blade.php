@@ -1,4 +1,5 @@
 <x-app-layout>
+   
     <div class="min-h-screen bg-gray-100">
         {{-- aquí va todo tu contenido tal cual lo tienes --}}
         <div class="min-h-screen bg-gray-100">
@@ -145,12 +146,13 @@
 
         {{-- 🗑️ Eliminar --}}
         @can('Eliminar Empleados')
-        <form id="formEliminar_{{ $empleado->usuario->id }}"
-            action="{{ route('empleados.eliminar', $empleado->usuario->id) }}"
+        <form id="formEliminar_{{ $empleado->id }}"
+            action="{{ route('empleados.destroy', $empleado->id) }}"
             method="POST">
             @csrf
+             @method('DELETE')
             <button type="button"
-                onclick="confirmarEliminacion('{{ $empleado->usuario->id }}')"
+                onclick="confirmarEliminacion('{{ $empleado->id }}')"
                 class="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-700 hover:bg-red-100">
                 🗑️ Eliminar
             </button>
@@ -203,4 +205,17 @@
             }
         }
     </script>
+     @if (session('success'))
+    <div class="bg-green-100 text-green-800 px-4 py-2 rounded mb-4">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if (session('error'))
+    <div class="bg-red-100 text-red-800 px-4 py-2 rounded mb-4">
+        {{ session('error') }}
+    </div>
+@endif
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  
 </x-app-layout>
