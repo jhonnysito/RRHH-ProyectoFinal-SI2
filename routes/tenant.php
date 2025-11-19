@@ -25,7 +25,7 @@ use App\Http\Controllers\PermisoController;
 use App\Http\Controllers\Api\LocationRecordController;
 use App\Http\Controllers\LocationRecordController as WebLocationRecordController;
 use Illuminate\Support\Facades\Auth;
-
+use App\Http\Controllers\SuscripcionController;
 use App\Http\Controllers\TenantCustomizationController;
 
 use App\Http\Controllers\HorarioController;
@@ -281,11 +281,39 @@ Route::middleware(['auth'])->prefix('permisos')->name('permisos.')->group(functi
     Route::post('/denegar/{permisoEmpleado}', [PermisoEmpleadoController::class, 'deny'])
         ->name('deny');
 });
-    Route::post('/notificaciones/leer/{id}', function ($id) {
-    $notificacion = Auth::user()->notifications()->findOrFail($id);
-    $notificacion->markAsRead();
+   // RUTAS PARA NOTIFICACIONES (NUEVO)
+// ===========================================
+Route::middleware(['auth'])->prefix('notificaciones')->name('notificaciones.')->group(function () {
+    
+    // Marcar una notificación como leída (al hacer clic)
+    Route::get('/leer/{id}', function ($id) {
+        $notificacion = Auth::user()->notifications()->findOrFail($id);
+        $notificacion->markAsRead();
+        
+        // Redirigir a la URL de la notificación (ej. el detalle del permiso)
+        $url = $notificacion->data['url'] ?? route('dashboard');
+        return redirect($url);
+        
+    })->name('leer');
 
-    return back();
-    })->name('notificaciones.leer')->middleware('auth');
+    // Marcar TODAS como leídas
+    Route::post('/leer-todas', function () {
+        Auth::user()->unreadNotifications->markAsRead();
+        return redirect()->back()->with('status', 'Notificaciones marcadas como leídas.');
+    })->name('leerTodas');
 
+});
+
+Route::middleware(['auth'])->prefix('billing')->group(function () {
+    // Ver planes
+    Route::get('/planes', [SuscripcionController::class, 'index'])->name('suscripcion.index');
+    
+    // Pagar un plan nuevo (Checkout)
+    Route::get('/suscribirse/{plan}', [SuscripcionController::class, 'suscribirse'])->name('suscripcion.pagar');
+    
+    // Administrar suscripción existente (Portal) -> ¡ESTA ES LA DEL MENÚ!
+    Route::get('/portal', [SuscripcionController::class, 'portal'])->name('suscripcion.portal');
+
+    Route::get('/exito', [SuscripcionController::class, 'exito'])->name('suscripcion.exito');
+});
 

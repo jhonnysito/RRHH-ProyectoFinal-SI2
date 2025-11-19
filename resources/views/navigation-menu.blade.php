@@ -41,23 +41,76 @@
                 </li>
                 <li class="">
                     <div class="ml-3 relative" x-data="{ open: false }">
-                        <button @click="open = !open"
-                            class="relative inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
-                            <!-- Ícono de notificación -->
-                            <div class="absolute left-0 top-0 bg-red-500 rounded-full">
+        <button @click="open = !open"
+            class="relative inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+            
+            <!-- Ícono de notificación -->
+            <div class="p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="text-gray-600 w-6 h-6" viewBox="0 0 16 16">
+                    <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
+                </svg>
+            </div>
 
-                            </div>
-                            <div class="p-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                    class="text-gray-600 w-6 h-6" viewBox="0 0 16 16">
-                                    <path
-                                        d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
-                                </svg>
-                            </div>
-                        </button>
-                        <!-- Dropdown de notificaciones -->
+            <!-- ¡NUEVO! Contador de Notificaciones No Leídas -->
+            @if (auth()->user()->unreadNotifications->count() > 0)
+                <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full transform translate-x-1/2 -translate-y-1/2">
+                    {{ auth()->user()->unreadNotifications->count() }}
+                </span>
+            @endif
+        </button>
 
+        <!-- ¡NUEVO! Dropdown de Notificaciones -->
+        <div x-show="open" @click.away="open = false"
+             class="origin-top-right absolute right-0 mt-2 w-80 md:w-96 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="transform opacity-0 scale-95"
+             x-transition:enter-end="transform opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-75"
+             x-transition:leave-start="transform opacity-100 scale-100"
+             x-transition:leave-end="transform opacity-0 scale-95"
+             style="display: none;">
+            
+            <div class="p-4 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">Notificaciones</h3>
+            </div>
+
+            <div class="max-h-96 overflow-y-auto">
+                @forelse (auth()->user()->unreadNotifications as $notification)
+                    <a href="{{ $notification->data['url'] ?? '#' }}" 
+                       class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 border-b border-gray-100">
+                        <p class="font-medium">{{ $notification->data['remitente_nombre'] ?? 'Sistema' }}</p>
+                        <p class="text-gray-600">{{ $notification->data['mensaje'] }}</p>
+                        <p class="text-xs text-gray-400 mt-1">{{ $notification->created_at->diffForHumans() }}</p>
+                    </a>
+                @empty
+                    <p class="text-center text-gray-500 py-6">No tienes notificaciones nuevas.</p>
+                @endforelse
+
+                @if(auth()->user()->readNotifications->count() > 0)
+                    <div class="p-2 border-t border-gray-200">
+                        <h4 class="text-xs font-medium text-gray-400 uppercase px-4 py-2">Leídas</h4>
                     </div>
+                    @foreach (auth()->user()->readNotifications->take(3) as $notification)
+                        <a href="{{ $notification->data['url'] ?? '#' }}" 
+                           class="block px-4 py-3 text-sm text-gray-500 bg-gray-50 hover:bg-gray-100 border-b border-gray-100">
+                            <p>{{ $notification->data['mensaje'] }}</p>
+                            <p class="text-xs text-gray-400 mt-1">{{ $notification->created_at->diffForHumans() }}</p>
+                        </a>
+                    @endforeach
+                @endif
+            </div>
+
+            <div class="p-2 bg-gray-50 border-t border-gray-200">
+                <!-- (Opcional) Enlace para marcar todas como leídas -->
+                <form action="{{ route('notificaciones.leerTodas') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="text-sm text-indigo-600 hover:text-indigo-900 w-full text-center">
+                        Marcar todas como leídas
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
                 </li>
                 <li class="" onclick="openUserDropdown()">
                     <x-dropdown align="right" width="48">
@@ -177,6 +230,23 @@
             <a href="{{ route('permisos.historial') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Aprobar / Denegar</a>
         </x-sidebar-dropdown>
 
+               <!-- ENLACE DE SUSCRIPCIÓN (NUEVO) -->
+                    <div class="border-t border-gray-200"></div>
+                            <x-dropdown-link href="{{ route('suscripcion.index') }}">
+                                {{ __('Planes de Suscripción') }}
+                            </x-dropdown-link>
+
+                            <!-- Si el usuario ya tiene ID de stripe, mostrar botón al portal -->
+                            @if(Auth::user()->stripe_id)
+                                <x-dropdown-link href="{{ route('suscripcion.portal') }}">
+                                    {{ __('Gestionar Pagos') }}
+                                </x-dropdown-link>
+                            @endif
+
+                        <div class="border-t border-gray-200"></div>
+
+
+
     @endrole
 
 
@@ -208,6 +278,7 @@
             <a href="{{ route('permisos.historial') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Historial</a>
         </x-sidebar-dropdown>
 
+        
     @endrole
 
 

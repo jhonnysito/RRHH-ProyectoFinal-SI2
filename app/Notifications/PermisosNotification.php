@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use App\Models\User;
 
 /**
  * Notificación general para avisar al empleado sobre el estado de su permiso (aprobado o rechazado).
@@ -16,19 +17,21 @@ class PermisosNotification extends Notification implements ShouldQueue
     use Queueable;
 
     public $permiso;
-    public $status; // 'solicitado', 'aprobado' o 'rechazado'
+    public $status;
+    public $sender; 
 
     /**
      * Create a new notification instance.
      *
      * @param Permiso $permiso El objeto Permiso afectado.
      * @param string $status El estado actual del permiso.
-     * @return void
+     * @param User $sender El usuario que origina la acción
      */
-    public function __construct(PermisoEmpleado $permiso, string $status)
+    public function __construct(PermisoEmpleado $permiso, string $status,User $sender)
     {
         $this->permiso = $permiso;
         $this->status = $status;
+        $this->sender = $sender;
     }
 
     /**
@@ -50,34 +53,27 @@ class PermisosNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $subject = 'Actualización de Permiso';
-        $greeting = 'Hola ' . $notifiable->name;
-        $actionText = 'Ver Detalles';
-        
-        switch ($this->status) {
-            case 'aprobado':
-                $subject = '✅ Permiso Aprobado';
-                $line = "Tu solicitud de permiso ({$this->permiso->motivo}) ha sido APROBADA. ¡Que disfrutes tu tiempo!";
-                break;
-            case 'rechazado':
-                $subject = '❌ Permiso Rechazado';
-                $line = "Tu solicitud de permiso ({$this->permiso->motivo}) ha sido RECHAZADA. Revisa el historial para ver la razón.";
-                break;
-            case 'solicitado':
-                $subject = '✉️ Nueva Solicitud de Permiso';
-                $line = "El empleado {$this->permiso->user->name} ha solicitado un nuevo permiso ({$this->permiso->motivo}). Requiere tu revisión.";
-                break;
-            default:
-                $line = "El estado de tu permiso ha sido actualizado a '{$this->status}'.";
-                break;
+        $actionUrl = route('permisos.show', $this->permiso);
+        $line = "";
+        $subject = "";
+
+        if ($this->status == 'solicitado') {
+            $subject = "Nueva Solicitud de Permiso: " . $this->sender->name;
+            $line = "El empleado **{$this->sender->name}** ha solicitado un permiso por: **{$this->permiso->incidencia->nombre}**.";
+        } elseif ($this->status == 'aprobado') {
+            $subject = "✅ Solicitud Aprobada";
+            $line = "Tu solicitud de permiso por **{$this->permiso->incidencia->nombre}** ha sido **APROBADA**.";
+        } elseif ($this->status == 'rechazado') {
+            $subject = "❌ Solicitud Rechazada";
+            $line = "Tu solicitud de permiso por **{$this->permiso->incidencia->nombre}** ha sido **RECHAZADA**.";
         }
 
         return (new MailMessage)
-            ->subject($subject)
-            ->greeting($greeting)
-            ->line($line)
-            ->line("Periodo solicitado: del {$this->permiso->fecha_inicio->format('d/m/Y')} al {$this->permiso->fecha_fin->format('d/m/Y')}")
-            ->action($actionText, route('permisos.historial'));
+                    ->subject($subject)
+                    ->line($line)
+                    ->line("Motivo: " . $this->permiso->motivo)
+                    ->action('Ver Detalle de la Solicitud', $actionUrl)
+                    ->line('Gracias por usar el sistema.');
     }
 
     /**
@@ -88,10 +84,21 @@ class PermisosNotification extends Notification implements ShouldQueue
      */
     public function toArray($notifiable)
     {
+
+        $line = "";
+        if ($this->status == 'solicitado') {
+            $line = "{$this->sender->name} ha solicitado un permiso.";
+        } elseif ($this->status == 'aprobado') {
+            $line = "Tu permiso de {$this->permiso->incidencia->nombre} fue APROBADO.";
+        } elseif ($this->status == 'rechazado') {
+            $line = "Tu permiso de {$this->permiso->incidencia->nombre} fue RECHAZADO.";
+        }
         return [
             'permiso_id' => $this->permiso->id,
-            'motivo' => $this->permiso->motivo,
-            'status' => $this->status,
+            'mensaje' => $line,
+            'remitente_id' => $this->sender->id,
+            'remitente_nombre' => $this->sender->name,
+            'url' => route('permisos.show', $this->permiso),
         ];
     }
 }

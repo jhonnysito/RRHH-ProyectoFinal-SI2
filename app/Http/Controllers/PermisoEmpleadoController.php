@@ -62,7 +62,7 @@ class PermisoEmpleadoController extends Controller
         // 2. Notificar al administrador (o supervisor)
         $administradores = User::role('Administrador')->get();
         foreach ($administradores as $admin) {
-            $admin->notify(new PermisosNotification($permiso, 'solicitado'));
+            $admin->notify(new PermisosNotification($permiso, 'solicitado', $user));
         }
 
         return redirect()->route('permisos.historial')->with('creado', 'Solicitud de permiso enviada con éxito. Pendiente de aprobación.');
