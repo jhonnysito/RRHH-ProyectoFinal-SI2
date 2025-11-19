@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PermisoEmpleado extends Model
 {
-      protected $table = 'permisos_empleados';
+    protected $table = 'permiso_empleados';
 
     /**
      * Los atributos que se pueden asignar masivamente.
@@ -15,12 +15,13 @@ class PermisoEmpleado extends Model
      */
     protected $fillable = [
         'user_id',
+        'incidencia',     // vacaciones | enfermedad | otros
         'motivo',
-        'tipo_permiso', // <-- ¡NUEVO CAMPO AÑADIDO!
         'fecha_inicio',
         'fecha_fin',
-        'aprobado',
-        'denegado',
+        'imagen',         // path de la imagen
+        'estado',         // solicitado | aprobado | rechazado
+        'tenant_id'
     ];
 
     /**
@@ -31,3 +32,4 @@ class PermisoEmpleado extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 }
+

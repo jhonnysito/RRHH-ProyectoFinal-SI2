@@ -22,7 +22,6 @@ class RoleSeeder extends Seeder
 
         $rol1 = Role::firstOrCreate(['name' => 'Administrador']);
         $rol2 = Role::firstOrCreate(['name' => 'Encargado']);
-        $rol3 = Role::firstOrCreate(['name' => 'Postulante']);
         $rol4 = Role::firstOrCreate(['name' => 'Empleado']);
 
         // --- ¡AJUSTE NECESARIO PARA EL CHAT! ---
@@ -58,13 +57,13 @@ class RoleSeeder extends Seeder
     
         //postulantes
         Permission::firstOrCreate(['name' => 'Inicio Postulantes'])->syncRoles([$rol1, $rol2]);
-        Permission::firstOrCreate(['name' => 'Postularse'])->syncRoles([$rol1, $rol3]);
-        Permission::firstOrCreate(['name' => 'Guardar Solicitud'])->syncRoles([$rol1, $rol3]);
-        Permission::firstOrCreate(['name' => 'Avanzar en Solicitud'])->syncRoles([$rol1, $rol3]);
-        Permission::firstOrCreate(['name' => 'Registrar Postulante'])->syncRoles([$rol1, $rol3]);
+        Permission::firstOrCreate(['name' => 'Postularse'])->syncRoles($rol1);
+        Permission::firstOrCreate(['name' => 'Guardar Solicitud'])->syncRoles([$rol1]);
+        Permission::firstOrCreate(['name' => 'Avanzar en Solicitud'])->syncRoles([$rol1]);
+        Permission::firstOrCreate(['name' => 'Registrar Postulante'])->syncRoles([$rol1]);
         Permission::firstOrCreate(['name' => 'Eliminar Postulante'])->syncRoles([$rol1, $rol2]);
-        Permission::firstOrCreate(['name' => 'Editar Solicitud'])->syncRoles([$rol1, $rol2, $rol3]);
-        Permission::firstOrCreate(['name' => 'Actualizar Solicitud'])->syncRoles([$rol1, $rol2, $rol3]);
+        Permission::firstOrCreate(['name' => 'Editar Solicitud'])->syncRoles([$rol1, $rol2]);
+        Permission::firstOrCreate(['name' => 'Actualizar Solicitud'])->syncRoles([$rol1, $rol2]);
 
         //Puestos Disponibles
         Permission::firstOrCreate(['name' => 'Inicio Puestos Disponibles'])->syncRoles([$rol1, $rol2, $rol4]);
