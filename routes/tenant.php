@@ -237,7 +237,11 @@ Route::post('/api/location-records', [LocationRecordController::class, 'store'])
 //Route::put('/actualizar/{id}', [PermisoController::class, 'actualizar'])->name('permisos.actualizar');
 Route::delete('/eliminar/{id}', [PermisoController::class, 'destroy'])->name('permisos.eliminar');
     Route::get('/editar/{id}', [PermisoController::class, 'edit'])->name('permisos.editar');
+// Mostrar todos los permisos
+Route::get('/permisos', [PermisoController::class, 'index'])->name('permisos.inicio');
 
+// Mostrar formulario para crear permiso
+Route::get('/permisos/crear', [PermisoController::class, 'create'])->name('permisos.crear');
 
 
 
@@ -295,15 +299,15 @@ Route::group(['middleware' => ['auth']], function () {
 
 });
 
-Route::group(['middleware' => ['auth']], function () {
     // Index de asistencias
     Route::get('/asistencias', [AsistenciaController::class, 'index'])
         ->name('asistencias.index');
-
+// Crear nueva asistencia
+    Route::post('/asistencias', [AsistenciaController::class, 'store'])
+    ->name('asistencias.store');
     // Crear nueva asistencia
     Route::get('/asistencias/create', [AsistenciaController::class, 'create'])
         ->name('asistencias.create');
-});
 
 
 

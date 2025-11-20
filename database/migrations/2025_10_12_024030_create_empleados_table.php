@@ -23,7 +23,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
             $table->string('password')->nullable();
-            $table->enum('estado', ['activo', 'Inactivo'])->default('activo');
+            $table->enum('estado', ['Activo', 'Inactivo'])->default('Activo');
             $table->string('tenant_id');
 
             $table->timestamps();

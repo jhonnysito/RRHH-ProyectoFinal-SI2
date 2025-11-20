@@ -36,10 +36,6 @@ class PagoEmpleado extends Model
         return $this->hasMany(AtrasoEmpleado::class, 'pago_id');
     }
 
-    public function bonos()
-    {
-        return $this->hasMany(BonoEmpleado::class, 'pago_id');
-    }
 
     public function descuentos()
     {

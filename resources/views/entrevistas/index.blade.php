@@ -39,7 +39,6 @@
                                 <th class="border px-4 py-2">Postulante</th>
                                 <th class="border px-4 py-2">Fecha</th>
                                 <th class="border px-4 py-2">Hora</th>
-                                <th class="border px-4 py-2">Notas</th>
                                 <th class="border px-4 py-2 text-center">Acciones</th>
                             </tr>
                         </thead>
@@ -58,7 +57,6 @@
                                     </td>
                                     <td class="border px-4 py-2">{{ $entrevista->fecha }}</td>
                                     <td class="border px-4 py-2">{{ $entrevista->hora }}</td>
-                                    <td class="border px-4 py-2">{{ $entrevista->notas ?? '—' }}</td>
                                     <td class="border px-4 py-2 text-center">
                                         <div class="flex justify-center gap-2">
                                             @if ($evaluada)

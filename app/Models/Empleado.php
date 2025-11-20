@@ -32,7 +32,6 @@ class Empleado extends Model
         'correo',
         'estado',
         'user_id',
-        'ruta_imagen_e',
     ];
 
 

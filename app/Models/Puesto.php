@@ -14,5 +14,6 @@ class Puesto extends Model
         'descripcion',
         'vacantes',
         'ubicacion',
+         'tenant_id',   
     ];
 }
