@@ -122,30 +122,66 @@ class EntrevistaController extends Controller
         return view('entrevistas.evaluar', compact('entrevista'));
     }
 
-    // Guardar evaluación
     public function guardarEvaluacion(Request $request, Entrevista $entrevista)
     {
+        //dd($request->all());
         $request->validate([
-            'puntaje_comunicacion' => 'required|integer|min:0|max:10',
-            'puntaje_conocimiento' => 'required|integer|min:0|max:10',
-            'puntaje_actitud' => 'required|integer|min:0|max:10',
-            'puntaje_trabajo_equipo' => 'required|integer|min:0|max:10',
-            'resultado_final' => 'required|string',
-            'comentarios' => 'nullable|string',
-        ]);
+            // Características personales
+            'apariencia_profesional' => 'required|integer|min:0|max:10',
+            'actitud' => 'required|integer|min:0|max:10',
+            'conversacion' => 'required|integer|min:0|max:10',
+            'cooperacion_entrevistador' => 'required|integer|min:0|max:10',
+            'relaciones_interpersonales' => 'required|integer|min:0|max:10',
 
+            // Características relacionadas con el puesto
+            'experiencia_puesto' => 'required|integer|min:0|max:10',
+            'conocimiento_cargo' => 'required|integer|min:0|max:10',
+            'perfil_puesto' => 'required|integer|min:0|max:10',
+            'valoracion_curricular' => 'required|integer|min:0|max:10',
+            'adecuacion_puesto' => 'required|integer|min:0|max:10',
+
+        ]);
         $tenant_id = Auth::user()->tenant_id;
+        dd($tenant_id);
         $evaluacion = new Evaluacion();
         $evaluacion->entrevista_id = $entrevista->id;
         $evaluacion->evaluador_id = Auth::id(); // quien evalúa
-        $evaluacion->puntaje_comunicacion = $request->puntaje_comunicacion;
-        $evaluacion->puntaje_conocimiento = $request->puntaje_conocimiento;
-        $evaluacion->puntaje_actitud = $request->puntaje_actitud;
-        $evaluacion->puntaje_trabajo_equipo = $request->puntaje_trabajo_equipo;
-        $evaluacion->puntaje_total = $request->puntaje_comunicacion + $request->puntaje_conocimiento + $request->puntaje_actitud + $request->puntaje_trabajo_equipo;
-        $evaluacion->resultado_final = $request->resultado_final;
-        $evaluacion->comentarios = $request->comentarios;
         $evaluacion->tenant_id = $tenant_id;
+
+        // Guardar características personales
+        $evaluacion->apariencia_profesional = $request->apariencia_profesional;
+        $evaluacion->actitud = $request->actitud;
+        $evaluacion->conversacion = $request->conversacion;
+        $evaluacion->cooperacion_entrevistador = $request->cooperacion_entrevistador;
+        $evaluacion->relaciones_interpersonales = $request->relaciones_interpersonales;
+
+        // Guardar características del puesto
+        $evaluacion->experiencia_puesto = $request->experiencia_puesto;
+        $evaluacion->conocimiento_cargo = $request->conocimiento_cargo;
+        $evaluacion->perfil_puesto = $request->perfil_puesto;
+        $evaluacion->valoracion_curricular = $request->valoracion_curricular;
+        $evaluacion->adecuacion_puesto = $request->adecuacion_puesto;
+
+        // Calcular total de puntuación sobre 100
+        $total_caracteristicas_personales = $evaluacion->apariencia_profesional + $evaluacion->actitud + $evaluacion->conversacion + $evaluacion->cooperacion + $evaluacion->relaciones_interpersonales;
+        $total_caracteristicas_puesto = $evaluacion->experiencia_puesto + $evaluacion->conocimiento_cargo + $evaluacion->perfil_puesto + $evaluacion->valoracion_curricular + $evaluacion->adecuacion_puesto;
+
+        $total_maximo = 10 * 10; // 10 atributos x 10 puntos cada uno
+        $evaluacion->total_puntuacion = round((($total_caracteristicas_personales + $total_caracteristicas_puesto) / $total_maximo) * 100, 2);
+
+        // Determinar candidato según total_puntuacion
+        if ($evaluacion->total_puntuacion < 40) {
+            $evaluacion->candidato = 'Malo';
+        } elseif ($evaluacion->total_puntuacion < 60) {
+            $evaluacion->candidato = 'Regular';
+        } elseif ($evaluacion->total_puntuacion < 80) {
+            $evaluacion->candidato = 'Bueno';
+        } else {
+            $evaluacion->candidato = 'Muy Bueno';
+        }
+
+        // Comentario final
+        $evaluacion->comentario_final = $request->comentario_final;
 
         $evaluacion->save();
 
