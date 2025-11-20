@@ -8,18 +8,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use App\Notifications\PermisosNotification;
+use Illuminate\Support\Facades\Storage;
 use App\Models\User; // Para buscar al administrador
 
 class PermisoEmpleadoController extends Controller
 {
 
-    public function solicitud()
-    {
-        // Tipos de permisos disponibles
-        $incidencias = ['vacaciones', 'enfermedad', 'otros'];
+   public function solicitud()
+{
+    $incidencias = Incidencia::all();
 
-        return view('permisos.solicitud', compact('incidencias'));
-    }
+    return view('permisos.solicitud', compact('incidencias'));
+}
 
     /**
      * Procesa y guarda la solicitud de permiso.
@@ -32,8 +32,15 @@ class PermisoEmpleadoController extends Controller
             'fecha_inicio' => 'required|date|after_or_equal:today',
             'fecha_fin' => 'required|date|after_or_equal:fecha_inicio',
             'motivo' => 'nullable|string|max:255',
-            'imagen' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120', // 5MB
+            'archivo_adjunto' => 'nullable|file|mimes:pdf,jpg,png,jpeg|max:2048', 
         ]);
+        
+         $pathArchivo = null;
+        if ($request->hasFile('archivo_adjunto')) {
+            // Guarda el archivo en 'storage/app/public/permisos_respaldos'
+            // La ruta guardada será 'permisos_respaldos/nombre_archivo.pdf'
+            $pathArchivo = $request->file('archivo_adjunto')->store('permisos_respaldos', 'public');
+        }
 
         // SUBIR ARCHIVO SI EXISTE
         $rutaImagen = null;
@@ -43,15 +50,15 @@ class PermisoEmpleadoController extends Controller
 
         // CREACIÓN DEL PERMISO
         $permiso = PermisoEmpleado::create([
-            'user_id' => Auth::id(),
-            'incidencia' => $request->incidencia,  // <---- NUEVO CAMPO
-            'fecha_inicio' => $request->fecha_inicio,
-            'fecha_fin' => $request->fecha_fin,
-            'motivo' => $request->motivo,
-            'imagen' => $rutaImagen, // <---- NUEVA IMAGEN
-            'estado' => 'solicitado',
-            'tenant_id'       => tenant('id'),
-        ]);
+        'user_id' => Auth::id(),
+        'incidencia_id' => $request->incidencia_id,
+        'fecha_inicio' => $request->fecha_inicio,
+        'fecha_fin' => $request->fecha_fin,
+        'motivo' => $request->motivo,
+        'estado' => 'solicitado',
+        'archivo_adjunto' => $pathArchivo,
+        'tenant_id' => tenant('id'),
+    ]);
 
         // NOTIFICAR EMPLEADO
         $user = Auth::user();
@@ -62,7 +69,7 @@ class PermisoEmpleadoController extends Controller
         // NOTIFICAR ADMINISTRADORES
         $administradores = User::role('Administrador')->get();
         foreach ($administradores as $admin) {
-            $admin->notify(new PermisosNotification($permiso, 'solicitado'));
+            $admin->notify(new PermisosNotification($permiso, 'solicitado', $user));
         }
 
         return redirect()
@@ -73,16 +80,19 @@ class PermisoEmpleadoController extends Controller
     /**
      * Muestra el historial de permisos del empleado o la lista de solicitudes para el administrador.
      */
-    public function historial()
+    public function historial(Request $request)
     {
-        if (Auth::user()->hasRole('Administrador')) {
-            $permisos = PermisoEmpleado::with('user')
-                ->orderBy('created_at', 'desc')
-                ->get();
+        if ($request->user()->hasRole('Administrador')) {
+            // El Admin ve TODO
+            $permisos = PermisoEmpleado::with('user', 'incidencia')
+                                        ->orderBy('created_at', 'desc')
+                                        ->get();
         } else {
-            $permisos = PermisoEmpleado::where('user_id', Auth::id())
-                ->orderBy('created_at', 'desc')
-                ->get();
+            // El Empleado ve SOLO LO SUYO
+            $permisos = PermisoEmpleado::with('incidencia')
+                                        ->where('user_id', Auth::id())
+                                        ->orderBy('created_at', 'desc')
+                                        ->get();
         }
 
         return view('permisos.historial', compact('permisos'));
@@ -91,52 +101,43 @@ class PermisoEmpleadoController extends Controller
     /**
      * Aprueba un permiso. Solo accesible por administradores.
      */
-    public function aprobar($id)
+ public function approve(Request $request,PermisoEmpleado $permisoEmpleado)
     {
-        // Buscar el permiso
-        $permiso = PermisoEmpleado::findOrFail($id);
-
-        // Verificar estado
-        if ($permiso->estado === 'solicitado') {
-
-            $permiso->update(['estado' => 'aprobado']);
-
-            // Notificar al empleado
-            if ($permiso->user) {
-                $permiso->user->notify(new PermisosNotification($permiso, 'aprobado'));
-            }
-
-            return redirect()->route('permisos.historial')
-                ->with('actualizado', 'Permiso aprobado y empleado notificado.');
+        if (!$request->user()->hasRole('Administrador')) {
+             abort(403, 'Acción no autorizada.');
         }
 
-        return redirect()->route('permisos.historial')
-            ->with('error', 'El permiso ya fue procesado o no está en estado "solicitado".');
-    }
+        if ($permisoEmpleado->estado === 'solicitado') {
+            $permisoEmpleado->update(['estado' => 'aprobado']);
+            
+            // Aquí iría la integración con Asistencia (Incidencias) que hablamos
+            // ... (crear Incidencia::create(...) por cada día) ...
 
+            // Aquí iría la notificación al empleado
+            // $permisoEmpleado->user->notify(...)
+
+            return redirect()->route('permisos.historial')->with('actualizado', 'Permiso APROBADO exitosamente.');
+        }
+        return redirect()->route('permisos.historial')->with('error', 'Esta solicitud ya fue procesada.');
+    }
     /**
      * Deniega un permiso. Solo accesible por administradores.
      */
-    public function denegar($id)
+  public function deny(Request $request,PermisoEmpleado $permisoEmpleado)
     {
-        // Buscar el permiso
-        $permiso = PermisoEmpleado::findOrFail($id);
+         if (!$request->user()->hasRole('Administrador')) {
+             abort(403, 'Acción no autorizada.');
+         }
 
-        if ($permiso->estado === 'solicitado') {
+        if ($permisoEmpleado->estado === 'solicitado') {
+            $permisoEmpleado->update(['estado' => 'rechazado']);
 
-            $permiso->update(['estado' => 'rechazado']);
+            // Aquí iría la notificación al empleado
+            // $permisoEmpleado->user->notify(...)
 
-            // Notificar al empleado
-            if ($permiso->user) {
-                $permiso->user->notify(new PermisosNotification($permiso, 'rechazado'));
-            }
-
-            return redirect()->route('permisos.historial')
-                ->with('actualizado', 'Permiso denegado y empleado notificado.');
+            return redirect()->route('permisos.historial')->with('actualizado', 'Permiso RECHAZADO exitosamente.');
         }
-
-        return redirect()->route('permisos.historial')
-            ->with('error', 'El permiso ya fue procesado o no está en estado "solicitado".');
+        return redirect()->route('permisos.historial')->with('error', 'Esta solicitud ya fue procesada.');
     }
     /**
      * Display a listing of the resource.
@@ -165,9 +166,17 @@ class PermisoEmpleadoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PermisoEmpleado $permisoEmpleado)
+    public function show(Request $request,PermisoEmpleado $permisoEmpleado)
     {
-        //
+        // Solo el Admin puede ver detalles (o el propio empleado, si quisieras)
+        if (!$request->user()->hasRole('Administrador')) {
+             abort(403, 'Acción no autorizada.');
+        }
+
+        // Cargamos las relaciones para mostrar el nombre del user y la incidencia
+        $permisoEmpleado->load('user', 'incidencia');
+
+        return view('permisos.show', compact('permisoEmpleado'));
     }
 
     /**

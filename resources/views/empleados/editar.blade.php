@@ -36,7 +36,7 @@
                                 </div>
                                 <input id= "nombre_completo" type="text" name="nombre_completo"
                                     class="w-full -ml-10 pl-10 pr-3 py-2 rounded-2xl border-2 border-gray-200 outline-none focus:border-indigo-500"
-                                    placeholder="Ingresar nombre" value="{{ $empleados->usuario->name }}">
+                                    placeholder="Ingresar nombre" value="{{ $empleado->usuario->name }}">
                                 @error('nombre_completo')
                                     <strong class = "text-red-500">{{ $message }}</strong>
                                 @enderror
@@ -53,7 +53,7 @@
                                 </div>
                                 <input id= "correo" type="email" name="correo"
                                     class="w-full -ml-10 pl-10 pr-3 py-2 rounded-2xl border-2 border-gray-200 outline-none focus:border-indigo-500"
-                                    placeholder="ingresar correo electrónico" value="{{ $empleados->usuario->email }}"v>
+                                    placeholder="ingresar correo electrónico" value="{{ $empleado->usuario->email }}"v>
                                 @error('correo')
                                     <strong class = "text-red-500">{{ $message }}</strong>
                                 @enderror
@@ -70,7 +70,7 @@
                                 </div>
                                 <input id= "direccion" type="text" name="direccion"
                                     class="w-full -ml-10 pl-10 pr-3 py-2 rounded-2xl border-2 border-gray-200 outline-none focus:border-indigo-500"
-                                    placeholder="ingresar dirección" value="{{ $empleados->usuario->direccion }}">
+                                    placeholder="ingresar dirección" value="{{ $empleado->direccion }}">
                             </div>
                         </div>
                     </div>
@@ -84,7 +84,7 @@
                                 </div>
                                 <input id="telefono" type="integer" name="telefono"
                                     class="w-full -ml-10 pl-10 pr-3 py-2 rounded-2xl border-2 border-gray-200 outline-none focus:border-indigo-500"
-                                    placeholder="Ingresar teléfono" value="{{ $empleados->usuario->telefono }}">
+                                    placeholder="Ingresar teléfono" value="{{ $empleado->usuario->telefono }}">
                                 @error('telefono')
                                     <strong class="text-red-500">{{ $message }}</strong>
                                 @enderror
@@ -101,7 +101,7 @@
                                 </div>
                                 <input id="ci" type="integer" name="ci"
                                     class="w-full -ml-10 pl-10 pr-3 py-2 rounded-2xl border-2 border-gray-200 outline-none focus:border-indigo-500"
-                                    placeholder="Ingresar C.I." value="{{ $empleados->usuario->ci }}">
+                                    placeholder="Ingresar C.I." value="{{ $empleado->usuario->ci }}">
                                 @error('ci')
                                     <strong class="text-red-500">{{ $message }}</strong>
                                 @enderror
@@ -138,7 +138,7 @@
                                     <option value="">Selecciona el Departamento</option>
                                     @foreach ($departamentos as $departamento)
                                         <option value="{{ $departamento->id }}"
-                                            @if ($departamento->id == $empleados->departamento->id) selected @endif>
+                                            @if ($departamento->id == $empleado->departamento->id) selected @endif>
                                             {{ $departamento->nombre }}</option>
                                     @endforeach
                                 </select>
@@ -159,7 +159,7 @@
                                                value="{{ $rol->id }}" 
                                                id="{{ $rol->id }}" 
                                                class="mr-1" 
-                                               {{ $empleados->usuario->hasRole($rol->name) ? 'checked' : '' }} />
+                                               {{ $empleado->usuario->hasRole($rol->name) ? 'checked' : '' }} />
                                         {{ $rol->name }}
                                     </label>
                                 @endforeach
@@ -184,7 +184,7 @@
                                     @foreach ($cargos as $cargo)
                                         <option value="{{ $cargo->id }}"
                                             data-departamento="{{ $cargo->ID_Departamento }}"
-                                            @if ($cargo->id == $empleados->cargo->id) selected @endif>{{ $cargo->nombre }}
+                                            @if ($cargo->id == $empleado->cargo->id) selected @endif>{{ $cargo->nombre }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -196,7 +196,7 @@
                     <div class="flex justify-center items-center space-x-6 py-9 pb-10">
                         <div class="shrink-0">
                             <img id='imagen' class="object-cover rounded-full"
-                                style="width: 100px; height: 100px;" src="{{ $empleados->ruta_imagen_e }}"
+                                style="width: 100px; height: 100px;" src="{{ $empleado->ruta_imagen_e }}"
                                 alt="Imagen del empleado" />
                         </div>
                         <label class="block">
@@ -244,4 +244,6 @@
             });
         });
     </script>
+
+     
 </x-app-layout>

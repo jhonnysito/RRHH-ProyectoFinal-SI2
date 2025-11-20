@@ -5,101 +5,74 @@
         </h2>
     </x-slot>
 
-    <div class="container mx-auto">
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
+    <div class="py-12">
+        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
 
-                    {{-- Mostrar errores de validación --}}
-                    @if ($errors->any())
-                        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                            <strong class="font-bold">¡Error!</strong>
-                            <span class="block sm:inline">Corrige los siguientes errores:</span>
-                            <ul class="mt-2 list-disc list-inside">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+                @if ($errors->any())
+                    <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                        <strong class="font-bold">¡Error!</strong>
+                        <ul class="mt-2 list-disc list-inside">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
-                    {{-- FORMULARIO --}}
-                    <form method="POST" 
-                          action="{{ route('permisos.enviar-solicitud') }}" 
-                          class="space-y-6"
-                          enctype="multipart/form-data">
-                        @csrf
+                <form method="POST" action="{{ route('permisos.enviar-solicitud') }}" enctype="multipart/form-data" class="space-y-6">
+                    @csrf
 
-                        {{-- Tipo de Permiso --}}
+                    <div>
+                        <label for="incidencia_id" class="block text-sm font-medium text-gray-700">Tipo de Permiso (*)</label>
+                        <select id="incidencia_id" name="incidencia_id" required 
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="" disabled selected>Seleccione el tipo...</option>
+                            @foreach ($incidencias as $incidencia)
+                                <option value="{{ $incidencia->id }}" {{ old('incidencia_id') == $incidencia->id ? 'selected' : '' }}>
+                                    {{ $incidencia->nombre }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label for="incidencia" class="block text-sm font-medium text-gray-700">Tipo de Permiso</label>
-                            <select id="incidencia" 
-                                    name="incidencia" 
-                                    class="form-select mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
-                                    required>
-                                <option value="">Seleccione un tipo...</option>
-                                <option value="enfermedad" {{ old('incidencia') == 'enfermedad' ? 'selected' : '' }}>Enfermedad</option>
-                                <option value="vacaciones" {{ old('incidencia') == 'vacaciones' ? 'selected' : '' }}>Vacaciones</option>
-                                <option value="otros" {{ old('incidencia') == 'otros' ? 'selected' : '' }}>Otros</option>
-                            </select>
+                            <label for="fecha_inicio" class="block text-sm font-medium text-gray-700">Fecha de Inicio (*)</label>
+                            <input id="fecha_inicio" type="date" name="fecha_inicio" value="{{ old('fecha_inicio') }}" required
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                         </div>
-
-                        {{-- Motivo --}}
                         <div>
-                            <label for="motivo" class="block text-sm font-medium text-gray-700">Motivo del Permiso</label>
-                            <input id="motivo" 
-                                   type="text" 
-                                   class="form-input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
-                                   name="motivo" 
-                                   value="{{ old('motivo') }}" 
-                                   required>
+                            <label for="fecha_fin" class="block text-sm font-medium text-gray-700">Fecha de Fin (*)</label>
+                            <input id="fecha_fin" type="date" name="fecha_fin" value="{{ old('fecha_fin') }}" required
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                         </div>
+                    </div>
+                    
+                    <div>
+                        <label for="motivo" class="block text-sm font-medium text-gray-700">Motivo / Descripción</label>
+                        <textarea id="motivo" name="motivo" rows="3" 
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('motivo') }}</textarea>
+                    </div>
 
-                        {{-- Comprobante / Imagen --}}
-                        <div>
-                            <label for="imagen" class="block text-sm font-medium text-gray-700">
-                                Comprobante / Documento (opcional)
-                            </label>
-                            <input type="file" 
-                                   id="imagen" 
-                                   name="imagen"
-                                   class="mt-2 block w-full text-sm text-gray-700">
-                            <p class="text-xs text-gray-500 mt-1">Formatos permitidos: JPG, PNG, PDF — Máx 5MB</p>
-                        </div>
+                    <div>
+                        <label for="archivo_adjunto" class="block text-sm font-medium text-gray-700">Documento de Respaldo (Opcional)</label>
+                        <input id="archivo_adjunto" type="file" name="archivo_adjunto"
+                            class="mt-1 block w-full text-sm text-gray-500
+                                   file:mr-4 file:py-2 file:px-4
+                                   file:rounded-full file:border-0
+                                   file:text-sm file:font-semibold
+                                   file:bg-indigo-50 file:text-indigo-700
+                                   hover:file:bg-indigo-100"/>
+                        <p class="text-xs text-gray-500 mt-1">Archivos permitidos: PDF, JPG, PNG (Máx 2MB)</p>
+                    </div>
 
-                        {{-- Fechas --}}
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label for="fecha_inicio" class="block text-sm font-medium text-gray-700">Fecha de Inicio</label>
-                                <input id="fecha_inicio" 
-                                       type="date" 
-                                       class="form-input mt-1 block w-full rounded-md border-gray-300 shadow-sm" 
-                                       name="fecha_inicio" 
-                                       value="{{ old('fecha_inicio') }}" 
-                                       required>
-                            </div>
-
-                            <div>
-                                <label for="fecha_fin" class="block text-sm font-medium text-gray-700">Fecha de Fin</label>
-                                <input id="fecha_fin" 
-                                       type="date" 
-                                       class="form-input mt-1 block w-full rounded-md border-gray-300 shadow-sm" 
-                                       name="fecha_fin" 
-                                       value="{{ old('fecha_fin') }}" 
-                                       required>
-                            </div>
-                        </div>
-
-                        {{-- Botón --}}
-                        <div>
-                            <button type="submit" 
-                                    class="inline-block px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-75">
-                                Enviar Solicitud
-                            </button>
-                        </div>
-                    </form>
-
-                </div>
+                    <div class="flex justify-end pt-4">
+                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700">
+                            Enviar Solicitud
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

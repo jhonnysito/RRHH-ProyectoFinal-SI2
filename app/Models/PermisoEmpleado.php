@@ -2,34 +2,37 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\Incidencia;
+
 
 class PermisoEmpleado extends Model
 {
+    use HasFactory;
+
     protected $table = 'permiso_empleados';
 
-    /**
-     * Los atributos que se pueden asignar masivamente.
-     *
-     * @var array
-     */
     protected $fillable = [
         'user_id',
-        'incidencia',     // vacaciones | enfermedad | otros
-        'motivo',
+        'incidencia_id',
         'fecha_inicio',
         'fecha_fin',
-        'imagen',         // path de la imagen
-        'estado',         // solicitado | aprobado | rechazado
-        'tenant_id'
+        'motivo',
+        'archivo_adjunto',
+        'estado',
+        'tenant_id',
     ];
 
-    /**
-     * Define la relación con el modelo de usuario (User).
-     */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(\App\Models\User::class, 'user_id');
+    }
+
+    public function incidencia()
+    {
+        return $this->belongsTo(Incidencia::class, 'incidencia_id');
     }
 }
 

@@ -13,12 +13,12 @@ class PermisoController extends Controller
     public function index()
     {
         $permisos = Permission::all();
-        return view('permisos.index', compact('permisos'));
+        return view('admin.permisos.index', compact('permisos'));
     }
 
     public function create()
     {
-        return view('permisos.create');
+        return view('admin.permisos.create');
     }
 
     public function store(Request $request)
@@ -29,7 +29,7 @@ class PermisoController extends Controller
 
         Permission::create(['name' => $request->name]);
 
-        return redirect()->route('permisos.index')->with('success', 'Permiso creado correctamente.');
+        return redirect()->route('admin.permisos.index')->with('success', 'Permiso creado correctamente.');
     }
 
     /**
@@ -46,7 +46,7 @@ class PermisoController extends Controller
     public function edit(string $id)
     {
         $permiso = Permission::findOrFail($id);
-        return view('permisos.editar', compact('permiso'));
+        return view('admin.permisos.editar', compact('permiso'));
     }
 
     /**
@@ -61,7 +61,7 @@ class PermisoController extends Controller
         $permiso->name = $request->name;
         $permiso->save();
 
-        return redirect()->route('permisos.index')->with('success', 'Permiso actualizado correctamente');
+        return redirect()->route('admin.permisos.index')->with('success', 'Permiso actualizado correctamente');
     }
 
     /**
@@ -72,6 +72,6 @@ class PermisoController extends Controller
         $permiso = Permission::findOrFail($id);
         $permiso->delete();
 
-        return redirect()->route('permisos.index')->with('success', 'Permiso eliminado correctamente.');
+        return redirect()->route('admin.permisos.index')->with('success', 'Permiso eliminado correctamente.');
     }
 }

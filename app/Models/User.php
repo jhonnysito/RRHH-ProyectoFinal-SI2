@@ -26,7 +26,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'tenant_id'
+        'tenant_id',
+        'stripe_id',       // <-- ¡AÑADE ESTO!
+        'pm_type',         // <-- ¡AÑADE ESTO!
+        'pm_last_four',    // <-- ¡AÑADE ESTO!
+        'trial_ends_at',   // <-- ¡AÑADE ESTO!
     ];
 
     /**

@@ -19,12 +19,14 @@ use App\Http\Controllers\ContratoController;
 use App\Http\Controllers\PermisoEmpleadoController;
 use App\Http\Controllers\ConversacionController;
 use App\Http\Controllers\MensajeController;
+use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\PostulanteController;
 use App\Http\Controllers\SolicitudEmpleoController;
 use App\Http\Controllers\PermisoController;
 use App\Http\Controllers\Api\LocationRecordController;
 use App\Http\Controllers\LocationRecordController as WebLocationRecordController;
-use App\Http\Controllers\SalarioController;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\SuscripcionController;
 use App\Http\Controllers\TenantCustomizationController;
 
 use App\Http\Controllers\HorarioController;
@@ -77,8 +79,9 @@ Route::middleware([
 
     // Empleados
     Route::get('/empleados', [EmpleadoController::class, 'index'])->name('empleados.index');
-    //Route::get('/empleados/editar/{id}', [EmpleadoController::class, 'edit'])->name('empleados.editar');
-    //Route::get('/empleados/eliminar/{id}', [EmpleadoController::class, 'edit'])->name('empleados.eliminar');
+    Route::get('/empleados/editar/{id}', [EmpleadoController::class, 'edit'])->name('empleados.editar');
+    Route::post('/empleados/actualizar/{id}', [EmpleadoController::class, 'update'])->name('empleados.actualizar');
+    Route::delete('/empleados/eliminar/{id}', [EmpleadoController::class, 'destroy'])->name('empleados.destroy');
 
     Route::get('/empleados/crear', [EmpleadoController::class, 'create'])->name('empleados.create');
     Route::post('/empleados/guardar', [EmpleadoController::class, 'store'])->name('empleados.guardar');
@@ -110,7 +113,14 @@ Route::middleware([
     Route::get('/bitacoras/PDF/{id}', [BitacoraController::class, 'generarBitacoraPDF_usuario'])->name('generarBitacoraPDF_usuario');
 
 
-    //Ruta para los roles
+    //REPORTES
+    
+      Route::get('/reportes', [ReporteController::class, 'inicio'])->name('reportes.inicio');
+       Route::post('/reportes/generar', [ReporteController::class, 'generar'])
+         ->name('reportes.generar');
+
+
+
 
     //ROLES
 
@@ -231,90 +241,88 @@ Route::post('/api/location-records', [LocationRecordController::class, 'store'])
     ->middleware([InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class])
     ->name('api.location-records.store');
 
+    Route::prefix('admin/permisos')->middleware(['auth'])->group(function () {
+
+   Route::get('/', [PermisoController::class, 'index'])->name('admin.permisos.index');
+    Route::get('/crear', [PermisoController::class, 'create'])->name('admin.permisos.create');
+    Route::post('/guardar', [PermisoController::class, 'store'])->name('admin.permisos.store');
+    Route::get('/editar/{id}', [PermisoController::class, 'edit'])->name('admin.permisos.edit');
+    Route::put('/actualizar/{id}', [PermisoController::class, 'update'])->name('admin.permisos.update');
+
+    Route::delete('/eliminar/{id}', [PermisoController::class, 'destroy'])->name('admin.permisos.destroy');
+});
 
 
-        // Para actualizar el permiso
-//Route::put('/actualizar/{id}', [PermisoController::class, 'actualizar'])->name('permisos.actualizar');
-Route::delete('/eliminar/{id}', [PermisoController::class, 'destroy'])->name('permisos.eliminar');
-    Route::get('/editar/{id}', [PermisoController::class, 'edit'])->name('permisos.editar');
-
-
-
-
-// 1. (GET) Muestra la vista para crear un nuevo permiso
-    // Ruta: /permisos/solicitar
-    // Nombre: permisos.solicitud
-    Route::get('/permisos/solicitar', [PermisoEmpleadoController::class, 'solicitud'])->name('permisos.solicitud');
-
-    // 2. (POST) Guarda la nueva solicitud de permiso en la BD
-    // Ruta: /permisos/enviar
-    // Nombre: permisos.enviar-solicitud
-    Route::post('/permisos/enviar', [PermisoEmpleadoController::class, 'enviarSolicitud'])->name('permisos.enviar-solicitud');
-
-    // 3. (GET) Muestra el historial de permisos (para empleados y admins)
-    // Ruta: /permisos/historial
-    // Nombre: permisos.historial
-    Route::get('/permisos/historial', [PermisoEmpleadoController::class, 'historial'])->name('permisos.historial');
-
-    // 4. (POST) Aprueba un permiso (solo para Admins/Encargados)
-    // Ruta: /permisos/aprobar/{id}
-    // Nombre: permisos.approve
-    Route::post('/permisos/aprobar/{id}', [PermisoEmpleadoController::class, 'aprobar'])->name('permisos.approve');
-
-    // 5. (POST) Deniega un permiso (solo para Admins/Encargados)
-    // Ruta: /permisos/denegar/{id}
-    // Nombre: permisos.deny
-    Route::post('/permisos/denegar/{id}', [PermisoEmpleadoController::class, 'denegar'])->name('permisos.deny');
-
-
-// Rutas para Salarios
-Route::group(['middleware' => ['auth']], function () {
-
-    // Ver todos los salarios
-    Route::get('/salarios', [SalarioController::class, 'index'])->name('salarios.index');
-    Route::get('/salarios/{empleado}', [SalarioController::class, 'showEmpleado'])
-    ->name('salarios.empleado');
     
-    // Mostrar los días de un mes específico de un empleado
-    Route::get('/salarios/{empleado}/mes/{mes}', [SalarioController::class, 'showMes'])
-        ->name('salarios.empleado.mes');
-    // Crear un nuevo salario
-    Route::get('/salarios/create', [SalarioController::class, 'create'])->name('salarios.create');
 
-    // Guardar salario nuevo
-    Route::post('/salarios', [SalarioController::class, 'store'])->name('salarios.store');
+  // Route::middleware(['auth'])->group(function() {
+   //Route::delete('/eliminar/{id}', [PermisoController::class, 'destroy'])->name('permisos.//eliminar');
+  // Route::get('/editar/{id}', [PermisoController::class, 'edit'])->name('permisos.editar');
+  // Route::resource('permisos', PermisoController::class);
+//});
 
-    // Editar un salario
-    Route::get('/salarios/{id}/edit', [SalarioController::class, 'edit'])->name('salarios.edit');
+   
+// PERMISOS DE EMPLEADOS
 
-    // Actualizar un salario
-    Route::put('/salarios/{id}', [SalarioController::class, 'update'])->name('salarios.update');
+Route::middleware(['auth'])->prefix('permisos')->name('permisos.')->group(function () {
 
-    // Eliminar un salario
-    Route::delete('/salarios/{id}', [SalarioController::class, 'destroy'])->name('salarios.destroy');
+    // (Empleado) Vista para crear la solicitud
+    Route::get('/solicitar', [PermisoEmpleadoController::class, 'solicitud'])
+        ->name('solicitud');
+
+    // (Empleado) POST para guardar la solicitud (con adjunto)
+    Route::post('/enviar', [PermisoEmpleadoController::class, 'enviarSolicitud'])
+        ->name('enviar-solicitud');
+
+    // (Admin y Empleado) Vista de Historial (la lista)
+    Route::get('/historial', [PermisoEmpleadoController::class, 'historial'])
+        ->name('historial');
+    
+    // (Admin) ¡NUEVA! Vista de DETALLE
+    // Usamos {permisoEmpleado} para que Laravel encuentre el permiso automáticamente
+    Route::get('/detalle/{permisoEmpleado}', [PermisoEmpleadoController::class, 'show'])
+        ->name('show');
+
+    // (Admin) Acciones de Aprobación/Rechazo (Actualizadas)
+    Route::post('/aprobar/{permisoEmpleado}', [PermisoEmpleadoController::class, 'approve'])
+        ->name('approve');
+
+    Route::post('/denegar/{permisoEmpleado}', [PermisoEmpleadoController::class, 'deny'])
+        ->name('deny');
+});
+   // RUTAS PARA NOTIFICACIONES (NUEVO)
+// ===========================================
+Route::middleware(['auth'])->prefix('notificaciones')->name('notificaciones.')->group(function () {
+    
+    // Marcar una notificación como leída (al hacer clic)
+    Route::get('/leer/{id}', function ($id) {
+        $notificacion = Auth::user()->notifications()->findOrFail($id);
+        $notificacion->markAsRead();
+        
+        // Redirigir a la URL de la notificación (ej. el detalle del permiso)
+        $url = $notificacion->data['url'] ?? route('dashboard');
+        return redirect($url);
+        
+    })->name('leer');
+
+    // Marcar TODAS como leídas
+    Route::post('/leer-todas', function () {
+        Auth::user()->unreadNotifications->markAsRead();
+        return redirect()->back()->with('status', 'Notificaciones marcadas como leídas.');
+    })->name('leerTodas');
 
 });
 
-Route::group(['middleware' => ['auth']], function () {
-    // Index de asistencias
-    Route::get('/asistencias', [AsistenciaController::class, 'index'])
-        ->name('asistencias.index');
+Route::middleware(['auth'])->prefix('billing')->group(function () {
+    // Ver planes
+    Route::get('/planes', [SuscripcionController::class, 'index'])->name('suscripcion.index');
+    
+    // Pagar un plan nuevo (Checkout)
+    Route::get('/suscribirse/{plan}', [SuscripcionController::class, 'suscribirse'])->name('suscripcion.pagar');
+    
+    // Administrar suscripción existente (Portal) -> ¡ESTA ES LA DEL MENÚ!
+    Route::get('/portal', [SuscripcionController::class, 'portal'])->name('suscripcion.portal');
 
-    // Crear nueva asistencia
-    Route::get('/asistencias/create', [AsistenciaController::class, 'create'])
-        ->name('asistencias.create');
-});
-
-
-
-use App\Http\Controllers\DescuentoEmpleadoController;
-
-Route::prefix('descuentos')->name('descuentos.')->group(function () {
-    Route::get('/', [DescuentoEmpleadoController::class, 'index'])->name('index');      // Ver / Listar
-    Route::get('/create', [DescuentoEmpleadoController::class, 'create'])->name('create'); // Crear
-    Route::post('/store', [DescuentoEmpleadoController::class, 'store'])->name('store');  // Guardar nuevo
-    Route::get('/{descuento}/edit', [DescuentoEmpleadoController::class, 'edit'])->name('edit'); // Editar
-    Route::put('/{descuento}', [DescuentoEmpleadoController::class, 'update'])->name('update'); // Actualizar
-    Route::delete('/{descuento}', [DescuentoEmpleadoController::class, 'destroy'])->name('destroy'); // Eliminar
+    Route::get('/exito', [SuscripcionController::class, 'exito'])->name('suscripcion.exito');
 });
 

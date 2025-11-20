@@ -9,10 +9,12 @@ use Spatie\Permission\Models\Role;
 use App\Models\Cargo;
 use App\Models\Contrato;
 use Illuminate\Support\Facades\Hash;
-
+use App\Models\Incidencia;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
 use App\Models\User;
 
+use App\Models\PermisoEmpleado;
 class EmpleadoController extends Controller
 
 {
@@ -136,7 +138,7 @@ class EmpleadoController extends Controller
         $roles = Role::all(); // Si usas spatie/laravel-permission
         $departamentos = Departamento::all();
         $cargos = Cargo::all();
-
+        
         return view('empleados.editar', compact('empleado', 'roles', 'departamentos', 'cargos'));
     }
     public function ver($empleado_id)
@@ -217,20 +219,33 @@ class EmpleadoController extends Controller
     /**
      * Elimina un empleado.
      */
-    public function destroy($id)
-    {
-        $empleado = Empleado::findOrFail($id);
-        if ($empleado->usuario) {
-            $empleado->usuario->delete();
-        }
+   public function destroy($id)
+{
+    $empleado = Empleado::findOrFail($id);
 
-        $empleado->delete();
+    //Verificamos si tiene contrato activo
+    $contratoActivo = $empleado->contratos()
+        ->where(function ($query) {
+            $query->whereNull('fecha_fin')
+                  ->orWhere('fecha_fin', '>=', now());
+        })
+        ->exists();
 
-        return redirect()->route('empleados.index')->with('success', 'Empleado eliminado correctamente.');
+    if ($contratoActivo) {
+        return redirect()->route('empleados.index')
+            ->with('error', 'No se puede eliminar este empleado porque tiene un contrato activo.');
     }
-    public function info($id)
-    {
-        $empleado = Empleado::with(['departamento', 'cargo', 'usuario'])->findOrFail($id);
-        return view('empleados.info', compact('empleado'));
+
+    //Eliminar el usuario asociado si existe
+    if ($empleado->usuario) {
+        $empleado->usuario->delete();
     }
+
+    // Eliminar el empleado
+    $empleado->delete();
+
+    return redirect()->route('empleados.index')
+        ->with('success', 'Empleado eliminado correctamente.');
+}
+
 }
