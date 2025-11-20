@@ -36,6 +36,21 @@ services:
     networks:
       - laravel_net
 
+  django:
+    build:
+      context: ./djangomicroservicio
+      dockerfile: Dockerfile
+    container_name: django_microservicio
+    command: python manage.py runserver 0.0.0.0:8001
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./djangomicroservicio:/app
+    depends_on:
+      - db
+    networks:
+      - laravel_net    
+
 volumes:
   dbdata:
 
