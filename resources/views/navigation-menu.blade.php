@@ -1,4 +1,5 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+<nav x-data="{ open: false, sidebarVisible: false }" class="bg-white border-b border-gray-100">
+
 
     <!-- Primary Navigation Menu -->
     <div class="h-14 bg-gray-100 top-0 w-full fixed shadow" style="z-index: 99999;">
@@ -162,10 +163,10 @@
 
         <div class="flex flex-col justify-between h-full">
 
-           <ul class="flex flex-col gap-1 mt-2">
+    <ul class="flex flex-col gap-1 mt-2">
 
-    {{-- =====================  ADMINISTRADOR ===================== --}}
-    @role('Administrador')
+      {{-- =====================  ADMINISTRADOR ===================== --}}
+      @role('Administrador')
 
         {{-- Dashboard --}}
         <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
@@ -244,90 +245,22 @@
                             @endif
 
                         <div class="border-t border-gray-200"></div>
+                {{-- Reportes --}}
+             <x-sidebar-dropdown texto="Reportes">
+              <a href="{{ route('reportes.inicio') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">
+                Ver Reportes
+                </a>
+              </x-sidebar-dropdown>
+               {{-- Bitácoras --}}        
+              <x-sidebar-dropdown texto="Bitácoras">
+                <a href="{{ route('bitacora.rinicio') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">
+                   Ver Bitácoras
+                 </a>
+                </x-sidebar-dropdown>
+      @endrole
 
-
-
-
-
-                <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-                    <a class="w-full flex items-center py-3" href="{{ route('departamentos.index') }}">
-                        <i class="fa-solid fa-building text-center px-5"></i>
-                        <span class="whitespace-nowrap pl-1">Departamentos</span>
-                    </a>
-                </li>
-
-                <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-                    <a class="w-full flex items-center py-3" href="{{ route('asistencia.index') }}">
-                        <i class="fa-solid fa-map-location-dot text-center px-5"></i>
-                        <span class="whitespace-nowrap pl-1">Asistencias</span>
-                    </a>
-                </li>
-
-                <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-                    <a class="w-full flex items-center py-3" href="{{ route('postulantes.index') }}">
-                        <i class="fa-solid fa-building text-center px-5"></i>
-                        <span class="whitespace-nowrap pl-1">Postulantes</span>
-                    </a>
-                </li>
-
-                <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-                    <a class="w-full flex items-center py-3" href="{{ route('solicitudes.index') }}">
-                        <i class="fa-solid fa-building text-center px-5"></i>
-                        <span class="whitespace-nowrap pl-1">Solicitudes de Empleo</span>
-                    </a>
-                </li>
-
-                @can('Inicio Cargos')
-                    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-                        <a class="w-full flex items-center py-3" href="{{ route('cargos.index') }}">
-                            <i class="fa-solid fa-briefcase text-center px-5"></i>
-                            <span class="whitespace-nowrap pl-1">Cargos</span>
-                        </a>
-                    </li>
-                @endcan 
-
-                @can('Inicio Reportes')
-                    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-                        <a class="w-full flex items-center py-3" href="{{ route('reportes.inicio') }}">
-                            <i class="fa-solid fa-chart-line text-center px-5"></i>
-                            <span class="whitespace-nowrap pl-1">Reportes</span>
-                        </a>
-                    </li>
-                @endcan
-
-
-                @can('Inicio Roles')
-                    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-                        <a class="w-full flex items-center py-3" href="{{ route('roles.inicio') }}">
-                            <i class="fa-solid fa-user-shield text-center px-5"></i>
-                            <span class="whitespace-nowrap pl-1">Roles</span>
-                        </a>
-                    </li>
-                @endcan
-
-                @can('Inicio Bitacoras')
-                    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-                        <a class="w-full flex items-center py-3" href="{{ route('bitacora.rinicio') }}">
-                            <i class="fa-solid fa-clock-rotate-left text-center px-5"></i>
-                            <span class="whitespace-nowrap pl-1">Bitacoras</span>
-                        </a>
-                    </li>
-                @endcan
-
-                @can('Inicio Empleados')
-                    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
-                        <a class="w-full flex items-center py-3" href="{{ route('empleados.index') }}">
-                            <i class="fa-solid fa-user-check text-center px-5"></i>
-                            <span class="whitespace-nowrap pl-1">Empleados</span>
-                        </a>
-                    </li>
-                @endcan
-
-
-    @endrole
-
-    {{-- =====================  EMPLEADO ===================== --}}
-    @role('Empleado')
+      {{-- =====================  EMPLEADO ===================== --}}
+     @role('Empleado')
 
         {{-- Dashboard --}}
         <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
@@ -354,25 +287,25 @@
         </x-sidebar-dropdown>
 
         
-    @endrole
+     @endrole
 
 
 
-    {{-- =====================  ENCARGADO / POSTULANTE (si los tienes) ===================== --}}
-    {{-- Aquí podemos agregar más roles si quieres más adelante --}}
+     {{-- =====================  ENCARGADO / POSTULANTE (si los tienes) ===================== --}}
+     {{-- Aquí podemos agregar más roles si quieres más adelante --}}
 
 
 
-    {{-- ===================== CHAT ===================== --}}
-    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
+     {{-- ===================== CHAT ===================== --}}
+     <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
         <a class="w-full flex items-center py-3" href="{{ route('chat.index') }}">
             <i class="fa-solid fa-comments text-center px-5"></i>
             <span class="whitespace-nowrap pl-1">Mis Chats</span>
         </a>
-    </li>
+     </li>
 
-    {{-- ===================== LOGOUT ===================== --}}
-    <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900 mt-2">
+     {{-- ===================== LOGOUT ===================== --}}
+     <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900 mt-2">
         <form method="POST" action="{{ route('logout') }}" x-data>
             @csrf
             <a class="w-full flex items-center py-3" href="{{ route('logout') }}"
@@ -381,13 +314,13 @@
                 <span class="pl-1">Logout</span>
             </a>
         </form>
-    </li>
+     </li>
+ 
+  </ul>
 
-</ul>
 
-
-        </div>
-    </aside>
+    </div>
+  </aside>
 
 
 </nav>

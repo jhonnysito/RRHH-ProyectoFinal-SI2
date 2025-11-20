@@ -54,6 +54,8 @@ class RoleSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Editar Rol'])->syncRoles([$rol1]);
         Permission::firstOrCreate(['name' => 'Actualizar Rol'])->syncRoles([$rol1]);
         Permission::firstOrCreate(['name' => 'Eliminar Rol'])->syncRoles([$rol1]);
+        
+        
 
         //postulantes
         Permission::firstOrCreate(['name' => 'Inicio Postulantes'])->syncRoles([$rol1, $rol2]);
@@ -111,6 +113,7 @@ class RoleSeeder extends Seeder
         Permission::firstOrCreate(['name' => 'Ver Historial de Permisos'])->syncRoles([$rol1, $rol4, $rol2]); // Solo los administradores pueden ver el historial de permisos
 
         //ASISTENCIA
+       
         Permission::firstOrCreate(['name' => 'Marcar Asistencia'])->syncRoles([$rol1, $rol2, $rol4]);
         Permission::firstOrCreate(['name' => 'Ver Evaluacion'])->syncRoles([$rol1, $rol2]);
 
