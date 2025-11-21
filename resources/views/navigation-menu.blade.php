@@ -298,13 +298,18 @@
                         Solicitar Permiso
                     </a>
                     @endcan
-
                     {{-- Ver Historial --}}
                     @can('Ver Permisos Laborales')
                     <a href="{{ route('permisos.historial') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">
                         Ver Historial
                     </a>
                     @endcan
+                    <a href="{{ route('reportes.inicio') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">
+                        Reportes Estaticos
+                    </a>
+                    <a href="{{ route('reportes.dinamicos') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">
+                        Reportes Dinamicos
+                    </a>
                 </x-sidebar-dropdown>
                 @endcanany
 
@@ -326,14 +331,12 @@
                     </li>
                 @endcan 
 
-                @can('Inicio Reportes')
                     <li class="text-gray-500 hover:bg-gray-100 hover:text-gray-900">
                         <a class="w-full flex items-center py-3" href="{{ route('reportes.inicio') }}">
                             <i class="fa-solid fa-chart-line text-center px-5"></i>
                             <span class="whitespace-nowrap pl-1">Reportes</span>
                         </a>
                     </li>
-                @endcan
 
 
                 @can('Inicio Roles')
@@ -376,8 +379,6 @@
 
 
 
-                </x-sidebar-dropdown>
-                @endcanany
                 <a href="{{ route('descuentos.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Descuentos</a>
             </ul>
 

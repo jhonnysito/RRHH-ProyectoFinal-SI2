@@ -62,7 +62,7 @@
                                             {{ ucfirst($permiso->estado) }}
                                         </span>
                                     </td>
-                                    @if (Auth::user()->hasRole('Administrador') || Auth::user()->hasRole('Encargado'))
+                                    @if (Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Encargado'))
                                     <td class="px-8 py-4 whitespace-nowrap text-center text-sm font-medium">
                                         @if($permiso->estado === 'solicitado')
                                             <form action="{{ route('permisos.approve', $permiso->id) }}" method="POST" class="inline">

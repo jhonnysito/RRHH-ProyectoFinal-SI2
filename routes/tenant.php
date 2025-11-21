@@ -116,11 +116,13 @@ Route::middleware([
 
 
     //REPORTES
-    
-      Route::get('/reportes', [ReporteController::class, 'inicio'])->name('reportes.inicio');
-       Route::post('/reportes/generar', [ReporteController::class, 'generar'])
+     Route::post('/reportes/generar', [ReporteController::class, 'generar'])
          ->name('reportes.generar');
-
+      Route::get('/reportes', [ReporteController::class, 'inicio'])->name('reportes.inicio');
+      // Ruta para la vista de reportes dinámicos
+Route::get('/reportes/dinamicos', [ReporteController::class, 'dinamicos'])->name('reportes.dinamicos');
+// Procesar prompt de texto/voz para generar el reporte
+Route::post('/reportes/dinamicos/generar', [ReporteController::class, 'generarDinamico'])->name('reportes.generar_dinamico');
 
 
 
