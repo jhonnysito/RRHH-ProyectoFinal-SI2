@@ -22,5 +22,11 @@ class TenantSeeder extends Seeder
             'tenant_id' => $tenant->id,
             'domain' => 'empresa1.test',
         ]);
+
+        // Dominio nip.io para acceder desde la red
+        Domain::create([
+            'tenant_id' => $tenant->id,
+            'domain' => 'empresa1.3.21.163.163.nip.io',
+        ]);
     }
 }
