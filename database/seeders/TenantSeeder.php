@@ -20,7 +20,7 @@ class TenantSeeder extends Seeder
 
         Domain::create([
             'tenant_id' => $tenant->id,
-            'domain' => 'empresa1.localhost',
+            'domain' => 'empresa1.test',
         ]);
     }
 }

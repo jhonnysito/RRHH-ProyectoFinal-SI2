@@ -308,6 +308,7 @@
                 </x-sidebar-dropdown>
                 @endcanany
 
+                    
 
                 {{-- Salarios --}}
                 @canany(['Agregar Salarios',' Ver Salarios'])
