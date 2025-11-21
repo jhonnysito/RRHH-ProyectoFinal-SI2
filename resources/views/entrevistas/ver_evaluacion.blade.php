@@ -49,21 +49,27 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <p><span class="font-semibold text-gray-700">Evaluador:</span> {{ $evaluacion->evaluador->name ?? '—' }}</p>
-                        <p><span class="font-semibold text-gray-700">Puntaje Comunicación:</span> {{ $evaluacion->puntaje_comunicacion }}</p>
-                        <p><span class="font-semibold text-gray-700">Puntaje Conocimiento:</span> {{ $evaluacion->puntaje_conocimiento }}</p>
+                        <p><span class="font-semibold text-gray-700">Apariencia Profesional:</span> {{ $evaluacion->apariencia_profesional }}</p>
+                        <p><span class="font-semibold text-gray-700">Actitud:</span> {{ $evaluacion->actitud }}</p>
+                        <p><span class="font-semibold text-gray-700">Conversación:</span> {{ $evaluacion->conversacion }}</p>
+                        <p><span class="font-semibold text-gray-700">Cooperación con Entrevistador:</span> {{ $evaluacion->cooperacion_entrevistador }}</p>
+                        <p><span class="font-semibold text-gray-700">Relaciones Interpersonales:</span> {{ $evaluacion->relaciones_interpersonales }}</p>
                     </div>
 
                     <div>
-                        <p><span class="font-semibold text-gray-700">Puntaje Actitud:</span> {{ $evaluacion->puntaje_actitud }}</p>
-                        <p><span class="font-semibold text-gray-700">Puntaje Trabajo en Equipo:</span> {{ $evaluacion->puntaje_trabajo_equipo }}</p>
-                        <p><span class="font-semibold text-gray-700">Puntaje Total:</span> {{ $evaluacion->puntaje_total }}</p>
-                        <p><span class="font-semibold text-gray-700">Resultado Final:</span> {{ $evaluacion->resultado_final }}</p>
+                        <p><span class="font-semibold text-gray-700">Experiencia en el Puesto:</span> {{ $evaluacion->experiencia_puesto }}</p>
+                        <p><span class="font-semibold text-gray-700">Conocimiento del Cargo:</span> {{ $evaluacion->conocimiento_cargo }}</p>
+                        <p><span class="font-semibold text-gray-700">Perfil del Puesto:</span> {{ $evaluacion->perfil_puesto }}</p>
+                        <p><span class="font-semibold text-gray-700">Valoración Curricular:</span> {{ $evaluacion->valoracion_curricular }}</p>
+                        <p><span class="font-semibold text-gray-700">Adecuación al Puesto:</span> {{ $evaluacion->adecuacion_puesto }}</p>
+                        <p><span class="font-semibold text-gray-700">Total Puntuación:</span> {{ $evaluacion->total_puntuacion }}</p>
+                        <p><span class="font-semibold text-gray-700">Resultado Final:</span> {{ $evaluacion->candidato }}</p>
                     </div>
                 </div>
 
                 <div class="mt-4">
                     <p><span class="font-semibold text-gray-700">Comentarios:</span></p>
-                    <p class="text-gray-600 whitespace-pre-line">{{ $evaluacion->comentarios }}</p>
+                    <p class="text-gray-600 whitespace-pre-line">{{ $evaluacion->comentario_final }}</p>
                 </div>
 
             </div>

@@ -21,48 +21,57 @@ class EmpleadoController extends Controller
      */
     public function index(Request $request)
     {
-        // Obtenemos los parámetros enviados por el formulario de filtros
-        $empleados = Empleado::with('usuario')->get();
+        // Obtener los parámetros enviados por el formulario de filtros
         $buscar = $request->input('buscar');
         $departamento = $request->input('departamento');
+        $cargo = $request->input('cargo');
         $estado = $request->input('estado');
 
-        // Construimos la consulta base
-        $query = Empleado::query();
+        // Construir la consulta base
+        $query = Empleado::with('usuario');
 
         // Filtro por nombre o apellido (búsqueda general)
         if ($buscar) {
             $query->where(function ($q) use ($buscar) {
-                $q->where('nombre', 'LIKE', "%{$buscar}%")
-                    ->orWhere('apellido', 'LIKE', "%{$buscar}%")
+                $q->where('nombre_completo', 'LIKE', "%{$buscar}%")
                     ->orWhere('ci', 'LIKE', "%{$buscar}%");
             });
         }
 
-        // Filtro por departamento (si aplica)
+        // Filtro por departamento
         if ($departamento) {
-            $query->where('departamento', $departamento);
+            $query->where('departamento_id', $departamento);
         }
 
-        // Filtro por estado (activo/inactivo)
+        // Filtro por cargo
+        if ($cargo) {
+            $query->where('cargo_id', $cargo);
+        }
+
+        // Filtro por estado (Activo/Inactivo)
         if ($estado) {
             $query->where('estado', $estado);
         }
 
-        // Ordenamos por fecha de creación y paginamos resultados
+        // Ordenar por fecha de creación y paginar resultados
         $empleados = $query->orderBy('created_at', 'desc')->paginate(10);
 
-        // Pasamos datos a la vista
+        // Obtener todos los departamentos y cargos para los filtros
+        $departamentos = Departamento::all();
+        $cargos = Cargo::all();
+
+        // Pasar datos a la vista
         return view('empleados.empleado', [
-            'empleados' => $empleados,
-            'buscar' => $buscar,
-            'departamento' => $departamento,
-            'estado' => $estado,
+            'empleados'     => $empleados,
+            'buscar'        => $buscar,
+            'departamento'  => $departamento,
+            'cargo'         => $cargo,
+            'estado'        => $estado,
+            'departamentos' => $departamentos,
+            'cargos'        => $cargos,
         ]);
     }
-
-    /**
-     * Muestra el formulario para registrar un nuevo empleado.
+    /* Muestra el formulario para registrar un nuevo empleado.
      */
     public function create()
     {
@@ -83,26 +92,27 @@ class EmpleadoController extends Controller
         $validated = $request->validate([
             'nombre_completo' => 'required|string|max:100',
             'ci' => 'required|string|max:20|unique:empleados,ci',
-            'password' => ['required', Password::min(8)],
             'cargo_id' => 'required|exists:cargos,id',
             'departamento_id' => 'required|exists:departamentos,id',
             'direccion' => 'nullable|string|max:200',
             'telefono' => 'nullable|string|max:20',
             'correo' => 'nullable|email|max:100|unique:empleados,correo',
-            'estado' => 'required|in:activo,inactivo',
+            'estado' => 'required|in:Activo,Inactivo',
             'roles' => 'required|array',
             'ruta_imagen_e' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
 
         ]);
-
         // 1️⃣ Crear el usuario relacionado
         $user = User::create([
             'name' => $request['nombre_completo'],
             'email' => $request['correo'],
-            'password' => Hash::make($request['password']),
+            'password' => Hash::make($request['ci']),
             'tenant_id' => tenant('id'),
         ]);
-
+        // Asignar roles al usuario usando Spatie
+        if ($request->has('roles')) {
+            $user->assignRole($request->roles); // $request->roles es un array
+        }
         $imagePath = null;
         if ($request->hasFile('ruta_imagen_e')) {
             // Guarda la imagen en 'storage/app/public/fotos_empleados'
@@ -120,7 +130,7 @@ class EmpleadoController extends Controller
             'direccion' => $validated['direccion'] ?? null,
             'telefono' => $validated['telefono'] ?? null,
             'correo' => $validated['correo'],
-            'estado' => strtolower($validated['estado']),
+            'estado' => ucfirst(strtolower($validated['estado'])),
             'tenant_id' => tenant('id'),
             'user_id' => $user->id,
         ]);

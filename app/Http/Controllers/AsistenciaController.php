@@ -35,28 +35,29 @@ class AsistenciaController extends Controller
         return view('asistencias.create', compact('empleados'));
     }
 
-    public function store(Request $request)
+    public function store()
     {
-        $request->validate([
-            'empleado_id' => 'required|exists:empleados,id',
-            'fecha' => 'required|date',
-            'hora_entrada' => 'nullable|date_format:H:i',
-            'hora_salida' => 'nullable|date_format:H:i',
-            'estado' => 'required|in:Presente,Tarde,Ausente,Permiso',
-        ]);
+        $user = Auth::user();
+        $empleado = $user->empleado;
+
+        if (!$empleado) {
+            return back()->with('error', 'No se encontró empleado asociado al usuario.');
+        }
 
         Asistencia::create([
-            'tenant_id' => Auth::user()->tenant_id,
-            'empleado_id' => $request->empleado_id,
-            'fecha' => $request->fecha,
-            'hora_entrada' => $request->hora_entrada,
-            'hora_salida' => $request->hora_salida,
-            'estado' => $request->estado,
-            'observacion' => $request->observacion,
+            'tenant_id'    => $user->tenant_id,
+            'empleado_id'  => $empleado->id,
+            'fecha'        => now()->toDateString(),
+            'hora_entrada' => now()->format('H:i'),
+            'estado'       => 'Presente',
+            'observacion'  => null,
         ]);
 
-        return redirect()->route('asistencias.index')->with('success', 'Asistencia registrada correctamente.');
+        return redirect()
+            ->route('asistencias.index')
+            ->with('success', 'Asistencia marcada correctamente.');
     }
+
 
     public function edit(Asistencia $asistencia)
     {

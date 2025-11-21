@@ -5,24 +5,28 @@
     <h1 class="text-3xl font-bold mb-6">Registro de Asistencias</h1>
 
     @if(session('success'))
-        <div class="mb-4 p-3 bg-green-200 text-green-800 rounded shadow">
-            {{ session('success') }}
-        </div>
+    <div class="mb-4 p-3 bg-green-200 text-green-800 rounded shadow">
+        {{ session('success') }}
+    </div>
     @endif
 
     <div class="mb-4 flex justify-between items-center">
-        <a href="{{ route('asistencias.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-2">
-            <i class="fa-solid fa-plus"></i> Nueva Asistencia
-        </a>
+        <form action="{{ route('asistencias.store') }}" method="POST" id="formAsistencia">
+            @csrf
+            <button type="submit"
+                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-2">
+                <i class="fa-solid fa-plus"></i> Marcar Asistencia
+            </button>
+        </form>
 
         <form method="GET" class="flex gap-2">
             <input type="date" name="fecha" value="{{ request('fecha') }}" class="border rounded px-3 py-2">
             <select name="empleado_id" class="border rounded px-3 py-2">
                 <option value="">Todos los empleados</option>
                 @foreach($empleados as $empleado)
-                    <option value="{{ $empleado->id }}" {{ request('empleado_id') == $empleado->id ? 'selected' : '' }}>
-                        {{ $empleado->nombre_completo }}
-                    </option>
+                <option value="{{ $empleado->id }}" {{ request('empleado_id') == $empleado->id ? 'selected' : '' }}>
+                    {{ $empleado->nombre_completo }}
+                </option>
                 @endforeach
             </select>
             <button type="submit" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Buscar</button>
@@ -55,12 +59,12 @@
                     </td>
                     <td class="px-6 py-4">
                         @php
-                            $colores = [
-                                'Presente' => 'bg-green-500',
-                                'Tarde' => 'bg-yellow-500',
-                                'Ausente' => 'bg-red-500',
-                                'Permiso' => 'bg-blue-500',
-                            ];
+                        $colores = [
+                        'Presente' => 'bg-green-500',
+                        'Tarde' => 'bg-yellow-500',
+                        'Ausente' => 'bg-red-500',
+                        'Permiso' => 'bg-blue-500',
+                        ];
                         @endphp
                         <span class="px-2 py-1 text-white rounded {{ $colores[$asistencia->estado] ?? 'bg-gray-500' }}">
                             {{ $asistencia->estado }}
