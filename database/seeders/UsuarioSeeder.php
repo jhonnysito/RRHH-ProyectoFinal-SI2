@@ -26,7 +26,6 @@ class UsuarioSeeder extends Seeder
         $userSuperAdmin = User::firstOrCreate(
             ['email' => 'superadmin@gmail.com'],
             [
-                'tenant_id' => 'empresa1',
                 'name' => 'superadmin',
                 'password' => Hash::make('12345678'),
             ]

@@ -35,27 +35,32 @@ class SalarioController extends Controller
 
     public function showMes(User $empleado, $mes)
     {
-        // Filtrar pagos del mes
+        // Asegurarse de parsear correctamente la fecha del mes
+        $fecha = Carbon::parse($mes);
+
+        // Obtener el pago del empleado correspondiente a ese mes
         $pagoMes = PagoEmpleado::where('empleado_id', $empleado->id)
-            ->whereMonth('periodo_inicio', '=', Carbon::parse($mes)->month)
-            ->whereYear('periodo_inicio', '=', Carbon::parse($mes)->year)
+            ->whereMonth('periodo_inicio', $fecha->month)
+            ->whereYear('periodo_inicio', $fecha->year)
             ->first();
 
         // Usar nombre completo si existe, sino fallback al name
         $empleadoNombre = $empleado->nombre_completo ?? $empleado->name;
-        //dd($empleadoNombre);
+
         // Traer registros de asistencia del mes desde location_records
         $asistencias = LocationRecord::where('name', $empleadoNombre)
-            ->whereMonth('recorded_at', Carbon::parse($mes)->month)
-            ->whereYear('recorded_at', Carbon::parse($mes)->year)
+            ->whereMonth('recorded_at', $fecha->month)
+            ->whereYear('recorded_at', $fecha->year)
             ->orderBy('recorded_at')
             ->get()
             ->groupBy(function ($registro) {
                 return Carbon::parse($registro->recorded_at)->format('Y-m-d'); // agrupa por día
             });
 
+        // Retornar vista con los datos
         return view('pagos.empleado_mes', compact('empleado', 'pagoMes', 'asistencias', 'mes'));
     }
+
     // Mostrar formulario para crear nuevo pago
     public function create()
     {

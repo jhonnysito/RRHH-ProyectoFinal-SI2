@@ -15,10 +15,8 @@
             <table class="min-w-full table-auto">
                 <thead class="bg-gray-100">
                     <tr>
-                        <th class="px-4 py-2 text-left">Empleado</th>
                         <th class="px-4 py-2 text-left">Tipo</th>
-                        <th class="px-4 py-2 text-left">Monto</th>
-                        <th class="px-4 py-2 text-left">Mes Correspondiente</th>
+                        <th class="px-4 py-2 text-left">Porcentaje</th>
                         <th class="px-4 py-2 text-left">Fecha Creación</th>
                         <th class="px-4 py-2 text-left">Acciones</th>
                     </tr>
@@ -26,10 +24,8 @@
                 <tbody>
                     @foreach($descuentos as $descuento)
                         <tr class="border-b hover:bg-gray-50">
-                            <td class="px-4 py-2">{{ $descuento->empleado->nombre_completo ?? '-' }}</td>
                             <td class="px-4 py-2">{{ $descuento->tipo }}</td>
                             <td class="px-4 py-2">{{ number_format($descuento->monto, 2) }}</td>
-                            <td class="px-4 py-2">{{ $descuento->corresponde_a_mes ?? '-' }}</td>
                             <td class="px-4 py-2">{{ $descuento->created_at->format('d/m/Y H:i') }}</td>
                             <td class="px-4 py-2 space-x-2">
                                 <a href="{{ route('descuentos.edit', $descuento->id) }}"

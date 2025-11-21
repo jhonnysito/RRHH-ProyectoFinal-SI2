@@ -327,6 +327,7 @@
 
                 </x-sidebar-dropdown>
                 @endcanany
+                <a href="{{ route('descuentos.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Descuentos</a>
             </ul>
 
 

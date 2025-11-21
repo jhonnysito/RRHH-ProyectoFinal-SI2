@@ -10,11 +10,8 @@ class DescuentoEmpleado extends Model
 
     protected $fillable = [
         'tenant_id',
-        'empleado_id',
-        'pago_id',
         'tipo',
         'monto',
-        'corresponde_a_mes'
     ];
 
     public function empleado()

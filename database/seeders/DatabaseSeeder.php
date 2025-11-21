@@ -14,11 +14,11 @@ class DatabaseSeeder extends Seeder
             TenantSeeder::class,
             RoleSeeder::class,
             UsuarioSeeder::class,
-            PagosSeeder::class,
-            LocationRecordSeeder::class,
             DepartamentoSeeder::class,
             CargoSeeder::class,
             EmpleadoSeeder::class,
+            PagosSeeder::class,
+            LocationRecordSeeder::class,
             PuestosDisponiblesSeeder::class,
         ]);
     }

@@ -15,39 +15,74 @@ class LocationRecordSeeder extends Seeder
 
         foreach ($empleados as $empleado) {
 
-            // Traemos los pagos del empleado (6 meses, según el PagosSeeder)
-            $pagos = $empleado->pagosEmpleado()->get(); // O PagoEmpleado::where('empleado_id', $empleado->user_id)->get();
+            // Traemos los pagos del empleado (6 meses, según PagosSeeder)
+            $pagos = $empleado->pagosEmpleado()->get();
 
             foreach ($pagos as $pago) {
 
-                // Generamos registros para cada día del periodo
                 $currentDate = Carbon::parse($pago->periodo_inicio);
                 $endDate = Carbon::parse($pago->periodo_fin);
 
                 while ($currentDate <= $endDate) {
 
-                    // Simulamos que en algunos días el empleado se olvidó de marcar entrada o salida
-                    $entradaOlvidada = rand(0, 20) === 0; // 1 de cada 20 días
-                    $salidaOlvidada = rand(0, 20) === 0;
+                    // ---- Escenarios posibles ----
+                    // 0 = NO MARCÓ NADA
+                    // 1 = Solo entrada
+                    // 2 = Solo salida
+                    // 3 = Marcó ambas (normal o con retraso)
+                    $escenario = rand(0, 3);
 
-                    // Registro de entrada
-                    if (!$entradaOlvidada) {
-                        LocationRecord::create([
-                            'name' => $empleado->nombre_completo,
-                            'latitude' => rand(-1000000, 1000000) / 1000000,
-                            'longitude' => rand(-1000000, 1000000) / 1000000,
-                            'recorded_at' => $currentDate->copy()->setTime(8, rand(0, 30)), // 08:00 ±30min
-                        ]);
-                    }
+                    // Retraso en minutos (máx 90 min)
+                    $retrasoEntrada = rand(0, 100) < 20 ? rand(10, 90) : 0; // 20% chance
+                    $retrasoSalida  = rand(0, 100) < 20 ? rand(10, 90) : 0; // 20% chance
 
-                    // Registro de salida
-                    if (!$salidaOlvidada) {
-                        LocationRecord::create([
-                            'name' => $empleado->nombre_completo,
-                            'latitude' => rand(-1000000, 1000000) / 1000000,
-                            'longitude' => rand(-1000000, 1000000) / 1000000,
-                            'recorded_at' => $currentDate->copy()->setTime(17, rand(0, 30)), // 17:00 ±30min
-                        ]);
+                    // Entrada → 08:00
+                    $entrada = $currentDate->copy()->setTime(8, 0)->addMinutes($retrasoEntrada);
+
+                    // Salida → 17:00
+                    $salida  = $currentDate->copy()->setTime(17, 0)->addMinutes($retrasoSalida);
+
+                    // ----------- MARCAR SEGÚN ESCENARIO ----------
+                    switch ($escenario) {
+
+                        case 1: // SOLO ENTRADA
+                            LocationRecord::create([
+                                'name'        => $empleado->nombre_completo,
+                                'latitude'    => rand(-1000000, 1000000) / 1000000,
+                                'longitude'   => rand(-1000000, 1000000) / 1000000,
+                                'recorded_at' => $entrada,
+                            ]);
+                            break;
+
+                        case 2: // SOLO SALIDA
+                            LocationRecord::create([
+                                'name'        => $empleado->nombre_completo,
+                                'latitude'    => rand(-1000000, 1000000) / 1000000,
+                                'longitude'   => rand(-1000000, 1000000) / 1000000,
+                                'recorded_at' => $salida,
+                            ]);
+                            break;
+
+                        case 3: // ENTRADA Y SALIDA (normal o con retraso)
+                            LocationRecord::create([
+                                'name'        => $empleado->nombre_completo,
+                                'latitude'    => rand(-1000000, 1000000) / 1000000,
+                                'longitude'   => rand(-1000000, 1000000) / 1000000,
+                                'recorded_at' => $entrada,
+                            ]);
+
+                            LocationRecord::create([
+                                'name'        => $empleado->nombre_completo,
+                                'latitude'    => rand(-1000000, 1000000) / 1000000,
+                                'longitude'   => rand(-1000000, 1000000) / 1000000,
+                                'recorded_at' => $salida,
+                            ]);
+                            break;
+
+                        case 0:
+                        default:
+                            // NO MARCA NADA ESTE DÍA
+                            break;
                     }
 
                     $currentDate->addDay();

@@ -316,7 +316,7 @@ use App\Http\Controllers\DescuentoEmpleadoController;
 Route::prefix('descuentos')->name('descuentos.')->group(function () {
     Route::get('/', [DescuentoEmpleadoController::class, 'index'])->name('index');      // Ver / Listar
     Route::get('/create', [DescuentoEmpleadoController::class, 'create'])->name('create'); // Crear
-    Route::post('/store', [DescuentoEmpleadoController::class, 'store'])->name('store');  // Guardar nuevo
+    Route::post('/store', [DescuentoEmpleadoController::class, 'store'])->name('store')->middleware('auth');;  // Guardar nuevo
     Route::get('/{descuento}/edit', [DescuentoEmpleadoController::class, 'edit'])->name('edit'); // Editar
     Route::put('/{descuento}', [DescuentoEmpleadoController::class, 'update'])->name('update'); // Actualizar
     Route::delete('/{descuento}', [DescuentoEmpleadoController::class, 'destroy'])->name('destroy'); // Eliminar
