@@ -174,7 +174,7 @@ class PermisoEmpleadoController extends Controller
             $response = Http::post('http://django:8001/api/fcm/send/', [
                 //'token' => $permiso->user->fcm_token, // <-- aquí debes tener el token FCM del usuario
                 'token' => 'deqOqmsSSoWb0K2Jg_Grdi:APA91bEwNISi1WFLb9CCm21gm-1wmFpuz4Q-ls85utbHGmeBL5dH-MHmlkiIKvKVjPfx4o8iNCzcigoRAMWzzYcbQtDoYLFptanGBOzndI6r5p0CQEWQzug',
-                'title' => 'Permiso Aprobado DESDE LARAVEL',
+                'title' => 'Solicitud Permiso',
                 'message' => 'Tu solicitud de permiso ha sido aprobada.'
             ]);
 
@@ -208,7 +208,25 @@ class PermisoEmpleadoController extends Controller
      */
     public function denegar(PermisoEmpleado $permiso)
     {
-        Gate::authorize('manage-permisos');
+        //Gate::authorize('manage-permisos');
+        try {
+            //$response = Http::post('http://localhost:9000/api/fcm/send/', [
+            $response = Http::post('http://django:8001/api/fcm/send/', [
+                //'token' => $permiso->user->fcm_token, // <-- aquí debes tener el token FCM del usuario
+                'token' => 'deqOqmsSSoWb0K2Jg_Grdi:APA91bEwNISi1WFLb9CCm21gm-1wmFpuz4Q-ls85utbHGmeBL5dH-MHmlkiIKvKVjPfx4o8iNCzcigoRAMWzzYcbQtDoYLFptanGBOzndI6r5p0CQEWQzug',
+                'title' => 'Solicitud Permiso',
+                'message' => 'Tu solicitud de permiso ha sido Rechazada.'
+            ]);
+
+            if ($response->successful()) {
+                // opcional: log
+                //\Log::info('Notificación enviada a Django FCM: ' . $response->body());
+            } else {
+                // \Log::error('Error enviando notificación a Django FCM: ' . $response->body());
+            }
+        } catch (\Exception $e) {
+            //\Log::error('Error enviando POST a Django FCM: ' . $e->getMessage());
+        }
 
         if ($permiso->estado === 'solicitado') {
             $permiso->update(['estado' => 'rechazado']);
