@@ -142,7 +142,7 @@ class EntrevistaController extends Controller
 
         ]);
         $tenant_id = Auth::user()->tenant_id;
-        dd($tenant_id);
+        //dd($tenant_id);
         $evaluacion = new Evaluacion();
         $evaluacion->entrevista_id = $entrevista->id;
         $evaluacion->evaluador_id = Auth::id(); // quien evalúa
