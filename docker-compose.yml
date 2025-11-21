@@ -14,7 +14,7 @@ services:
     image: nginx:alpine
     container_name: laravel_webserver
     ports:
-      - "8000:80"
+      - "80:80"
     volumes:
       - .:/var/www
       - ./nginx:/etc/nginx/conf.d
@@ -35,6 +35,21 @@ services:
       - dbdata:/var/lib/postgresql/data
     networks:
       - laravel_net
+
+  django:
+    build:
+      context: ./djangomicroservicio
+      dockerfile: Dockerfile
+    container_name: django_microservicio
+    command: python manage.py runserver 0.0.0.0:8001
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./djangomicroservicio:/app
+    depends_on:
+      - db
+    networks:
+      - laravel_net    
 
 volumes:
   dbdata:

@@ -97,9 +97,7 @@
         </div>
     </div>
     <!-- left sidebar -->
-    <aside id="sidebar"
-        x-show="sidebarVisible"
-        x-transition:enter="transition ease-out duration-300"
+    <aside id="sidebar" x-show="sidebarVisible" x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0 transform -translate-x-10"
         x-transition:enter-end="opacity-100 transform translate-x-0"
         x-transition:leave="transition ease-in duration-300"
@@ -122,37 +120,44 @@
                 @endcan
 
                 {{-- Sidebar Departamentos --}}
-                @canany(['Agregar Departamentos','Editar Departamentos','Eliminar Departamentos','Ver Departamentos'])
+                @canany(['Agregar Departamentos', 'Editar Departamentos', 'Eliminar Departamentos', 'Ver
+                Departamentos'])
                 <x-sidebar-dropdown texto="Departamentos">
                     @can('Agregar Departamentos')
-                    <a href="{{ route('departamentos.create') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Agregar</a>
+                    <a href="{{ route('departamentos.create') }}"
+                        class="block px-2 py-1 hover:bg-gray-200 rounded">Agregar</a>
                     @endcan
 
                     @can('Editar Departamentos')
-                    <a href="{{ route('departamentos.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Editar</a>
+                    <a href="{{ route('departamentos.index') }}"
+                        class="block px-2 py-1 hover:bg-gray-200 rounded">Editar</a>
                     @endcan
 
                     @can('Eliminar Departamentos')
-                    <a href="{{ route('departamentos.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Eliminar</a>
+                    <a href="{{ route('departamentos.index') }}"
+                        class="block px-2 py-1 hover:bg-gray-200 rounded">Eliminar</a>
                     @endcan
 
                     @can('Ver Departamentos')
-                    <a href="{{ route('departamentos.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Ver</a>
+                    <a href="{{ route('departamentos.index') }}"
+                        class="block px-2 py-1 hover:bg-gray-200 rounded">Ver</a>
                     @endcan
                 </x-sidebar-dropdown>
                 @endcanany
 
                 {{-- Cargos --}}
-                @canany(['Agregar Cargos','Editar Cargos','Eliminar Cargos','Ver Cargos'])
+                @canany(['Agregar Cargos', 'Editar Cargos', 'Eliminar Cargos', 'Ver Cargos'])
                 <x-sidebar-dropdown texto="Cargos">
                     @can('Agregar Cargos')
-                    <a href="{{ route('cargos.create') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Agregar</a>
+                    <a href="{{ route('cargos.create') }}"
+                        class="block px-2 py-1 hover:bg-gray-200 rounded">Agregar</a>
                     @endcan
                     @can('Editar Cargos')
                     <a href="{{ route('cargos.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Editar</a>
                     @endcan
                     @can('Eliminar Cargos')
-                    <a href="{{ route('cargos.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Eliminar</a>
+                    <a href="{{ route('cargos.index') }}"
+                        class="block px-2 py-1 hover:bg-gray-200 rounded">Eliminar</a>
                     @endcan
                     @can('Ver Cargos')
                     <a href="{{ route('cargos.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Ver</a>
@@ -164,10 +169,12 @@
                 @canany(['Ver Puestos Disponibles', 'Agregar Puestos Disponibles'])
                 <x-sidebar-dropdown texto="Puestos Disponibles">
                     @can('Ver Puestos Disponibles')
-                    <a href="{{ route('puesto_disponibles.inicio') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Ver</a>
+                    <a href="{{ route('puesto_disponibles.inicio') }}"
+                        class="block px-2 py-1 hover:bg-gray-200 rounded">Ver</a>
                     @endcan
                     @can('Agregar Puestos Disponibles')
-                    <a href="{{ route('puesto_disponibles.crear') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Agregar</a>
+                    <a href="{{ route('puesto_disponibles.crear') }}"
+                        class="block px-2 py-1 hover:bg-gray-200 rounded">Agregar</a>
                     @endcan
 
                 </x-sidebar-dropdown>
@@ -176,24 +183,21 @@
 
 
                 {{-- Postulantes --}}
-                @canany(['Ver Postulantes','Ver Entrevistas'])
+                @canany(['Ver Postulantes', 'Ver Entrevistas'])
                 <x-sidebar-dropdown texto="Postulantes">
                     @can('Ver Postulantes')
-                    <a href="{{ route('postulantes.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Ver Postulantes</a>
+                    <a href="{{ route('postulantes.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Ver
+                        Postulantes</a>
                     @endcan
                     @can('Ver Entrevistas')
-                    <a href="{{ route('entrevistas.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Ver Entrevistas</a>
+                    <a href="{{ route('entrevistas.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Ver
+                        Entrevistas</a>
                     @endcan
                 </x-sidebar-dropdown>
                 @endcanany
 
                 {{-- Empleados --}}
-                @canany([
-                'Agregar Empleados',
-                'Editar Empleados',
-                'Eliminar Empleados',
-                'Ver Empleados'
-                ])
+                @canany(['Agregar Empleados', 'Editar Empleados', 'Eliminar Empleados', 'Ver Empleados'])
                 <x-sidebar-dropdown texto="Empleados">
 
                     @can('Ver Empleados')
@@ -201,15 +205,18 @@
                     @endcan
 
                     @can('Agregar Empleados')
-                    <a href="{{ route('empleados.create') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Agregar</a>
+                    <a href="{{ route('empleados.create') }}"
+                        class="block px-2 py-1 hover:bg-gray-200 rounded">Agregar</a>
                     @endcan
 
                     @can('Editar Empleados')
-                    <a href="{{ route('empleados.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Editar</a>
+                    <a href="{{ route('empleados.index') }}"
+                        class="block px-2 py-1 hover:bg-gray-200 rounded">Editar</a>
                     @endcan
 
                     @can('Eliminar Empleados')
-                    <a href="{{ route('empleados.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Eliminar</a>
+                    <a href="{{ route('empleados.index') }}"
+                        class="block px-2 py-1 hover:bg-gray-200 rounded">Eliminar</a>
                     @endcan
 
                 </x-sidebar-dropdown>
@@ -217,16 +224,8 @@
 
 
                 {{-- Roles y Permisos (solo Admin) --}}
-                @canany([
-                'Agregar Roles',
-                'Editar Roles',
-                'Eliminar Roles',
-                'Ver Roles',
-                'Agregar Permisos',
-                'Editar Permisos',
-                'Eliminar Permisos',
-                'Ver Permisos'
-                ])
+                @canany(['Agregar Roles', 'Editar Roles', 'Eliminar Roles', 'Ver Roles', 'Agregar Permisos', 'Editar
+                Permisos', 'Eliminar Permisos', 'Ver Permisos'])
                 <x-sidebar-dropdown texto="Roles y Permisos">
 
                     {{-- Roles --}}
@@ -235,11 +234,13 @@
                     @endcan
 
                     @can('Editar Roles')
-                    <a href="{{ route('roles.editar') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Editar</a>
+                    <a href="{{ route('roles.editar') }}"
+                        class="block px-2 py-1 hover:bg-gray-200 rounded">Editar</a>
                     @endcan
 
                     @can('Eliminar Roles')
-                    <a href="{{ route('roles.inicio') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Eliminar</a>
+                    <a href="{{ route('roles.inicio') }}"
+                        class="block px-2 py-1 hover:bg-gray-200 rounded">Eliminar</a>
                     @endcan
 
                     @can('Ver Roles')
@@ -248,39 +249,50 @@
 
                     {{-- Permisos --}}
                     @can('Agregar Permisos')
-                    <a href="{{ route('permisos.crear') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Agregar Permiso</a>
+                    <a href="{{ route('permisos.crear') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Agregar
+                        Permiso</a>
                     @endcan
 
                     @can('Ver Permisos')
-                    <a href="{{ route('permisos.inicio') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Ver Permisos</a>
+                    <a href="{{ route('permisos.inicio') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Ver
+                        Permisos</a>
                     @endcan
 
                 </x-sidebar-dropdown>
                 @endcanany
 
                 {{-- Asistencias --}}
-                @canany(['Marcar Asistencias','Ver Asistencias'])
+                @canany(['Marcar Asistencias', 'Ver Asistencias'])
                 <x-sidebar-dropdown texto="Asistencias">
                     @can('Marcar Asistencias')
-                    <a href="{{ route('asistencias.create') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Marcar</a>
+                    <a href="{{ route('asistencias.create') }}"
+                        class="block px-2 py-1 hover:bg-gray-200 rounded">Marcar</a>
                     @endcan
                     @can('Ver Asistencias')
-                    <a href="{{ route('asistencias.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Ver Asistencias</a>
+                    <a href="{{ route('asistencias.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Ver
+                        Asistencias</a>
+                    @endcan
+                    @can('Ver Asistencias')
+                    <a href="{{ route('asistencia.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Ver
+                        Asistencias GPS</a>
                     @endcan
                 </x-sidebar-dropdown>
                 @endcanany
 
                 {{-- Horarios --}}
-                @canany(['Agregar Horarios','Editar Horarios,Eliminar Horarios','Ver Horarios'])
+                @canany(['Agregar Horarios', 'Editar Horarios,Eliminar Horarios', 'Ver Horarios'])
                 <x-sidebar-dropdown texto="Horarios">
                     @can('Agregar Horarios')
-                    <a href="{{ route('horarios.create') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Agregar</a>
+                    <a href="{{ route('horarios.create') }}"
+                        class="block px-2 py-1 hover:bg-gray-200 rounded">Agregar</a>
                     @endcan
                     @can('Editar Horarios')
-                    <a href="{{ route('horarios.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Editar</a>
+                    <a href="{{ route('horarios.index') }}"
+                        class="block px-2 py-1 hover:bg-gray-200 rounded">Editar</a>
                     @endcan
                     @can('Eliminar Horarios')
-                    <a href="{{ route('horarios.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Eliminar</a>
+                    <a href="{{ route('horarios.index') }}"
+                        class="block px-2 py-1 hover:bg-gray-200 rounded">Eliminar</a>
                     @endcan
                     @can('Ver Horarios')
                     <a href="{{ route('horarios.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Ver</a>
@@ -289,7 +301,7 @@
                 @endcanany
 
                 {{-- Permisos Empleados --}}
-                @canany(['Solicitar Permisos Laborales',' Ver Permisos Laborales'])
+                @canany(['Solicitar Permisos Laborales', ' Ver Permisos Laborales'])
                 <x-sidebar-dropdown texto="Permisos Empleados">
 
                     {{-- Solicitar Permisos Laborales --}}
@@ -307,7 +319,7 @@
                 </x-sidebar-dropdown>
                 @endcanany
 
-                 {{-- Permisos Empleados --}}
+                {{-- Permisos Empleados --}}
                 @canany(['Solicitar Permisos Laborales',' Ver Permisos Laborales'])
                 <x-sidebar-dropdown texto="Reportes">
                     <a href="{{ route('reportes.inicio') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">
@@ -319,11 +331,23 @@
                 </x-sidebar-dropdown>
                 @endcanany
 
+                {{-- Salarios --}}
+                @canany(['Agregar Salarios', ' Ver Salarios'])
+                <x-sidebar-dropdown texto="Salarios">
 
+                    @can('Agregar Salarios')
+                    <a href="{{ route('salarios.create') }}"
+                        class="block px-2 py-1 hover:bg-gray-200 rounded">Agregar</a>
+                    @endcan
 
-                <a href="{{ route('descuentos.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Descuentos</a>
-                <a href="{{ route('chat.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Mis Chats</a>
-            </ul>
+                    @can('Ver Salarios')
+                    <a href="{{ route('salarios.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Ver</a>
+                    @endcan
+                </x-sidebar-dropdown>
+                @endcanany
+
+            <a href="{{ route('descuentos.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Descuentos</a>
+            <a href="{{ route('chat.index') }}" class="block px-2 py-1 hover:bg-gray-200 rounded">Mis Chats</a>
 
 
             {{-- Logout --}}
