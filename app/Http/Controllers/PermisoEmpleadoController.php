@@ -108,7 +108,7 @@ class PermisoEmpleadoController extends Controller
             ]);
 
             // NOTIFICAR ADMINISTRADORES
-            $administradores = User::role('Administrador')->get();
+            $administradores = User::role('Admin')->get();
             foreach ($administradores as $admin) {
                 $admin->notify(new PermisosNotification($permiso, 'solicitado'));
             }
